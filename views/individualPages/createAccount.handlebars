@@ -1,0 +1,13 @@
+<h2 class="loginHeader">Create a New Account</h2>
+<form name="myForm" class='login-form' action="/account/create" method="post" id="form">
+    {{#if error}}
+        <p class="errorMessage">{{error}}</p>
+    {{/if}}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required="required" minlength="5">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required="required" minlength="5">
+    <button class="actionButton" type="submit" id="btn">Create!</button>
+</form>
+
+<a href="/account/login" class="littleLink">Already have an account? Log in!</a>

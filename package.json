@@ -1,0 +1,32 @@
+{
+    "name": "what2watch",
+    "version": "1.0.0",
+    "description": "Final Project for CS 546 - WS - S2022",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ksharo/cs-546.git"
+    },
+    "keywords": [
+        "tv",
+        "shows",
+        "web",
+        "app"
+    ],
+    "author": "Jared Follet, Joshua Mimer, Logan Rechler, and Kaitlyn Sharo (10436895)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ksharo/cs-546/issues"
+    },
+    "homepage": "https://github.com/ksharo/cs-546#readme",
+    "dependencies": {
+        "express": "^4.17.3",
+        "express-handlebars": "^6.0.5",
+        "express-session": "^1.17.2",
+        "mongodb": "^4.5.0"
+    }
+}

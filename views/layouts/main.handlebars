@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>What2Watch</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+
+<body>
+    <header class="header">
+        {{#if user}}
+        <button class="headerItem">&#8801;</button>
+        {{else}}
+        <a class="headerItem homeLink" href="/">Home</a>
+        {{/if}}
+        <a href="/" class="titleLink">What2Watch</a>
+        {{#if user}}
+        <img class="headerItem" href="{{user.img}}" alt="{{user.username}}" />
+        {{else}}
+        <a class="headerItem loginLink" href="/account/login">Log in/Create Account</a>
+        {{/if}}
+    </header>
+    <main>
+        {{{body}}}
+    </main>
+    <footer class="footer">
+        <p>A Web Application By: Jared Follet, Joshua Mimer, Logan Rechler, and Kaitlyn Sharo</p>
+        <p>For CS 546 - Web Programming I - Spring 2022 - Web Section</p>
+        <p>Stevens Institute of Technology</p>
+    </footer>
+    <script src='/public/script.js'></script>
+</body>
+
+</html>

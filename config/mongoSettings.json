@@ -1,0 +1,6 @@
+{
+    "mongoConfig": {
+        "dbUrl": "mongodb://0.0.0.0:27017",
+        "database": "what2watch"
+    }
+}
