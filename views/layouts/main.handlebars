@@ -8,17 +8,33 @@
 </head>
 
 <body>
+    <section id="fullCover" hidden></section>
     <header class="header">
         {{#if user}}
         <button class="headerItem">&#8801;</button>
         {{else}}
-        <a class="headerItem homeLink" href="/">Home</a>
+        <a class="headerItem" id="homeLink" href="/">Home</a>
         {{/if}}
         <a href="/" class="titleLink">What2Watch</a>
         {{#if user}}
         <img class="headerItem" href="{{user.img}}" alt="{{user.username}}" />
         {{else}}
-        <a class="headerItem loginLink" href="/account/login">Log in/Create Account</a>
+        <section id='loginStatus'>
+            <button class="headerItem loginLink" id="loginBtn">Log in/Create Account</button>
+        </section>
+        <section id='loginSection' hidden>
+            <button id="closeLoginBtn">x</button>
+            <h2 class="loginHeader">Login</h2>
+            <form name="myForm" class='accountForm' action="/account/checkAccount" method="post" id="loginForm">
+                <p class="errorMessage" id="loginError" hidden></p>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" autocomplete>
+                <button type="submit">Login</button>
+            </form>
+            <a href="/account/create" class="littleLink">No account? Make one today!</a>
+        </section>
         {{/if}}
     </header>
     <main>
@@ -29,6 +45,7 @@
         <p>For CS 546 - Web Programming I - Spring 2022 - Web Section</p>
         <p>Stevens Institute of Technology</p>
     </footer>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src='/public/script.js'></script>
 </body>
 

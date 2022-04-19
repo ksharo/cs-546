@@ -1,9 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Pacifico&family=Red+Hat+Mono&display=swap');
+
+/************ BASIC CSS ************/
+
 :root {
     --primary: rgb(1, 1, 78);
     --body: rgb(1, 1, 40);
-    --secondary: #edb3b3;
+    --secondary: #c9abab;
     --accent: #ffba6b;
+    --dark: #aa6767;
+    --error: #a73c06;
     --lightBackground: #EDEDED;
 }
 
@@ -62,7 +67,7 @@ body {
     font-size: 18px;
 }
 
-.homeLink {
+#homeLink {
     text-align: left;
     margin-left: 12px;
     font-size: 18px;
@@ -104,6 +109,12 @@ body {
 .loginHeader {
     font-size: 32px;
     text-align: center;
+    margin: 4px auto;
+    color: var(--secondary);
+}
+
+.loginHeader {
+    color: var(--primary);
 }
 
 button {
@@ -129,6 +140,24 @@ button:active {
     filter: brightness(60%);
     box-shadow: 1px 1px 2px rgba(128, 128, 128, 0.859);
 }
+
+label {
+    color: var(--primary);
+}
+
+.littleLink {
+    color: var(--dark);
+    margin-top: 14px;
+    display: block;
+    font-size: 16px;
+}
+
+.littleLink:visited {
+    color: var(--primary);
+}
+
+
+/************ HOME PAGE CSS ************/
 
 #mainDescription {
     width: 100%;
@@ -174,9 +203,17 @@ button:active {
     top: 400px;
     left: 80px;
     animation-name: fromLeftFarther;
-    animation-duration: 6.5s;
+    animation-duration: 7s;
     color: var(--accent);
 }
+
+#startForm {
+    height: 300px;
+    margin-top: 100px;
+}
+
+
+/************ HOME PAGE ANIMATIONS ************/
 
 @keyframes fromLeft {
     to {
@@ -205,14 +242,84 @@ button:active {
     }
 }
 
-#startForm {
-    height: 300px;
-    margin-top: 100px;
+
+/************ LOGIN CSS ************/
+
+#loginSection {
+    background-color: var(--lightBackground);
+    width: 350px;
+    height: fit-content;
+    z-index: 100;
+    padding: 20px;
+    border-radius: 8px;
+    outline-offset: 2px;
+    outline: 2px solid var(--secondary);
+    position: relative;
 }
 
-.login-form {
-    width: 400px;
+.accountForm {
+    width: 300px;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
+}
+
+.accountForm button {
+    margin: auto;
+}
+
+.accountForm input {
+    margin: 8px 0px;
+    border-radius: 4px;
+    height: 24px;
+    border: 1px solid var(--body);
+}
+
+.accountForm input:focus {
+    outline: 2px solid var(--dark);
+    border: none;
+}
+
+#loginBtn {
+    background: none;
+    box-shadow: none;
+    width: fit-content;
+    color: var(--secondary);
+}
+
+#fullCover {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    position: fixed;
+    animation-name: gradualShow;
+    animation-duration: .5s;
+}
+
+@keyframes gradualShow {
+    to {
+        opacity: 100;
+    }
+    from {
+        opacity: 0;
+    }
+}
+
+#closeLoginBtn {
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    position: absolute;
+    font-size: 19px;
+    padding: 1px 8px;
+    left: 6px;
+    top: 9px;
+}
+
+.errorMessage {
+    color: var(--error);
+    text-align: center;
+    width: 200px;
+    margin: 4px auto 12px auto;
 }
