@@ -8,6 +8,7 @@
     const loginUsername = $('#username');
     const loginPassword = $('#password');
     const loginError = $('#loginError');
+    const loginLink = $('#loginLink');
 
     loginForm.on('submit', (event) => {
         event.preventDefault();
@@ -20,7 +21,7 @@
             if (uLength == 0) {
                 errorTxt = 'Error: Please provide a username!';
             } else {
-                errorTxt = 'Error: Username must be at least 5 characters.';
+                errorTxt = 'Error: Username must be at least 6 characters.';
             }
             loginError.text(errorTxt);
             loginError.show();
@@ -30,7 +31,7 @@
             if (pLength == 0) {
                 errorTxt = 'Error: Please provide a password!';
             } else {
-                errorTxt = 'Error: Password must be at least 5 characters.';
+                errorTxt = 'Error: Password must be at least 6 characters.';
             }
             loginError.text(errorTxt);
             loginError.show();
@@ -66,11 +67,11 @@
     });
 
     loginBtn.on('click', () => {
-        loginBox.show();
-        loginError.hide();
-        loginBtn.hide();
-        darkCover.show();
-        homeLink.width(455);
+        openLogin();
+    });
+
+    loginLink.on('click', () => {
+        openLogin();
     });
 
     darkCover.on('click', () => {
@@ -80,6 +81,14 @@
     closeLoginBtn.on('click', () => {
         closeLogin();
     });
+
+    function openLogin() {
+        loginBox.show();
+        loginError.hide();
+        loginBtn.hide();
+        darkCover.show();
+        homeLink.width(455);
+    }
 
     function closeLogin() {
         darkCover.hide();
