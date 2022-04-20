@@ -24,10 +24,12 @@
     },
     "homepage": "https://github.com/ksharo/cs-546#readme",
     "dependencies": {
+        "bcryptjs": "^2.4.3",
         "express": "^4.17.3",
         "express-handlebars": "^6.0.5",
         "express-session": "^1.17.2",
         "lodash": "^4.17.21",
-        "mongodb": "^4.5.0"
+        "mongodb": "^4.5.0",
+        "validator": "^13.7.0"
     }
 }
