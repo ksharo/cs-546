@@ -1,14 +1,16 @@
 <h2 class="subheader">Create a New Account</h2>
 <form name="myForm" class='accountForm' action="/account/create" method="post" id="newAccountForm">
-    <p class="errorMessage" hidden id="createAccountError"></p>
+    {{#if error}}
+        <p class="errorMessage" id="createAccountError">{{errorMessage}} (status code: {{errorStatus}})</p>
+    {{/if}}
     <label for="newFirstName">First Name:</label>
-    <input type="text" id="newFirstName" name="newFirstName">
+    <input type="text" id="newFirstName" name="newFirstName" value={{firstName}}>
     <label for="newLastName">Last Name:</label>
-    <input type="text" id="newLastName" name="newLastName">
+    <input type="text" id="newLastName" name="newLastName" value={{lastName}}>
     <label for="newEmail">Email (this will be your username):</label>
-    <input type="email" id="newEmail" name="newEmail">
+    <input type="email" id="newEmail" name="newEmail" value={{email}}>
     <label for="newScreenName">Screen Name:</label>
-    <input type="text" id="newScreenName" name="newScreenName">
+    <input type="text" id="newScreenName" name="newScreenName" value={{username}}>
     <label for="newPassword">Password:</label>
     <input type="password" id="newPassword" name="newPassword" autocomplete />
     <label for="confirmNewPassword">Confirm Password:</label>

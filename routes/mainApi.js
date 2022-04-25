@@ -8,4 +8,10 @@ router
         res.status(200).render('individualPages/homepage');
     });
 
+router
+    .route('/showSearch')
+    .get(async(req, res) => {
+        res.status(200).render('individualPages/mainSearch');
+    });
+
 module.exports = router;

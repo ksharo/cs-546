@@ -207,14 +207,14 @@ label {
     top: 300px;
     right: 80px;
     animation-name: fromRightFar;
-    animation-duration: 4.5s;
+    animation-duration: 4s;
 }
 
 #mainDescription article p:nth-child(3) {
     top: 400px;
     left: 80px;
     animation-name: fromLeftFarther;
-    animation-duration: 7s;
+    animation-duration: 6s;
     color: var(--accent);
 }
 
@@ -228,28 +228,34 @@ label {
 
 @keyframes fromLeft {
     to {
-        left: 80px;
+        opacity: 100%;
     }
     from {
-        left: -3000px;
+        opacity: 0%;
     }
 }
 
 @keyframes fromRightFar {
     to {
-        right: 80px;
+        opacity: 100%;
+    }
+    60% {
+        opacity: 0%;
     }
     from {
-        right: -6000px;
+        opacity: 0%;
     }
 }
 
 @keyframes fromLeftFarther {
     to {
-        left: 80px;
+        opacity: 100%;
+    }
+    75% {
+        opacity: 0%;
     }
     from {
-        left: -8000px;
+        opacity: 0%;
     }
 }
 
