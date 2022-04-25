@@ -10,6 +10,7 @@
     --dark: #aa6767;
     --error: #a73c06;
     --lightBackground: #EDEDED;
+    --veryDark: #925e5e;
 }
 
 html {
@@ -56,6 +57,7 @@ body {
 
 .headerItem {
     width: 200px;
+    height: 100px;
     align-self: center;
     text-decoration: none;
     color: var(--lightBackground);
@@ -103,6 +105,57 @@ body {
 
 .formClass * {
     margin-top: 20px;
+}
+
+#loggedInMenu {
+    background-color: var(--veryDark);
+    font-size: 32px;
+    width: 44px;
+    height: 44px;
+    letter-spacing: -10px;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    margin-right: 150px;
+    padding: 0px 10px 0px 0px;
+    box-shadow: none;
+}
+
+#loggedInMenu:hover {
+    box-shadow: none;
+}
+
+#loggedInMenu:active {
+    box-shadow: none;
+}
+
+.profileIcon {
+    background-color: var(--veryDark);
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    padding: 0px;
+    border-radius: 100%;
+    outline: 2px solid var(--veryDark);
+    outline-offset: 4px;
+    padding: 13px 0px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 12px;
+}
+
+.profileIcon:hover {
+    filter: brightness(85%);
+    cursor: pointer;
+}
+
+.profileIcon:active {
+    filter: brightness(75%);
+}
+
+.iconHolder {
+    position: relative;
 }
 
 .subheader,
@@ -185,7 +238,7 @@ label {
     height: 600px;
     object-fit: cover;
     object-position: bottom;
-    filter: brightness(40%) grayscale(70%);
+    filter: brightness(30%) grayscale(80%);
 }
 
 #mainDescription article p {

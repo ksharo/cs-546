@@ -7,7 +7,7 @@ const validator = require('validator');
 router
     .route('/create')
     .get(async(req, res) => {
-        return res.status(200).render('individualPages/createAccount');
+        return res.status(200).render('individualPages/createAccount', { user: req.session.user });
     });
 
 router
@@ -24,7 +24,7 @@ router
             /* error check all inputs */
             checkString(firstName, 'First Name', 1);
             checkString(lastName, 'Last Name', 1);
-            checkString(email, 'Email', 0, false, false, true);
+            checkString(email, 'Email', 6, false, false, true);
             checkString(username, 'Screen Name', 6);
             checkString(password, 'Password', 6, false, false, false);
             checkString(confirmation, 'Password Confirmation', 0, false, false, false);
@@ -38,7 +38,7 @@ router
                 return res.status(200).redirect('/showSearch');
             } else {
                 /* if it doesn't, show an error */
-                return res.status(500).render('individualPages/createAccount', { error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.', firstName: firstName, lastName: lastName, email: email, username: username });
+                return res.status(500).render('individualPages/createAccount', { error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.', firstName: firstName, lastName: lastName, email: email, username: username, user: req.session.user });
             }
         } catch (e) {
             const firstName = req.body.newFirstName.trim();
@@ -46,7 +46,7 @@ router
             const email = req.body.newEmail.trim();
             const username = req.body.newScreenName.trim();
             /* if something went wrong, like an input was probably wrong, show an error */
-            return res.status(400).render('individualPages/createAccount', { error: true, errorStatus: 400, errorMessage: e, firstName: firstName, lastName: lastName, email: email, username: username });
+            return res.status(400).render('individualPages/createAccount', { error: true, errorStatus: 400, errorMessage: e, firstName: firstName, lastName: lastName, email: email, username: username, user: req.session.user });
         }
     });
 
@@ -56,7 +56,14 @@ router
         try {
             const auth = await accountFunctions.checkUser(req.body.username, req.body.password);
             if (auth.authenticated) {
-                return res.status(200).json({ status: 200 });
+                /* set cookie for user */
+                req.session.user = {
+                    name: auth.data.first_name + ' ' + auth.data.last_name,
+                    username: auth.data.screen_name,
+                    pic: auth.data.profile_pic,
+                    initials: auth.data.first_name[0] + auth.data.last_name[0]
+                };
+                return res.status(200).json({ status: 200, user: req.session.user });
             } else {
                 return res.status(400).json({ status: 400, errorStatus: 400, errorMessage: 'Either the username or password is invalid' });
             }

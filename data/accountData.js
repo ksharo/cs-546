@@ -71,7 +71,7 @@ async function createUser(firstName, lastName, email, username, password) {
         /* check that the parameters are valid */
         checkAdvancedString(firstName, 'First Name', 1);
         checkAdvancedString(lastName, 'Last Name', 1);
-        checkAdvancedString(email, 'Email', 0, false, false, true);
+        checkAdvancedString(email, 'Email', 6, false, false, true);
         checkAdvancedString(username, 'Screen Name', 6);
         checkAdvancedString(password, 'Password', 6, false, false, false);
 
@@ -115,14 +115,14 @@ async function createUser(firstName, lastName, email, username, password) {
 async function checkUser(username, password) {
     try {
         /* check that the parameters are valid */
-        checkString(username, 'username', true, 4);
+        checkAdvancedString(username, 'username', 6, false, false, true);
         checkString(password, 'password', false, 6);
 
         /* get the user database info */
         const userCollection = await usersDb();
 
         /* query the database for the username */
-        let hasUsername = await userCollection.findOne({ screen_name: username.toLowerCase() });
+        let hasUsername = await userCollection.findOne({ email: username.toLowerCase() });
         if (hasUsername == undefined || hasUsername == null) throw `Either the username or password is invalid`;
 
         /* username was found, check password */
@@ -136,7 +136,7 @@ async function checkUser(username, password) {
 
         /* passwords match! */
         if (compare) {
-            return { authenticated: true };
+            return { authenticated: true, data: user };
         }
         /* passwords do not match */
         else {

@@ -9,6 +9,11 @@
     const loginPassword = $('#password');
     const loginError = $('#loginError');
     const loginLink = $('#loginLink');
+    const loginIcon = $('#loggedInIcon');
+    const loggedInitials = $('#loggedInitials');
+    const loggedInMenu = $('#loggedInMenu');
+    const loggedOutBox = $('#logBox');
+    const loggedInBox = $('#rightLogBox');
 
     loginForm.on('submit', (event) => {
         event.preventDefault();
@@ -57,6 +62,18 @@
         $.ajax(requestConfig).then(function(responseMessage) {
             if (Number(responseMessage.status) == 200) {
                 closeLogin();
+                loggedOutBox.hide();
+                homeLink.hide();
+                loggedInBox.show();
+                if (responseMessage.user.pic != '') {
+                    loginIcon.href = responseMessage.user.pic;
+                    loginIcon.alt = responseMessage.user.username;
+                    loginIcon.show();
+                } else {
+                    loggedInitials.text(responseMessage.user.initials);
+                    loggedInitials.show();
+                }
+                loggedInMenu.show();
                 return;
             } else {
                 loginError.text('Error (code ' + responseMessage.errorStatus + '): ' + responseMessage.errorMessage);
@@ -87,7 +104,7 @@
         loginError.hide();
         loginBtn.hide();
         darkCover.show();
-        homeLink.width(455);
+        homeLink.width(380);
     }
 
     function closeLogin() {
