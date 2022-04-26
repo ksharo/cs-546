@@ -11,12 +11,36 @@
     <section id="fullCover" hidden></section>
     <header class="header">
         {{#if user}}
-        <button class="headerItem loggedInMenu" id="loggedInMenu">&#8801;&#8801;</button>
+        <button class="headerItem loggedInMenu" id="loggedInMenu" onclick="showSideMenu()">&#8801;&#8801;</button>
+        <section id="sideMenu" class='sideMenu' hidden>
+            <p class="menuHeader">Menu</p>
+            <a href='http://localhost:3000/account/view'>
+                View Your Profile
+            </a>
+            <a href='http://localhost:3000/account/showSearch'>
+                Search For a Show
+            </a>
+            <a href="http://localhost:3000/account/logout">
+                Log Out
+            </a>
+        </section>
         {{else}}
-        <button class="headerItem loggedInMenu" hidden id="loggedInMenuHidden">&#8801;&#8801;</button>
+        <button class="headerItem loggedInMenu" hidden id="loggedInMenuHidden" onclick="showSideMenu()">&#8801;&#8801;</button>
         <a class="headerItem" id="homeLink" href="/">Home</a>
+        <section id="sideMenuHidden" class='sideMenu' hidden>
+            <p class="menuHeader">Menu</p>
+            <a href='http://localhost:3000/account/view'>
+                Home
+            </a>
+            <a href='http://localhost:3000/account/edit'>
+                Edit Profile
+            </a>
+            <a href="http://localhost:3000/account/logout">
+                Log Out
+            </a>
+        </section>
         {{/if}}
-        <a href="/" class="titleLink">What2Watch</a>
+        <h1 class="noStyle"><a href="/" class="titleLink">What2Watch</a></h1>
         {{#if user}}
         {{#if user.img.length}}
         <div class="headerItem iconHolder">

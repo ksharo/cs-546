@@ -16,6 +16,8 @@
     const loggedInBox = $('#rightLogBox');
     const profileMenu = $('#smallMenu');
     const hiddenProfileMenu = $('#smallMenuHidden');
+    const sideMenu = $('#sideMenu');
+    const hiddenSideMenu = $('#sideMenuHidden');
 
     loginForm.on('submit', (event) => {
         event.preventDefault();
@@ -95,11 +97,18 @@
 
     darkCover.on('click', () => {
         closeLogin();
+        /* hide everything when dark cover is clicked */
         if (profileMenu) {
             profileMenu.hide();
             hiddenProfileMenu.hide();
         } else {
             hiddenProfileMenu.hide();
+        }
+        if (sideMenu) {
+            sideMenu.hide();
+            hiddenSideMenu.hide();
+        } else {
+            hiddenSideMenu.hide();
         }
     });
 
@@ -126,19 +135,25 @@
 })(window.jQuery);
 
 const profileMenu = document.getElementById('smallMenu');
-const hiddenMenu = document.getElementById('smallMenuHidden');
+const hiddenProfMenu = document.getElementById('smallMenuHidden');
+const sideMenu = document.getElementById('sideMenu');
+const hiddenSideMenu = document.getElementById('sideMenuHidden');
 const darkCover = document.getElementById('fullCover');
 
 function showProfileMenu() {
     if (profileMenu) {
         profileMenu.style.display = 'block';
     } else {
-        hiddenMenu.style.display = 'block';
+        hiddenProfMenu.style.display = 'block';
     }
     darkCover.style.display = 'block';
 }
 
-/* TODO:
- * 1. Add error checking client side (and other places?) on edit page
- * 3. Add side menu
- */
+function showSideMenu() {
+    if (profileMenu) {
+        sideMenu.style.display = 'block';
+    } else {
+        hiddenSideMenu.style.display = 'block';
+    }
+    darkCover.style.display = 'block';
+}

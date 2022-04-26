@@ -532,3 +532,59 @@ label {
     filter: brightness(90%);
     cursor: pointer;
 }
+
+.sideMenu {
+    background-color: var(--lightBackground);
+    height: 100%;
+    width: 240px;
+    position: absolute;
+    left: 4px;
+    top: 80px;
+    color: var(--body);
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+    border-radius: 4px;
+    z-index: 100;
+    animation-name: slideIn;
+    animation-duration: 0.3s;
+}
+
+.sideMenu a {
+    padding: 6px;
+    background-color: var(--lightBackground);
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+}
+
+.sideMenu a:hover {
+    filter: brightness(90%);
+    cursor: pointer;
+}
+
+.sideMenu a:visited {
+    color: var(--body);
+}
+
+.menuHeader {
+    font-size: 30px;
+    text-align: center;
+}
+
+@keyframes slideIn {
+    from {
+        left: -260px;
+    }
+    to {
+        left: 4px;
+    }
+}
+
+.noStyle {
+    margin: 0;
+    padding: 0;
+}
