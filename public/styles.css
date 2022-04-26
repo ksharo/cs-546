@@ -106,7 +106,7 @@ body {
     margin-top: 20px;
 }
 
-#loggedInMenu {
+.loggedInMenu {
     background-color: var(--veryDark);
     font-size: 32px;
     width: 44px;
@@ -120,11 +120,11 @@ body {
     box-shadow: none;
 }
 
-#loggedInMenu:hover {
+.loggedInMenu:hover {
     box-shadow: none;
 }
 
-#loggedInMenu:active {
+.loggedInMenu:active {
     box-shadow: none;
 }
 
@@ -141,6 +141,7 @@ body {
     box-sizing: border-box;
     position: absolute;
     right: 12px;
+    object-fit: cover;
 }
 
 .profileInitials {
@@ -504,7 +505,7 @@ label {
     flex-direction: column;
 }
 
-#smallMenu {
+.smallMenu {
     background-color: var(--lightBackground);
     height: fit-content;
     width: 140px;
@@ -518,7 +519,7 @@ label {
     z-index: 100;
 }
 
-#smallMenu a {
+.smallMenu a {
     padding: 6px;
     background-color: var(--lightBackground);
     width: 100%;
@@ -527,7 +528,7 @@ label {
     text-decoration: none;
 }
 
-#smallMenu a:hover {
+.smallMenu a:hover {
     filter: brightness(90%);
     cursor: pointer;
 }

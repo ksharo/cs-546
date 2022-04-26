@@ -1,8 +1,9 @@
 <h2 class="subheader">Create a New Account</h2>
-<form name="myForm" class='accountForm' action="/account/create" method="post" id="newAccountForm">
+<form name="createForm" class='accountForm' action="/account/create" method="post" id="newAccountForm">
     {{#if error}}
         <p class="errorMessage" id="createAccountError">{{errorMessage}} (status code: {{errorStatus}})</p>
     {{/if}}
+    <p class="errorMessage" id="hiddenCreateAccountError" hidden></p>
     <label for="newFirstName">First Name:</label>
     <input type="text" id="newFirstName" name="newFirstName" value={{firstName}}>
     <label for="newLastName">Last Name:</label>

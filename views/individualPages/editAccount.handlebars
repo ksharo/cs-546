@@ -3,6 +3,7 @@
     {{#if error}}
         <p class="errorMessage">{{errorMessage}} (status code: {{errorStatus}})</p>
     {{/if}}
+    <p id='editError' class="errorMessage" hidden></p>
     <p>Email/Username: {{user.email}}</p>
     <section class="uneditable">
         <p>First Name: {{user.firstName}}</p>
@@ -10,7 +11,11 @@
         <p>Screen Name: {{user.username}}</p>
         <section class="chosenPicSection">
             <label>Profile Picture:</label>
-            <img class='picPreview' alt='Your profile picture' src={{user.img}} />
+            {{#if user.img.length}}
+                <img class='picPreview' alt='Your profile picture' src={{user.img}} />
+            {{else}}
+                <p class="picPreview">No Profile Picture</p>
+            {{/if}}
         </section>
         <section class="horizontalFlex">
             <button onClick='editOn()'>Edit</button>
@@ -41,7 +46,12 @@
         </section>
         <section class="chosenPicSection">
             <label>Your Picture:</label>
-            <img id='chosenImg' class='picPreview' alt='Your chosen profile picture' src={{user.img}} />
+            {{#if user.img.length}}
+                <img id='chosenImg' class='picPreview' alt='Your chosen profile picture' src={{user.img}} />
+            {{else}}
+                <p class="picPreview" id="noPic">No Profile Picture</p>
+                <img id='hiddenImg' class='picPreview' hidden alt='Your chosen profile picture' src={{user.img}} />
+            {{/if}}
         </section>
         </article>
 

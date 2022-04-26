@@ -18,7 +18,7 @@ function checkString(str, name = 'string', strict = false, minLen = 1) {
         // check if there are spaces in the variable
         if (str.indexOf(' ') != -1) throw `${name} cannot contain any spaces.`;
         // make sure the variable is at least minimum length
-        if (str.trim().length < minLen) throw `Expected ${name} to be at least ${minLen} characters.`;
+        if (str.trim().length < minLen) throw `Expected ${name} to be at least ${minLen} ${minLen==1 ? 'character' : 'characters'}.`;
         // if strict, check for only alphanumeric characters
         if (strict) {
             const alphanum = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];

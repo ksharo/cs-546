@@ -9,12 +9,13 @@
     const loginPassword = $('#password');
     const loginError = $('#loginError');
     const loginLink = $('#loginLink');
-    const loginIcon = $('#loggedInIcon');
-    const loggedInitials = $('#loggedInitials');
-    const loggedInMenu = $('#loggedInMenu');
+    const hiddenIcon = $('#loggedInIconHidden');
+    const hiddenInitials = $('#loggedInitialsHidden');
+    const hiddenMenu = $('#loggedInMenuHidden');
     const loggedOutBox = $('#logBox');
     const loggedInBox = $('#rightLogBox');
     const profileMenu = $('#smallMenu');
+    const hiddenProfileMenu = $('#smallMenuHidden');
 
     loginForm.on('submit', (event) => {
         event.preventDefault();
@@ -23,11 +24,11 @@
         const uLength = loginUsername.val().trim().length;
         const pLength = loginPassword.val().trim().length;
         let errorTxt = '';
-        if (uLength < 6) {
+        if (uLength < 1) {
             if (uLength == 0) {
                 errorTxt = 'Error: Please provide a username!';
             } else {
-                errorTxt = 'Error: Username must be at least 6 characters.';
+                errorTxt = 'Error: Username must be at least 1 character.';
             }
             loginError.text(errorTxt);
             loginError.show();
@@ -67,14 +68,14 @@
                 homeLink.hide();
                 loggedInBox.show();
                 if (responseMessage.user.img.trim() != '') {
-                    loginIcon.attr("src", responseMessage.user.img);
-                    loginIcon.attr("alt", responseMessage.user.username + "'s Profile Picture");
-                    loginIcon.show();
+                    hiddenIcon.attr("src", responseMessage.user.img);
+                    hiddenIcon.attr("alt", responseMessage.user.username + "'s Profile Picture");
+                    hiddenIcon.show();
                 } else {
-                    loggedInitials.text(responseMessage.user.initials);
-                    loggedInitials.show();
+                    hiddenInitials.text(responseMessage.user.initials);
+                    hiddenInitials.show();
                 }
-                loggedInMenu.show();
+                hiddenMenu.show();
                 return;
             } else {
                 loginError.text('Error (code ' + responseMessage.errorStatus + '): ' + responseMessage.errorMessage);
@@ -94,7 +95,12 @@
 
     darkCover.on('click', () => {
         closeLogin();
-        profileMenu.hide();
+        if (profileMenu) {
+            profileMenu.hide();
+            hiddenProfileMenu.hide();
+        } else {
+            hiddenProfileMenu.hide();
+        }
     });
 
     closeLoginBtn.on('click', () => {
@@ -120,9 +126,19 @@
 })(window.jQuery);
 
 const profileMenu = document.getElementById('smallMenu');
+const hiddenMenu = document.getElementById('smallMenuHidden');
 const darkCover = document.getElementById('fullCover');
 
 function showProfileMenu() {
-    profileMenu.style.display = 'block';
+    if (profileMenu) {
+        profileMenu.style.display = 'block';
+    } else {
+        hiddenMenu.style.display = 'block';
+    }
     darkCover.style.display = 'block';
 }
+
+/* TODO:
+ * 1. Add error checking client side (and other places?) on edit page
+ * 3. Add side menu
+ */

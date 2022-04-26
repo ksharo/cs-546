@@ -11,38 +11,51 @@
     <section id="fullCover" hidden></section>
     <header class="header">
         {{#if user}}
-        <button class="headerItem" id="loggedInMenu">&#8801;&#8801;</button>
+        <button class="headerItem loggedInMenu" id="loggedInMenu">&#8801;&#8801;</button>
         {{else}}
-        <button class="headerItem" hidden id="loggedInMenu">&#8801;&#8801;</button>
+        <button class="headerItem loggedInMenu" hidden id="loggedInMenuHidden">&#8801;&#8801;</button>
         <a class="headerItem" id="homeLink" href="/">Home</a>
         {{/if}}
         <a href="/" class="titleLink">What2Watch</a>
         {{#if user}}
         {{#if user.img.length}}
         <div class="headerItem iconHolder">
-            <img src="{{user.img}}" onclick="showProfileMenu()" id="loggedInIcon" class="profileIcon" alt="{{user.username}} Profile Picture" />
+            <img src="{{user.img}}" onclick="showProfileMenu()" id="loggedInIitials" class="profileIcon"
+                alt="{{user.username}} Profile Picture" />
         </div>
         {{else}}
         <div class="headerItem iconHolder">
             <p id="loggedInIcon" onclick="showProfileMenu()" class="profileIcon profileInitials">{{user.initials}}</p>
         </div>
         {{/if}}
-        <section id="smallMenu" hidden>
-                <a href='http://localhost:3000/account/view'>
-                    Home
-                </a>
-                <a href='http://localhost:3000/account/edit'>
-                    Edit Profile
-                </a>
-                <a>
-                    Log Out
-                </a>
+        <section id="smallMenu" class='smallMenu' hidden>
+            <a href='http://localhost:3000/account/view'>
+                Home
+            </a>
+            <a href='http://localhost:3000/account/edit'>
+                Edit Profile
+            </a>
+            <a href="http://localhost:3000/account/logout">
+                Log Out
+            </a>
         </section>
         {{else}}
         <div hidden class="headerItem iconHolder" id="rightLogBox">
-            <img hidden id="loggedInIcon" src="" onclick="showProfileMenu()" class="profileIcon" alt="User's Profile Picture" />
-            <p id="loggedInitials" onclick="showProfileMenu()" class="profileIcon profileInitials" hidden></p>
+            <img hidden id="loggedInIconHidden" src="" onclick="showProfileMenu()" class="profileIcon"
+                alt="User's Profile Picture" />
+            <p id="loggedInitialsHidden" onclick="showProfileMenu()" class="profileIcon profileInitials" hidden></p>
         </div>
+        <section id="smallMenuHidden" class='smallMenu' hidden>
+            <a href='http://localhost:3000/account/view'>
+                Home
+            </a>
+            <a href='http://localhost:3000/account/edit'>
+                Edit Profile
+            </a>
+            <a href="http://localhost:3000/account/logout">
+                Log Out
+            </a>
+        </section>
         <div id="logBox">
             <section id='loginStatus'>
                 <button class="headerItem loginLink" id="loginBtn">Log In</button>
@@ -50,7 +63,7 @@
             <section id='loginSection' hidden>
                 <button id="closeLoginBtn">x</button>
                 <h2 class="loginHeader">Login</h2>
-                <form name="myForm" class='accountForm' action="/account/checkAccount" method="post" id="loginForm">
+                <form name="loginForm" class='accountForm' action="/account/checkAccount" method="post" id="loginForm">
                     <p class="errorMessage" id="loginError" hidden></p>
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username">
@@ -74,8 +87,7 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
-    <script src='/public/scripts/loginScript.js'></script>
-    <script src='/public/scripts/editAccountScript.js'></script>
+    {{> (lookup . 'partial') }}
 </body>
 
 </html>

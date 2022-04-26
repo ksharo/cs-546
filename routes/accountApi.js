@@ -58,7 +58,7 @@ const imgData = [{
 router
     .route('/create')
     .get(async(req, res) => {
-        return res.status(200).render('individualPages/createAccount', { user: req.session.user });
+        return res.status(200).render('individualPages/createAccount', { user: req.session.user, partial: 'createAccountScript' });
     });
 
 router
@@ -97,22 +97,18 @@ router
                 return res.status(200).redirect('/showSearch');
             } else {
                 /* if it doesn't, show an error */
-                return res.status(500).render('individualPages/createAccount', { error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.', firstName: firstName, lastName: lastName, email: email, username: username, user: req.session.user });
+                return res.status(500).json({ error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.' });
             }
         } catch (e) {
-            const firstName = req.body.newFirstName.trim();
-            const lastName = req.body.newLastName.trim();
-            const email = req.body.newEmail.trim();
-            const username = req.body.newScreenName.trim();
             /* if something went wrong, like an input was probably wrong, show an error */
-            return res.status(400).render('individualPages/createAccount', { error: true, errorStatus: 400, errorMessage: e, firstName: firstName, lastName: lastName, email: email, username: username, user: req.session.user });
+            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e });
         }
     });
 
 router
     .route('/edit')
     .get(async(req, res) => {
-        return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData });
+        return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
     });
 
 router
@@ -126,15 +122,15 @@ router
             const img = req.body.editImg.trim();
             /* if everything is the same as before, no need to continue */
             if (firstName == req.session.user.firstName && lastName == req.session.user.lastName && username == req.session.user.username && (img == req.session.user.img || img == 'null' || img == '' || img == null)) {
-                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData });
+                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
             }
             /* error check all inputs */
             checkString(firstName, 'First Name', 1);
             checkString(lastName, 'Last Name', 1);
             checkString(username, 'Screen Name', 6);
 
-            /* try to update the user */
-            const auth = await accountFunctions.editUser(firstName, lastName, req.session.user.email, req.session.user.username, username, img);
+            /* try to update the user (don't overwrite image with empty string!) */
+            const auth = await accountFunctions.editUser(firstName, lastName, req.session.user.email, req.session.user.username, username, img == '' ? req.session.user.img : img);
             if (auth.userUpdated) {
                 /* if it works, update the session variables */
                 req.session.user = {
@@ -145,21 +141,21 @@ router
                     img: auth.data.profile_pic,
                     initials: auth.data.first_name[0] + auth.data.last_name[0]
                 };
-                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData });
+                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
             } else {
                 /* if it doesn't, show an error */
-                return res.status(500).render('individualPages/editAccount', { error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.', user: req.session.user, imgData: imgData });
+                return res.status(500).json({ error: true, errorStatus: 500, errorMessage: 'There was a problem updating your account. Please try again later.' });
             }
         } catch (e) {
             /* if something went wrong, like an input was probably wrong, show an error */
-            return res.status(400).render('individualPages/editAccount', { error: true, errorStatus: 400, errorMessage: e, user: req.session.user, imgData: imgData });
+            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e });
         }
     });
 
 router
     .route('/view')
     .get(async(req, res) => {
-        return res.status(200).render('individualPages/viewAccount', { user: req.session.user });
+        return res.status(200).render('individualPages/viewAccount', { user: req.session.user, partial: 'mainScript' });
     });
 
 
@@ -167,7 +163,11 @@ router
     .route('/login')
     .post(async(req, res) => {
         try {
-            const auth = await accountFunctions.checkUser(req.body.username, req.body.password);
+            const username = req.body.username;
+            const password = req.body.password;
+            checkString(username, 'Username', 6, false, false, true);
+            checkString(password, 'Password', 6, false, false, false);
+            const auth = await accountFunctions.checkUser(username.trim(), password.trim());
             if (auth.authenticated) {
                 /* set cookie for user */
                 req.session.user = {
@@ -185,6 +185,15 @@ router
         } catch (e) {
             return res.status(400).json({ status: 400, errorStatus: 400, errorMessage: e });
         }
+    });
+
+router
+    .route('/logout')
+    .get(async(req, res) => {
+        /* delete session (log out user) */
+        req.session.cookie.expires = new Date(Date.now() - 10000);
+        req.session.destroy();
+        return res.redirect('/');
     });
 
 function checkString(str, name = 'Input', minLength = 1, onlyAlphNum = true, spacesAllowed = false, email = false) {
