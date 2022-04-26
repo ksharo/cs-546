@@ -20,17 +20,28 @@
         {{#if user}}
         {{#if user.img.length}}
         <div class="headerItem iconHolder">
-            <img src="{{user.img}}" id="loggedInIcon" class="profileIcon" alt="{{user.username}} Profile Picture" />
+            <img src="{{user.img}}" onclick="showProfileMenu()" id="loggedInIcon" class="profileIcon" alt="{{user.username}} Profile Picture" />
         </div>
         {{else}}
         <div class="headerItem iconHolder">
-            <p id="loggedInIcon" class="profileIcon profileInitials">{{user.initials}}</p>
+            <p id="loggedInIcon" onclick="showProfileMenu()" class="profileIcon profileInitials">{{user.initials}}</p>
         </div>
         {{/if}}
+        <section id="smallMenu" hidden>
+                <a href='http://localhost:3000/account/view'>
+                    Home
+                </a>
+                <a href='http://localhost:3000/account/edit'>
+                    Edit Profile
+                </a>
+                <a>
+                    Log Out
+                </a>
+        </section>
         {{else}}
         <div hidden class="headerItem iconHolder" id="rightLogBox">
-            <img hidden id="loggedInIcon" src="" class="profileIcon" alt="User's Profile Picture" />
-            <p id="loggedInitials" class="profileIcon profileInitials" hidden></p>
+            <img hidden id="loggedInIcon" src="" onclick="showProfileMenu()" class="profileIcon" alt="User's Profile Picture" />
+            <p id="loggedInitials" onclick="showProfileMenu()" class="profileIcon profileInitials" hidden></p>
         </div>
         <div id="logBox">
             <section id='loginStatus'>

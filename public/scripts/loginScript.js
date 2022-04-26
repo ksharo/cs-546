@@ -14,6 +14,7 @@
     const loggedInMenu = $('#loggedInMenu');
     const loggedOutBox = $('#logBox');
     const loggedInBox = $('#rightLogBox');
+    const profileMenu = $('#smallMenu');
 
     loginForm.on('submit', (event) => {
         event.preventDefault();
@@ -93,6 +94,7 @@
 
     darkCover.on('click', () => {
         closeLogin();
+        profileMenu.hide();
     });
 
     closeLoginBtn.on('click', () => {
@@ -116,3 +118,11 @@
     }
 
 })(window.jQuery);
+
+const profileMenu = document.getElementById('smallMenu');
+const darkCover = document.getElementById('fullCover');
+
+function showProfileMenu() {
+    profileMenu.style.display = 'block';
+    darkCover.style.display = 'block';
+}

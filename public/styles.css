@@ -503,3 +503,31 @@ label {
     display: flex;
     flex-direction: column;
 }
+
+#smallMenu {
+    background-color: var(--lightBackground);
+    height: fit-content;
+    width: 140px;
+    position: absolute;
+    right: 14px;
+    top: 80px;
+    color: var(--body);
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+    border-radius: 4px;
+    z-index: 100;
+}
+
+#smallMenu a {
+    padding: 6px;
+    background-color: var(--lightBackground);
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    text-decoration: none;
+}
+
+#smallMenu a:hover {
+    filter: brightness(90%);
+    cursor: pointer;
+}

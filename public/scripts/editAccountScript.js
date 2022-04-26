@@ -6,11 +6,13 @@ const imgBox = document.getElementById('chosenImg');
 
 let img = null;
 
-editForm.addEventListener('submit', async(event) => {
-    event.preventDefault();
-    await saveChanges(firstNameInput.value, lastNameInput.value, screenNameInput.value, img);
-    window.location.href = 'http://localhost:3000/account/edit';
-});
+if (editForm) {
+    editForm.addEventListener('submit', async(event) => {
+        event.preventDefault();
+        await saveChanges(firstNameInput.value, lastNameInput.value, screenNameInput.value, img);
+        window.location.href = 'http://localhost:3000/account/edit';
+    });
+}
 
 
 /* Turns edit mode on so that users can change their profile */
