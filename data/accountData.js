@@ -106,7 +106,46 @@ async function createUser(firstName, lastName, email, username, password) {
         if (!inserted.acknowledged || !inserted.insertedId) {
             throw `Failed to create account with username ${username}`;
         }
-        return { userInserted: true };
+        return { userInserted: true, data: newUser };
+    } catch (e) {
+        throw e;
+    }
+}
+
+/*
+ * Attempts to edit a user in the database.
+ */
+async function editUser(firstName, lastName, email, oldUsername, newUsername, imgLink) {
+    try {
+        /* check that the parameters are valid */
+        checkAdvancedString(firstName, 'First Name', 1);
+        checkAdvancedString(lastName, 'Last Name', 1);
+        checkAdvancedString(email, 'Email', 6, false, false, true);
+        checkAdvancedString(newUsername, 'Screen Name', 6);
+
+        /* get the user database info */
+        const userCollection = await usersDb();
+
+        /* check if there is already a user with username in the database if the username has been changed */
+        if (oldUsername.trim() != newUsername.trim()) {
+            let hasUsername = await userCollection.findOne({ screen_name: newUsername.toLowerCase() });
+            if (hasUsername != undefined && hasUsername != null) throw `Screen name ${newUsername} has already been claimed. Please choose a different screen name.`;
+        }
+
+        /* update the  user in the database */
+        const updatedUser = {
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            profile_pic: imgLink,
+            email: email,
+            screen_name: newUsername.toLowerCase(),
+        }
+
+        const updated = await userCollection.updateOne({ email: email }, { $set: updatedUser });
+        if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
+            throw `Failed to update account.`;
+        }
+        return { userUpdated: true, data: updatedUser };
     } catch (e) {
         throw e;
     }
@@ -150,5 +189,6 @@ async function checkUser(username, password) {
 module.exports = {
     createUser,
     checkUser,
-    checkString
+    checkString,
+    editUser
 }

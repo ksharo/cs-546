@@ -65,9 +65,9 @@
                 loggedOutBox.hide();
                 homeLink.hide();
                 loggedInBox.show();
-                if (responseMessage.user.pic != '') {
-                    loginIcon.href = responseMessage.user.pic;
-                    loginIcon.alt = responseMessage.user.username;
+                if (responseMessage.user.img.trim() != '') {
+                    loginIcon.attr("src", responseMessage.user.img);
+                    loginIcon.attr("alt", responseMessage.user.username + "'s Profile Picture");
                     loginIcon.show();
                 } else {
                     loggedInitials.text(responseMessage.user.initials);

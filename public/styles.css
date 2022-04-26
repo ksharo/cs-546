@@ -57,7 +57,6 @@ body {
 
 .headerItem {
     width: 200px;
-    height: 100px;
     align-self: center;
     text-decoration: none;
     color: var(--lightBackground);
@@ -139,10 +138,14 @@ body {
     border-radius: 100%;
     outline: 2px solid var(--veryDark);
     outline-offset: 4px;
-    padding: 13px 0px;
     box-sizing: border-box;
     position: absolute;
     right: 12px;
+}
+
+.profileInitials {
+    padding: 13px 0px;
+    top: -20px;
 }
 
 .profileIcon:hover {
@@ -156,6 +159,7 @@ body {
 
 .iconHolder {
     position: relative;
+    height: 50px;
 }
 
 .subheader,
@@ -199,7 +203,7 @@ button:active {
 }
 
 label {
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 .littleLink {
@@ -393,6 +397,109 @@ label {
     margin: 4px auto 12px auto;
 }
 
-#newAccountForm label {
-    color: var(--secondary);
+#loginForm label {
+    color: var(--primary);
+}
+
+#fileChooser:hover {
+    filter: brightness(80%);
+    cursor: pointer;
+}
+
+#fileChoose:active {
+    filter: brightness(70%);
+}
+
+.horizontalFlex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.editSection {
+    max-width: 500px;
+    margin: auto;
+}
+
+.editSection button {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.editSection p {
+    font-weight: bold;
+}
+
+.verticalFlex {
+    display: flex;
+    flex-direction: column;
+}
+
+.editable input {
+    width: 300px;
+    margin-bottom: 12px;
+    margin-top: 4px;
+}
+
+#imgSelector {
+    height: 312px;
+    width: 330px;
+    box-sizing: border-box;
+    padding: 2px;
+    overflow-y: scroll;
+    background-color: var(--lightBackground);
+    outline-offset: 4px;
+    outline: 2px solid var(--lightBackground);
+    position: relative;
+    top: 12px;
+}
+
+#imgSelector button,
+#imgSelector img {
+    background-color: transparent;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 0px;
+    padding: 0px;
+}
+
+#imgSelector img {
+    margin: 0px;
+}
+
+#imgSelector button {
+    margin: 2px;
+}
+
+#imgSelector img:hover {
+    cursor: pointer;
+    filter: brightness(90%);
+}
+
+#imgSelector img:active {
+    filter: brightness(85%);
+}
+
+#imgSelector button:focus {
+    filter: brightness(50%);
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+    border: none;
+}
+
+.picPreview {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    outline: 2px solid var(--secondary);
+    outline-offset: 4px;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+.chosenPicSection {
+    display: flex;
+    flex-direction: column;
 }
