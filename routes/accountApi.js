@@ -94,7 +94,7 @@ router
                     img: auth.data.profile_pic,
                     initials: auth.data.first_name[0] + auth.data.last_name[0]
                 };
-                return res.status(200).redirect('/showSearch');
+                return res.status(200).redirect('/shows/search');
             } else {
                 /* if it doesn't, show an error */
                 return res.status(500).json({ error: true, errorStatus: 500, errorMessage: 'There was a problem creating your account. Please try again later.' });

@@ -1,5 +1,8 @@
 const accountData = require('./accountData');
+const showData = require('./showData');
+
 
 module.exports = {
-    accountData: accountData
+    accountData: accountData,
+    showData: showData
 };

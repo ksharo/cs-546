@@ -24,6 +24,7 @@
     },
     "homepage": "https://github.com/ksharo/cs-546#readme",
     "dependencies": {
+        "axios": "^0.27.2",
         "bcryptjs": "^2.4.3",
         "express": "^4.17.3",
         "express-handlebars": "^6.0.5",

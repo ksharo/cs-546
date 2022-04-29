@@ -1,0 +1,15 @@
+<section class="searchResults cardLayoutImgRight">
+    {{#if shows.length}}
+        <ul>
+            {{#each shows}}
+            <li>
+                <a class="searchLink" onclick="addShow(`{{show.id}}`)">{{show.name}}</a>
+                <img class="searchImg" alt="Image for show" src={{show.image}} />
+            </li>
+            {{/each}}
+        </ul>
+
+    {{else}}
+        <p class="noResults">We're sorry, but no results were found for {{info.searchTerm}}.</p>
+    {{/if}}
+</section>

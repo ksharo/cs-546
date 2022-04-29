@@ -588,3 +588,122 @@ label {
     margin: 0;
     padding: 0;
 }
+
+.showName {
+    grid-row: header;
+    grid-column-start: details;
+    grid-column-end: 3;
+}
+
+.showImg {
+    grid-row: body;
+    grid-column: image;
+    max-width: 300px;
+    box-shadow: 2px 2px 10px rgba(211, 211, 211, 0.404);
+    justify-self: center;
+}
+
+.showDetails {
+    grid-row: body;
+    grid-column: details;
+    font-family: lato, ubuntu, sans-serif;
+}
+
+.showDetails dt {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.showDetails dd {
+    margin-bottom: 12px;
+}
+
+.showDetails dd ul {
+    margin-bottom: 12px;
+    display: inline;
+}
+
+.cardLayout {
+    margin: 40px auto;
+    border: 1px solid var(--secondary);
+    border-radius: 24px;
+    box-sizing: border-box;
+    padding: 12px;
+    display: grid;
+    grid-template-rows: [header] auto [subheader] auto [body] auto;
+    grid-template-columns: [details] 60% [image] 40%;
+    max-width: 800px;
+    height: fit-content;
+}
+
+.cardLayoutImgRight {
+    margin: 40px auto;
+    border: 1px solid var(--secondary);
+    border-radius: 24px;
+    box-sizing: border-box;
+    padding: 12px;
+    display: grid;
+    grid-template-rows: [header] auto [body] auto;
+    grid-template-columns: [image] 40% [details] 60%;
+    max-width: 800px;
+    height: fit-content;
+}
+
+.showSubheader {
+    grid-row: subheader;
+    grid-column-start: details;
+    grid-column-end: 3;
+    text-align: center;
+    font-size: 18px;
+    margin: 0px auto 12px auto;
+}
+
+.searchResults {
+    width: 550px;
+    margin: auto;
+    font-family: lato, ubuntu, sans-serif;
+    margin: 40px auto 20px auto;
+    position: relative;
+    min-height: 200px;
+}
+
+.searchLink {
+    line-height: 30px;
+    color: var(--secondary);
+    width: 400px;
+    grid-column-start: auto span 2;
+}
+
+.searchLink:visited {
+    color: var(--primary);
+}
+
+.searchLink:hover {
+    cursor: pointer;
+}
+
+.searchLink:hover+.searchImg {
+    opacity: 100%;
+    cursor: pointer;
+}
+
+.searchResults ul,
+.searchResults p {
+    grid-column-start: image;
+    grid-column-end: 3;
+    grid-row-start: header;
+    grid-row-end: 3;
+}
+
+.searchImg {
+    max-width: 120px;
+    opacity: 0%;
+    position: absolute;
+    right: 60px;
+    top: 20px;
+}
+
+.noResults {
+    text-align: center;
+    font-size: 16px;
+}

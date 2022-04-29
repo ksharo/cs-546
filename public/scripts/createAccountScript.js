@@ -29,7 +29,7 @@ newAccountForm.addEventListener('submit', async(event) => {
         let result = await createAccount(firstName, lastName, email, screenName, password, confirm);
         if (result.ok) {
             /* refresh page to go to search page */
-            window.location.href = 'http://localhost:3000/showSearch';
+            window.location.href = 'http://localhost:3000/shows/search';
             return;
         } else {
             const json = await result.json();

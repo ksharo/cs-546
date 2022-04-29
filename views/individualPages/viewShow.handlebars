@@ -1,0 +1,31 @@
+<article class="cardLayout">
+    <h2 class="subheader showName">{{ showData.name }}</h2>
+    <h3 class="showSubheader">Likes: {{showData.likes}} | Dislikes: {{showData.dislikes}} | Watches: {{showData.watches}}</h3>
+    <img src={{ showData.image }} class="showImg" alt='Image of Show'/>
+    <dl class="showDetails">
+        <dt>Number of Episodes</dt>
+        <dd>{{ showData.num_episodes }}</dd>
+        <dt>Episode Length</dt>
+        <dd>{{ showData.runtime }} minutes</dd>
+        <dt>Years Running</dt>
+        <dd>{{ showData.start_year}} - {{showData.end_year}}</dd>
+        <dt>Language</dt>
+        <dd>{{ showData.language }}</dd>
+        <dt>Genres</dt>
+        {{#if showData.genres.length}}
+            <dd>
+                <ul>
+                    {{#each showData.genres}}
+                        <li>{{ this }}</li>
+                    {{/each}}
+                </ul>
+            </dd>
+        {{else}}
+            <dd>
+                N/A 
+            </dd>
+        {{/if}}
+        <dt>Summary</dt>
+        <dd>{{{ showData.summary }}}</dd>
+    </dl>
+</article>
