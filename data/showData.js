@@ -68,7 +68,7 @@ async function add(showId) {
         if (!inserted.acknowledged || !inserted.insertedId) {
             throw `Error: Failed to add show with tv maze id ${showId}`;
         }
-        return { showInserted: true, showData: newShow };
+        return { showInserted: true, showData: { _id: inserted.insertedId, newShow } };
     } catch (e) {
         throw e;
     }

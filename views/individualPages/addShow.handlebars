@@ -1,10 +1,19 @@
+<section id="modalBackdrop" hidden class="modalBackground">
+    <section id="modal" class="popupModal">
+        <h3>Add show to database?</h3>
+        <section class="horizontalFlex">
+            <button id="dontAdd">No</button>
+            <button id="addShow">Yes</button>
+        </section>
+    </section>
+</section>
 <section class="searchResults cardLayoutImgRight">
     {{#if shows.length}}
         <ul>
             {{#each shows}}
             <li>
-                <a class="searchLink" onclick="addShow(`{{show.id}}`)">{{show.name}}</a>
-                <img class="searchImg" alt="Image for show" src={{show.image}} />
+                <a class="searchLink" onclick="openModal(`{{show.id}}`)">{{show.name}}</a>
+                <img class="searchImg" alt="Image for {{show.name}}" src={{show.image}} />
             </li>
             {{/each}}
         </ul>

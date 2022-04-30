@@ -38,8 +38,14 @@ router
             // this route should be used to add a tvmaze api show to our database
             const showId = req.params.showId;
             if (showId && showId.trim() != '') {
-                const shows = await data.showData.add(showId);
-                return res.status(200).render('individualPages/addShow', { user: req.session.user, shows: shows, partial: 'addShowScript' });
+                const show = await data.showData.add(showId);
+                if (show.showInserted) {
+                    return res.status(200).json({ user: req.session.user, show: show.showData, partial: 'addShowScript' });
+                } else {
+                    // TODO show error on page
+                }
+            } else {
+                // TODO show error on page
             }
         } catch (e) {
             // TODO show error on page
