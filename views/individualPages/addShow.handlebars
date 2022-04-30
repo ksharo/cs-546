@@ -1,3 +1,4 @@
+<h2 class="subheader">Add A Show</h2>
 <section id="modalBackdrop" hidden class="modalBackground">
     <section id="modal" class="popupModal">
         <h3>Add show to database?</h3>
@@ -7,18 +8,52 @@
         </section>
     </section>
 </section>
+<section id="manualBackdrop" hidden class="topModalSection">
+    <section id="manualAdd" class="popupModal bigModal">
+        <h3>Add A New Show!</h3>
+        <form name="newShowForm" class='accountForm' action="/shows/addManual" method="post" id="newShowForm">
+            {{#if error}}
+                <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
+            {{/if}}
+            <p class="errorMessage" id="hiddenAddShowError" hidden></p>
+            <label for="showName">Show Title:</label>
+            <input type="text" id="showName" name="showName">
+            <label for="imgLink">Link to Show Image:</label>
+            <input type="text" id="imgLink" name="imgLink">
+            <label for="startYear">Start Year:</label>
+            <input type="text" id="startYear" name="startYear">
+            <label for="endYear">End Year (leave blank if show is still active):</label>
+            <input type="text" id="endYear" name="endYear">
+            <label for="language">Main Language:</label>
+            <input type="text" id="language" name="language" />
+             <label for="numEpisodes">Number of Episodes:</label>
+            <input type="number" id="numEpisodes" name="numEpisodes" />
+            <label for="runtime">Episode Runtime (in minutes):</label>
+            <input type="number" id="runtime" name="runtime" />
+            <label for="genres">Enter genres, separated by a comma:</label>
+            <input type="text" id="genres" name="genres" />
+            <label for="summary">Summary:</label>
+            <textarea id="summary" name="summary"></textarea>
+            <button type="submit" id="createAccountBtn">Add!</button>
+        </form>
+    </section>
+</section>
 <section class="searchResults cardLayoutImgRight">
     {{#if shows.length}}
-        <ul>
-            {{#each shows}}
-            <li>
-                <a class="searchLink" onclick="openModal(`{{show.id}}`)">{{show.name}}</a>
-                <img class="searchImg" alt="Image for {{show.name}}" src={{show.image}} />
-            </li>
-            {{/each}}
-        </ul>
+    <ul>
+        {{#each shows}}
+        <li>
+            <a class="searchLink" onclick="openModal(`{{show.id}}`)">{{show.name}}</a>
+            <aside class="searchImg">
+                <img alt="Image for {{show.name}}" src={{show.image}} />
+                <p>{{show.start_year}} - {{show.end_year}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
 
     {{else}}
-        <p class="noResults">We're sorry, but no results were found for {{info.searchTerm}}.</p>
+    <p class="noResults">We're sorry, but no results were found for {{info.searchTerm}}.</p>
     {{/if}}
 </section>
+<a class="littleLink" onclick="openManualAdd()">Don't see your favorite show here? Click here to add one manually!</a>

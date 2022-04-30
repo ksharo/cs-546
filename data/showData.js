@@ -57,7 +57,7 @@ async function add(showId) {
             watches: 0,
             image: data.image == null ? '/public/assets/no_image.jpeg' : (data.image.medium ? data.image.medium : '/public/assets/no_image.jpeg'),
             start_year: data.premiered ? (data.premiered.split('-').length > 0 ? data.premiered.split('-')[0] : 'N/A') : 'N/A',
-            end_year: data.premiered ? (data.premiered.split('-').length > 0 ? data.premiered.split('-')[0] : 'Present') : 'Present',
+            end_year: data.ended ? (data.ended.split('-').length > 0 ? data.ended.split('-')[0] : 'Present') : 'Present',
             num_episodes: 0,
             language: dataValidation(data.language),
             runtime: dataValidation(data.runtime),
@@ -67,6 +67,39 @@ async function add(showId) {
         const inserted = await showCollection.insertOne(newShow);
         if (!inserted.acknowledged || !inserted.insertedId) {
             throw `Error: Failed to add show with tv maze id ${showId}`;
+        }
+        return { showInserted: true, showData: { _id: inserted.insertedId, newShow } };
+    } catch (e) {
+        throw e;
+    }
+}
+
+/*
+ * This function adds the tv show with the parameterized
+ * manually-inputted information to our database
+ */
+async function addManual(name, image, start, end, numEpisodes, language, runtime, summary, genres) {
+    try {
+        const showCollection = await showDb();
+        // TODO: check that all data exists
+        const newShow = {
+            maze_id: -1,
+            name: dataValidation(name),
+            likes: 0,
+            dislikes: 0,
+            watches: 0,
+            image: image == null || image == undefined ? '/public/assets/no_image.jpeg' : image,
+            start_year: dataValidation(start),
+            end_year: end ? end : 'Present',
+            num_episodes: dataValidation(numEpisodes),
+            language: dataValidation(language),
+            runtime: dataValidation(runtime),
+            summary: dataValidation(summary),
+            genres: genres ? genres : []
+        }
+        const inserted = await showCollection.insertOne(newShow);
+        if (!inserted.acknowledged || !inserted.insertedId) {
+            throw `Error: Failed to add show from manual data!`;
         }
         return { showInserted: true, showData: { _id: inserted.insertedId, newShow } };
     } catch (e) {
@@ -115,5 +148,6 @@ module.exports = {
     searchDb,
     add,
     searchMaze,
-    getShow
+    getShow,
+    addManual
 }
