@@ -65,6 +65,10 @@
         }
         $.ajax(requestConfig).then(function(responseMessage) {
             if (Number(responseMessage.status) == 200) {
+                /* simply reload if page is shows/view to get like/dislike buttons */
+                if (window.location.href.includes('/shows/view')) {
+                    window.location.reload();
+                }
                 closeLogin();
                 loggedOutBox.hide();
                 homeLink.hide();

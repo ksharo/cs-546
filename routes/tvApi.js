@@ -98,4 +98,29 @@ router
         }
     });
 
+
+router
+    .route('/updateShowCounts/:showId')
+    .patch(async(req, res) => {
+        /* This route should be used for updating the likes/dislikes/watched counts of a show */
+        /* TODO: Error check! each should be +/- 1 */
+        try {
+            const id = req.params.showId;
+            const likes = req.body.likes;
+            const dislikes = req.body.dislikes;
+            const watches = req.body.watches;
+            const user = req.session.user.username;
+            const updated = await data.showData.updateCounts(id, user, likes, dislikes, watches);
+            if (updated.showUpdated && updated.userUpdated) {
+                /* success! */
+                res.status(200).json({ success: true });
+            } else {
+                /* TODO show error on page */
+            }
+        } catch (e) {
+            /* TODO show error on page */
+            res.status(500).json({ error: e });
+        }
+    });
+
 module.exports = router;
