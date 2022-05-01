@@ -155,6 +155,11 @@ router
 router
     .route('/view')
     .get(async(req, res) => {
+        try{
+            const recs = await data.showData.getRecommendations(req.session.user.username);
+        }catch (e){
+            throw e;
+        }
         return res.status(200).render('individualPages/viewAccount', { user: req.session.user, partial: 'mainScript' });
     });
 

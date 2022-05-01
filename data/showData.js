@@ -218,6 +218,69 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
     }
 }
 
+async function getRecommendations(user) {
+    try{
+        //get document for current user
+        const userCollection = await userDb();
+        const foundUser = await userCollection.findOne({screen_name: user});
+        if (!(foundUser != undefined && foundUser != null)){
+            throw "Error: User with username " + user + " was not found in the database!";
+        }else {
+            //get list of liked shows for current user
+            const liked_shows = foundUser.liked_shows;
+            const watched_shows = foundUser.watched_shows;
+            let likedGenres = {};
+            //iterate through list of liked shows' id and get document from id
+            const showCollection = await showDb();
+            for (let i = 0; i < liked_shows.length; i++){
+                const foundShow = await showCollection.findOne({ _id: ObjectId(liked_shows[i]) });
+                if (foundShow != undefined && foundShow != null){
+                    //get list of genres for current show
+                    const showGenres = foundShow.genres;
+                    //iterate through list of genres and add to frequency map
+                    for (let j = 0; j < showGenres.length; j++){
+                        const genre = showGenres[j];
+                        if(likedGenres[genre]){
+                            likedGenres[genre]++;
+                        }else{
+                            likedGenres[genre] = 1;
+                        }
+                    }
+                }
+            }
+            //find users favorite genre
+            let favoriteGenre = '';
+            let maxFreq = 0;
+            for (const x in likedGenres){
+                if (likedGenres[x] > maxFreq){
+                    favoriteGenre = x;
+                    maxFreq = likedGenres[x];
+                }
+            }
+            
+            if (favoriteGenre == ''){
+                throw "Error: Recommendations cannot be made. User profile lacks sufficient data."
+            }
+            //returns array of 5 random shows with users fav genre
+            const recommendations = await showCollection.aggregate([{$match: {genres: favoriteGenre}}, {$sample: {size: 5}}]).toArray();
+
+            if(recommendations.length == 0){
+                throw "No recommendations found.";
+            }
+
+            //removes any shows that user has watched
+            for (let i = 0; i < recommendations.length; i++){
+                if(watched_shows.includes(recommendations[i]._id.toString())){
+                    recommendations.splice(i,1);
+                }
+            }
+            return recommendations;
+        }
+    } catch (e) {
+        throw e;
+    }
+}
+
 
 module.exports = {
     searchDb,
@@ -225,5 +288,6 @@ module.exports = {
     searchMaze,
     getShow,
     addManual,
-    updateCounts
+    updateCounts,
+    getRecommendations
 }
