@@ -1,0 +1,61 @@
+{{#if shows.length}}
+    <section class="searchResults cardLayoutImgRight">
+    <ul>
+        {{#each shows}}
+        <li>
+            <a class="searchLink" onclick = "location.href = 'http://localhost:3000/shows/view/{{this._id}}'">{{this.name}}</a>
+            <aside class="searchImg">
+                <img alt="Image for {{this.name}}" src={{this.image}} />
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+
+    {{else}}
+   
+    <section id="modal" class="popupModal">
+        <h3>No shows matching that search term were found. Would you like to add a show to the database?</h3>
+        <section class="horizontalFlex">
+            <button id="dontAdd">No</button>
+            <button id="addShow" onclick="location.href='http://localhost:3000/shows/add/{{searchTerm}}'">Yes</button>
+        </section>
+    </section>
+</section>
+    {{/if}}
+</section>
+<section id="manualBackdrop" hidden class="topModalSection">
+    <section id="manualAdd" class="popupModal bigModal">
+        <h3>Add A New Show!</h3>
+        <form name="newShowForm" class='accountForm' action="/shows/addManual" method="post" id="newShowForm">
+            {{#if error}}
+                <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
+            {{/if}}
+            <p class="errorMessage" id="hiddenAddShowError" hidden></p>
+            <label for="showName">Show Title:</label>
+            <input type="text" id="showName" name="showName">
+            <label for="imgLink">Link to Show Image:</label>
+            <input type="text" id="imgLink" name="imgLink">
+            <label for="startYear">Start Year:</label>
+            <input type="text" id="startYear" name="startYear">
+            <label for="endYear">End Year (leave blank if show is still active):</label>
+            <input type="text" id="endYear" name="endYear">
+            <label for="language">Main Language:</label>
+            <input type="text" id="language" name="language" />
+             <label for="numEpisodes">Number of Episodes:</label>
+            <input type="number" id="numEpisodes" name="numEpisodes" />
+            <label for="runtime">Episode Runtime (in minutes):</label>
+            <input type="number" id="runtime" name="runtime" />
+            <label for="genres">Enter genres, separated by a comma:</label>
+            <input type="text" id="genres" name="genres" />
+            <label for="summary">Summary:</label>
+            <textarea id="summary" name="summary"></textarea>
+            <button type="submit" id="createAccountBtn">Add!</button>
+        </form>
+    </section>
+</section>
+<a class="littleLink" onclick="openManualAdd()">Don't see your favorite show here? Click here to add one manually!</a>
