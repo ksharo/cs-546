@@ -603,8 +603,11 @@ label {
     grid-row: body;
     grid-column: image;
     max-width: 300px;
-    box-shadow: 2px 2px 10px rgba(211, 211, 211, 0.404);
     justify-self: center;
+}
+
+.showImg img {
+    box-shadow: 2px 2px 10px rgba(60, 60, 60, 0.188);
 }
 
 .showDetails {
@@ -757,4 +760,19 @@ label {
 
 .popupModal h3 {
     font-size: 22px;
+}
+
+.svgImg {
+    position: relative;
+    top: 4px;
+    padding: 0px 6px;
+}
+
+.svgImg:hover {
+    cursor: pointer;
+    filter: brightness(80%);
+}
+
+.svgImg:active {
+    filter: brightness(65%);
 }

@@ -1,5 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const showDb = mongoCollections.shows;
+const userDb = mongoCollections.users;
 const axios = require('axios');
 const { ObjectId } = require('mongodb');
 
@@ -166,11 +167,150 @@ async function getShow(showId) {
     }
 }
 
+/*
+ * This function is called when a user likes/dislikes or says they've watched a show.
+ * It updates that show's counts accordingly and adds/removes that show from the list of user's
+ * likes/dislikes/watched shows
+ */
+async function updateCounts(showId, username, likes, dislikes, watches) {
+    try {
+        /* TODO: error check */
+        /* get the show database info */
+        const showCollection = await showDb();
+        const thisShow = await this.getShow(showId);
+        /* update the show in the database */
+        const updatedShow = {
+            likes: Number(thisShow.likes) + Number(likes),
+            dislikes: Number(thisShow.dislikes) + Number(dislikes),
+            watches: Number(thisShow.watches) + Number(watches)
+        }
+
+        const updated = await showCollection.updateOne({ _id: ObjectId(showId) }, { $set: updatedShow });
+        if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
+            throw `Failed to update show data.`;
+        }
+        /* get the user database info */
+        const userCollection = await userDb();
+        /* get the user */
+        const user = await userCollection.findOne({ screen_name: username.toLowerCase() });
+        if (user != null && user != undefined) {
+            const newLikes = user.liked_shows;
+            const newDislikes = user.disliked_shows;
+            const newWatches = user.watched_shows;
+            /* update the user in the database */
+            if (user.liked_shows.includes(showId) && Number(likes) == -1) {
+                /* remove the show from the user's likes */
+                newLikes.remove(showId);
+            }
+            if (user.disliked_shows.includes(showId) && Number(dislikes) == -1) {
+                /* remove the show from the user's dislikes */
+                newDislikes.remove(showId);
+            }
+            if (user.watched_shows.includes(showId) && Number(watches) == -1) {
+                /* remove the show from the user's watched-list */
+                newWatches.remove(showId);
+            }
+            if (!user.liked_shows.includes(showId) && Number(likes) == 1) {
+                /* add the show to the user's likes */
+                newLikes.push(showId);
+            }
+            if (!user.disliked_shows.includes(showId) && Number(dislikes) == 1) {
+                /* add the show to the user's dislikes */
+                newDislikes.push(showId);
+            }
+            if (!user.watched_shows.includes(showId) && Number(watches) == 1) {
+                /* add the show to the user's watched-list */
+                newWatches.push(showId);
+            }
+            /* update the show in the database */
+            const updatedUser = {
+                liked_shows: newLikes,
+                disliked_shows: newDislikes,
+                watched_shows: newWatches
+            }
+            const updatedU = await userCollection.updateOne({ screen_name: username.toLowerCase() }, { $set: updatedUser });
+            if (updatedU.matchedCount == 0 || updatedU.modifiedCount == 0) {
+                throw `Failed to update user data.`;
+            }
+        } else {
+            throw `Failed to find user with username ${username} in database!`
+        }
+        return { showUpdated: true, userUpdated: true };
+    } catch (e) {
+        throw e;
+    }
+}
+
+async function getRecommendations(user) {
+    try{
+        //get document for current user
+        const userCollection = await userDb();
+        const foundUser = await userCollection.findOne({screen_name: user});
+        if (!(foundUser != undefined && foundUser != null)){
+            throw "Error: User with username " + user + " was not found in the database!";
+        }else {
+            //get list of liked shows for current user
+            const liked_shows = foundUser.liked_shows;
+            const watched_shows = foundUser.watched_shows;
+            let likedGenres = {};
+            //iterate through list of liked shows' id and get document from id
+            const showCollection = await showDb();
+            for (let i = 0; i < liked_shows.length; i++){
+                const foundShow = await showCollection.findOne({ _id: ObjectId(liked_shows[i]) });
+                if (foundShow != undefined && foundShow != null){
+                    //get list of genres for current show
+                    const showGenres = foundShow.genres;
+                    //iterate through list of genres and add to frequency map
+                    for (let j = 0; j < showGenres.length; j++){
+                        const genre = showGenres[j];
+                        if(likedGenres[genre]){
+                            likedGenres[genre]++;
+                        }else{
+                            likedGenres[genre] = 1;
+                        }
+                    }
+                }
+            }
+            //find users favorite genre
+            let favoriteGenre = '';
+            let maxFreq = 0;
+            for (const x in likedGenres){
+                if (likedGenres[x] > maxFreq){
+                    favoriteGenre = x;
+                    maxFreq = likedGenres[x];
+                }
+            }
+            
+            if (favoriteGenre == ''){
+                throw "Error: Recommendations cannot be made. User profile lacks sufficient data."
+            }
+            //returns array of 5 random shows with users fav genre
+            const recommendations = await showCollection.aggregate([{$match: {genres: favoriteGenre}}, {$sample: {size: 5}}]).toArray();
+
+            if(recommendations.length == 0){
+                throw "No recommendations found.";
+            }
+
+            //removes any shows that user has watched
+            for (let i = 0; i < recommendations.length; i++){
+                if(watched_shows.includes(recommendations[i]._id.toString())){
+                    recommendations.splice(i,1);
+                }
+            }
+            return recommendations;
+        }
+    } catch (e) {
+        throw e;
+    }
+}
+
 
 module.exports = {
     searchDb,
     add,
     searchMaze,
     getShow,
-    addManual
+    addManual,
+    updateCounts,
+    getRecommendations
 }
