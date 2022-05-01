@@ -1,4 +1,4 @@
-const dbConnection = require("../config/mongoConfig/mongoConnection");
+const dbConnection = require("../config/mongoConnection");
 
 
 async function main() {

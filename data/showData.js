@@ -9,7 +9,30 @@ const { ObjectId } = require('mongodb');
  * the results of that search, or an empty array if nothing was found
  */
 async function searchDb(searchTerm) {
-    return [];
+    if(searchTerm.trim().length === 0) throw 'Please enter a search term'
+    const validShows = []; 
+    const showCollection = await showDb();
+    let matchingnames = await showCollection.find({name : {$regex : searchTerm, $options: '-i'}}).toArray();
+    for (x of matchingnames){
+        validShows.push(x)
+    }
+    let matchinggenres = await showCollection.find({genres : {$regex : searchTerm, $options: '-i'}}).toArray();
+    for (x of matchinggenres){
+        validShows.push(x)
+    }
+    let matchingsummary = await showCollection.find({summary : {$regex : searchTerm, $options: '-i'}}).toArray();
+    for (x of matchingsummary){
+        validShows.push(x)
+    }
+    /* Deleting possible collected duplicates */
+    var elements = validShows.reduce(function(previous, current) {
+        var object = previous.filter(object => object.name === current.name);
+        if (object.length == 0) {
+          previous.push(current);
+        }
+        return previous;
+      }, []);
+    return elements;
 }
 
 /*

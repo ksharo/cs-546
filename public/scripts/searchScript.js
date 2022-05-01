@@ -1,3 +1,1 @@
-function hi() {
-    console.log('hi')
-}
+/* Don't think I need this because I just used addShowScript.js */

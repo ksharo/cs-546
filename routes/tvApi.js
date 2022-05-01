@@ -5,9 +5,26 @@ const data = require('../data');
 router
     .route('/search')
     .get(async(req, res) => {
-        // TODO make this route
-        return res.status(200).render('individualPages/mainSearch', { user: req.session.user, partial: 'searchScript' });
+         return res.status(200).render('individualPages/mainSearch', { user: req.session.user, partial: 'searchScript' });
     });
+
+router
+    .route('/search')
+    .post(async(req, res) => {
+        // TODO make this route
+       try{
+            const searchTerm = req.body.searchTerm;
+            if (searchTerm && searchTerm.trim() != '') {
+                const shows = await data.showData.searchDb(searchTerm);
+                return res.status(200).render('individualPages/searchShow', { user: req.session.user, searchTerm: searchTerm, shows: shows, partial: 'searchScript' });
+            }
+            else{
+                return res.status(400).json({ error: 'please enter a search term' })
+            }
+       } catch (e) {
+           return res.status(500).json({ error: e })
+       }
+     });
 
 router
     .route('/add/:searchTerm')
