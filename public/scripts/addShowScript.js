@@ -31,7 +31,18 @@ newShowForm.addEventListener('submit', async(event) => {
         const runtime = runtimeInput.value.trim();
         const genres = genresInput.value.trim();
         const summary = summaryInput.value.trim();
+        /* Error check all inputs */
+
         // TODO: error check inputs
+        // name should be at least one character
+        // image is not required
+        // start must be between 1900 and 2023
+        // end is not required, but if given must be between 1900 and 2023
+        // language must be a string, but is not required
+        // number of episodes is not required but should be a number
+        // runtime is not required but should be a number
+        // genres should be turned into an array separated by commas
+        // summary is required and should be a string at least 20 characters long, fewer than 500 characters
         const result = await addManualShow(name, img, start, end, lang, numEp, runtime, summary, genres);
         if (result.ok) {
             const show = await result.json();

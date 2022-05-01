@@ -145,7 +145,13 @@ async function editUser(firstName, lastName, email, oldUsername, newUsername, im
         if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
             throw `Failed to update account.`;
         }
-        return { userUpdated: true, data: updatedUser };
+
+        /* get the user to return the data */
+        const result = await userCollection.findOne({ email: email });
+        if (result == null || result == undefined) {
+            throw `Failed to fetch user after update.`;
+        }
+        return { userUpdated: true, data: result };
     } catch (e) {
         throw e;
     }

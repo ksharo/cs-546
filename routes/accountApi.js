@@ -92,7 +92,10 @@ router
                     email: auth.data.email,
                     username: auth.data.screen_name,
                     img: auth.data.profile_pic,
-                    initials: auth.data.first_name[0] + auth.data.last_name[0]
+                    initials: auth.data.first_name[0] + auth.data.last_name[0],
+                    likes: auth.data.liked_shows,
+                    dislikes: auth.data.disliked_shows,
+                    watches: auth.data.watched_shows
                 };
                 return res.status(200).redirect('/shows/search');
             } else {
@@ -139,7 +142,10 @@ router
                     email: req.session.user.email,
                     username: auth.data.screen_name,
                     img: auth.data.profile_pic,
-                    initials: auth.data.first_name[0] + auth.data.last_name[0]
+                    initials: auth.data.first_name[0] + auth.data.last_name[0],
+                    likes: auth.data.liked_shows,
+                    dislikes: auth.data.disliked_shows,
+                    watches: auth.data.watched_shows
                 };
                 return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
             } else {
@@ -155,9 +161,9 @@ router
 router
     .route('/view')
     .get(async(req, res) => {
-        try{
+        try {
             const recs = await data.showData.getRecommendations(req.session.user.username);
-        }catch (e){
+        } catch (e) {
             throw e;
         }
         return res.status(200).render('individualPages/viewAccount', { user: req.session.user, partial: 'mainScript' });
@@ -181,7 +187,10 @@ router
                     email: auth.data.email,
                     username: auth.data.screen_name,
                     img: auth.data.profile_pic,
-                    initials: auth.data.first_name[0] + auth.data.last_name[0]
+                    initials: auth.data.first_name[0] + auth.data.last_name[0],
+                    likes: auth.data.liked_shows,
+                    dislikes: auth.data.disliked_shows,
+                    watches: auth.data.watched_shows
                 };
                 return res.status(200).json({ status: 200, user: req.session.user });
             } else {

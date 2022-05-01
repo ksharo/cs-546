@@ -8,7 +8,6 @@ const watchesTxt = document.getElementById('watchesTxt');
 
 for (let x of svgs) {
     x.addEventListener('click', async(event) => {
-        /* TODO: add/remove show to/from user's liked/disliked/watched and add/subdract 1 from show's likes/dislikes/watched count! */
         const originalSrc = event.target.src.split('_');
         let changedLike = 0;
         let changedDislike = 0;
@@ -59,8 +58,6 @@ for (let x of svgs) {
             watchesTxt.textContent = Number(watchesTxt.textContent) - 1;
             changedWatches -= 1;
         }
-
-        /* TODO send data to database */
         await updateShowCounts(changedLike, changedDislike, changedWatches);
     })
 }

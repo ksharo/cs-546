@@ -37,7 +37,6 @@ newAccountForm.addEventListener('submit', async(event) => {
             errorMessage.style.display = 'block';
         }
     } catch (e) {
-        console.log(e);
         errorMessage.textContent = e;
         errorMessage.style.display = 'block';
     }

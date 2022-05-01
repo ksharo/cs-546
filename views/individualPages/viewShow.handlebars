@@ -2,10 +2,10 @@
     <h2 class="subheader showName">{{ showData.name }}</h2>
     {{#if user}}
     <h3 class="showSubheader">
-        <img src="/public/assets/tup_outline.svg" id='tup' class="svgImg" alt="Thumbs Up" />
+        <img src={{likeIcon}} id='tup' class="svgImg" alt="Thumbs Up" />
         Likes: <span id='likesTxt'>{{showData.likes}}</span> |
-        <img src="/public/assets/tdown_outline.svg" id='tdown' class="svgImg" alt="Thumbs Down" />Dislikes: <span id='dislikesTxt'>{{showData.dislikes}}</span> |
-        <img src="/public/assets/check_outline.svg" id='watched' class="svgImg" alt="Watched check mark" />Watches:
+        <img src={{dislikeIcon}} id='tdown' class="svgImg" alt="Thumbs Down" />Dislikes: <span id='dislikesTxt'>{{showData.dislikes}}</span> |
+        <img src={{watchedIcon}} id='watched' class="svgImg" alt="Watched check mark" />Watches:
         <span id='watchesTxt'>{{showData.watches}}</span>
     </h3>
     {{else}}

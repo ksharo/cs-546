@@ -41,15 +41,17 @@ async function searchMaze(searchTerm) {
  */
 async function add(showId) {
     try {
-        // get the show with the given id
+        /* get the show with the given id */
         const { data } = await axios.get('http://api.tvmaze.com/shows/' + showId);
-        // add the show to the database
-        // make sure maze id doesn't already exist in database
+        /* add the show to the database if maze id doesn't already exist in database */
         const showCollection = await showDb();
         const hasMazeId = await showCollection.findOne({ maze_id: showId });
         if (hasMazeId != undefined && hasMazeId != null) throw `Error: Show with maze id ${showId} already exists in the database!`;
-        // TODO: check that all data exists
-        // TODO: get number of episodes from somewhere or delete
+        /* get number of episodes */
+        const episodes = await axios.get('http://api.tvmaze.com/shows/' + showId + '/episodes');
+        if (!episodes) throw `Error: could not get list of episodes for show with id ${showId}.`;
+        const start = data.premiered ? (data.premiered.split('-').length > 0 ? data.premiered.split('-')[0] : '?') : '?';
+        const end = data.ended ? (data.ended.split('-').length > 0 ? data.ended.split('-')[0] : start == '?' ? '?' : 'Present') : start == '?' ? '?' : 'Present';
         const newShow = {
             maze_id: data.id,
             name: dataValidation(data.name),
@@ -57,9 +59,9 @@ async function add(showId) {
             dislikes: 0,
             watches: 0,
             image: data.image == null ? '/public/assets/no_image.jpeg' : (data.image.medium ? data.image.medium : '/public/assets/no_image.jpeg'),
-            start_year: data.premiered ? (data.premiered.split('-').length > 0 ? data.premiered.split('-')[0] : 'N/A') : 'N/A',
-            end_year: data.ended ? (data.ended.split('-').length > 0 ? data.ended.split('-')[0] : 'Present') : 'Present',
-            num_episodes: 0,
+            start_year: start ? start : '?',
+            end_year: end ? end : start ? 'Present' : '?',
+            num_episodes: dataValidation(episodes.data.length),
             language: dataValidation(data.language),
             runtime: dataValidation(data.runtime),
             summary: dataValidation(data.summary),
@@ -82,7 +84,6 @@ async function add(showId) {
 async function addManual(name, image, start, end, numEpisodes, language, runtime, summary, genres) {
     try {
         const showCollection = await showDb();
-        // TODO: check that all data exists
         const newShow = {
             maze_id: -1,
             name: dataValidation(name),
@@ -90,8 +91,8 @@ async function addManual(name, image, start, end, numEpisodes, language, runtime
             dislikes: 0,
             watches: 0,
             image: image == null || image == undefined ? '/public/assets/no_image.jpeg' : image,
-            start_year: dataValidation(start),
-            end_year: end ? end : 'Present',
+            start_year: start ? start : '?',
+            end_year: end ? end : start ? 'Present' : '?',
             num_episodes: dataValidation(numEpisodes),
             language: dataValidation(language),
             runtime: dataValidation(runtime),
@@ -151,7 +152,15 @@ async function getShow(showId) {
  */
 async function updateCounts(showId, username, likes, dislikes, watches) {
     try {
-        /* TODO: error check */
+        /* Error check all variables */
+        /* make sure show id is a valid objectID */
+        if (!(showId && showId.trim() != '' && ObjectId.isValid(showId))) throw `Error: showId must be a valid ObjectId.`;
+        /* make sure username is a valid string */
+        if (username == undefined || username == null || username.trim() == '') throw `Error: Username must be a nonempty string.`;
+        /* make sure likes, dislikes, and watches all exist and are numbers in the range -1 to 1 */
+        checkInt(likes, -1, 1, 'likes');
+        checkInt(dislikes, -1, 1, 'dislikes');
+        checkInt(watches, -1, 1, 'watches');
         /* get the show database info */
         const showCollection = await showDb();
         const thisShow = await this.getShow(showId);
@@ -170,6 +179,7 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
         const userCollection = await userDb();
         /* get the user */
         const user = await userCollection.findOne({ screen_name: username.toLowerCase() });
+        /*  make sure we found the user! */
         if (user != null && user != undefined) {
             const newLikes = user.liked_shows;
             const newDislikes = user.disliked_shows;
@@ -177,15 +187,15 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
             /* update the user in the database */
             if (user.liked_shows.includes(showId) && Number(likes) == -1) {
                 /* remove the show from the user's likes */
-                newLikes.remove(showId);
+                newLikes.splice(newLikes.indexOf(showId), 1);
             }
             if (user.disliked_shows.includes(showId) && Number(dislikes) == -1) {
                 /* remove the show from the user's dislikes */
-                newDislikes.remove(showId);
+                newDislikes.splice(newDislikes.indexOf(showId), 1);
             }
             if (user.watched_shows.includes(showId) && Number(watches) == -1) {
                 /* remove the show from the user's watched-list */
-                newWatches.remove(showId);
+                newWatches.splice(newWatches.indexOf(showId), 1);
             }
             if (!user.liked_shows.includes(showId) && Number(likes) == 1) {
                 /* add the show to the user's likes */
@@ -207,42 +217,42 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
             }
             const updatedU = await userCollection.updateOne({ screen_name: username.toLowerCase() }, { $set: updatedUser });
             if (updatedU.matchedCount == 0 || updatedU.modifiedCount == 0) {
-                throw `Failed to update user data.`;
+                throw `Error: Failed to update user data.`;
             }
+            return { showUpdated: true, userUpdated: true, data: updatedUser };
         } else {
-            throw `Failed to find user with username ${username} in database!`
+            throw `Error: Failed to find user with username ${username} in database!`
         }
-        return { showUpdated: true, userUpdated: true };
     } catch (e) {
         throw e;
     }
 }
 
 async function getRecommendations(user) {
-    try{
+    try {
         //get document for current user
         const userCollection = await userDb();
-        const foundUser = await userCollection.findOne({screen_name: user});
-        if (!(foundUser != undefined && foundUser != null)){
+        const foundUser = await userCollection.findOne({ screen_name: user });
+        if (!(foundUser != undefined && foundUser != null)) {
             throw "Error: User with username " + user + " was not found in the database!";
-        }else {
+        } else {
             //get list of liked shows for current user
             const liked_shows = foundUser.liked_shows;
             const watched_shows = foundUser.watched_shows;
             let likedGenres = {};
             //iterate through list of liked shows' id and get document from id
             const showCollection = await showDb();
-            for (let i = 0; i < liked_shows.length; i++){
+            for (let i = 0; i < liked_shows.length; i++) {
                 const foundShow = await showCollection.findOne({ _id: ObjectId(liked_shows[i]) });
-                if (foundShow != undefined && foundShow != null){
+                if (foundShow != undefined && foundShow != null) {
                     //get list of genres for current show
                     const showGenres = foundShow.genres;
                     //iterate through list of genres and add to frequency map
-                    for (let j = 0; j < showGenres.length; j++){
+                    for (let j = 0; j < showGenres.length; j++) {
                         const genre = showGenres[j];
-                        if(likedGenres[genre]){
+                        if (likedGenres[genre]) {
                             likedGenres[genre]++;
-                        }else{
+                        } else {
                             likedGenres[genre] = 1;
                         }
                     }
@@ -251,27 +261,27 @@ async function getRecommendations(user) {
             //find users favorite genre
             let favoriteGenre = '';
             let maxFreq = 0;
-            for (const x in likedGenres){
-                if (likedGenres[x] > maxFreq){
+            for (const x in likedGenres) {
+                if (likedGenres[x] > maxFreq) {
                     favoriteGenre = x;
                     maxFreq = likedGenres[x];
                 }
             }
-            
-            if (favoriteGenre == ''){
+
+            if (favoriteGenre == '') {
                 throw "Error: Recommendations cannot be made. User profile lacks sufficient data."
             }
             //returns array of 5 random shows with users fav genre
-            const recommendations = await showCollection.aggregate([{$match: {genres: favoriteGenre}}, {$sample: {size: 5}}]).toArray();
+            const recommendations = await showCollection.aggregate([{ $match: { genres: favoriteGenre } }, { $sample: { size: 5 } }]).toArray();
 
-            if(recommendations.length == 0){
+            if (recommendations.length == 0) {
                 throw "No recommendations found.";
             }
 
             //removes any shows that user has watched
-            for (let i = 0; i < recommendations.length; i++){
-                if(watched_shows.includes(recommendations[i]._id.toString())){
-                    recommendations.splice(i,1);
+            for (let i = 0; i < recommendations.length; i++) {
+                if (watched_shows.includes(recommendations[i]._id.toString())) {
+                    recommendations.splice(i, 1);
                 }
             }
             return recommendations;
@@ -281,6 +291,12 @@ async function getRecommendations(user) {
     }
 }
 
+function checkInt(int, min, max, name = 'number') {
+    if (int == undefined || int == null) throw `Error: Expected ${name} to be a number, but it does not exist!`;
+    if (isNaN(Number(int))) throw `Error: Expected ${name} to be a number, but failed to convert.`;
+    if (Number(int) < min || Number(int) > max) throw `Error: Expected ${name} to be in the range ${min} - ${max}.`;
+    return true
+}
 
 module.exports = {
     searchDb,
@@ -289,5 +305,6 @@ module.exports = {
     getShow,
     addManual,
     updateCounts,
-    getRecommendations
+    getRecommendations,
+    checkInt
 }

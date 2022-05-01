@@ -24,11 +24,9 @@ router
                 }
                 return res.status(200).render('individualPages/addShow', { user: req.session.user, shows: shows, partial: 'addShowScript' });
             } else {
-                // TODO show error on page
-                return res.status(400).json({ error: 'please enter a search term' })
+                return res.status(400).json({ error: 'Error: Please enter a non-empty search term.' })
             }
         } catch (e) {
-            // TODO show error on page
             return res.status(500).json({ error: e })
         }
     });
@@ -44,13 +42,12 @@ router
                 if (show.showInserted) {
                     return res.status(200).json({ user: req.session.user, show: show.showData, partial: 'addShowScript' });
                 } else {
-                    // TODO show error on page
+                    return res.status(500).json({ error: 'Error: Could not add show with id ' + showId + ' from TV Maze to What2Watch Database.' });
                 }
             } else {
-                // TODO show error on page
+                return res.status(400).json({ error: 'Error: Expected showId to be non-empty.' });
             }
         } catch (e) {
-            // TODO show error on page
             return res.status(500).json({ error: e })
         }
     });
@@ -63,10 +60,25 @@ router
             const showId = req.params.showId;
             if (showId && showId.trim() != '') {
                 const show = await data.showData.getShow(showId);
-                return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, partial: 'viewShowScript' });
+                let likeIcon = '/public/assets/tup_outline.svg';
+                let dislikeIcon = '/public/assets/tdown_outline.svg';
+                let watchedIcon = '/public/assets/check_outline.svg';
+
+                /* send whether the user does or does not like/dislike/watch the show for icon fill/outline */
+                if (req.session.user) {
+                    if (req.session.user.likes.includes(showId)) {
+                        likeIcon = '/public/assets/tup_filled.svg';
+                    }
+                    if (req.session.user.dislikes.includes(showId)) {
+                        dislikeIcon = '/public/assets/tdown_filled.svg';
+                    }
+                    if (req.session.user.watches.includes(showId)) {
+                        watchedIcon = '/public/assets/check_filled.svg';
+                    }
+                }
+                return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, partial: 'viewShowScript' });
             }
         } catch (e) {
-            // TODO show error on page
             return res.status(500).json({ error: e })
         }
     });
@@ -76,6 +88,7 @@ router
     .post(async(req, res) => {
         try {
             // this route should be used to create a new show with manual data added by the user
+            // TODO: check for errors
             const showName = req.body.name;
             const showImg = req.body.img;
             const startYear = req.body.start;
@@ -89,11 +102,10 @@ router
             if (show.showInserted) {
                 return res.status(200).json({ user: req.session.user, show: show.showData, partial: 'addShowScript' });
             } else {
-                // TODO show error on page
+                return res.status(500).json({ error: 'Error: could not insert manual show' })
 
             }
         } catch (e) {
-            // TODO show error on page
             return res.status(500).json({ error: e })
         }
     });
@@ -103,23 +115,47 @@ router
     .route('/updateShowCounts/:showId')
     .patch(async(req, res) => {
         /* This route should be used for updating the likes/dislikes/watched counts of a show */
-        /* TODO: Error check! each should be +/- 1 */
         try {
             const id = req.params.showId;
             const likes = req.body.likes;
             const dislikes = req.body.dislikes;
             const watches = req.body.watches;
+            if (!req.session.user) {
+                return res.status(400).json({ error: `Error: User is not logged in!` });
+            }
             const user = req.session.user.username;
+            /* check that username exists */
+            if (!user) {
+                return res.status(500).json({ error: `Error getting username` });
+            }
+            /* check that id is a valid ObjectId */
+            if (!(id && id.trim() != '' && ObjectId.isValid(id))) {
+                return res.status(400).json({ error: `Error: the show's id must be a valid ObjectId.` });
+            }
+            /* check that likes, dislikes, and watches are -1, 0, or 1 */
+            try {
+                data.showData.checkInt(likes);
+                data.showData.checkInt(dislikes);
+                data.showData.checkInt(watches);
+                if (Number(likes) == 0 && Number(dislikes) == 0 && Number(watches) == 0) {
+                    return res.status(500).json({ error: 'Error: No data to update!' });
+                }
+            } catch (e) {
+                return res.status(400).json({ error: e });
+            }
             const updated = await data.showData.updateCounts(id, user, likes, dislikes, watches);
             if (updated.showUpdated && updated.userUpdated) {
                 /* success! */
-                res.status(200).json({ success: true });
+                /* update req.session.user with likes/dislikes/watches */
+                req.session.user.likes = updated.data.liked_shows;
+                req.session.user.dislikes = updated.data.disliked_shows;
+                req.session.user.watches = updated.data.watched_shows;
+                return res.status(200).json({ success: true });
             } else {
-                /* TODO show error on page */
+                return res.status(500).json({ error: 'Error trying to update show counts' });
             }
         } catch (e) {
-            /* TODO show error on page */
-            res.status(500).json({ error: e });
+            return res.status(500).json({ error: e });
         }
     });
 
