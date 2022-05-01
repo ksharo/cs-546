@@ -53,7 +53,7 @@ async function main() {
         for (let i = 0; i < num_shows; i++) {
             /* evens get likes, odds get dislikes */
             try {
-                await showData.updateCounts(shuffled[i], username, i % 2, i % 2, 1);
+                await showData.updateCounts(shuffled[i], username, i % 2 == 0 ? 1 : 0, i % 2 == 0 ? 0 : 1, 1);
             } catch (e) {
                 console.error(e);
             }
