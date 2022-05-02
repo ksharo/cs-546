@@ -1,0 +1,25 @@
+<h2 class="subheader">{{user.username}}'s Profile</h2>
+<h3>Recommendations Based on {{user.username}}'s Favorite Shows </h3>
+<ul>
+    {{#each recs}}
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
+    {{/each}}
+</ul>
+<h3>{{user.username}}'s Liked Shows</h3>
+<ul>
+    {{#each likes}}
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
+    {{/each}}
+</ul>
+<h3>Shows {{user.username}} Has Seen</h3>
+<ul>
+    {{#each watched}}
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
+    {{/each}}
+</ul>
+<h3>{{user.username}}'s Reviews</h3>
+<ul>
+    {{#each reviews}}
+    <li>{{this}}</li>
+    {{/each}}
+</ul>

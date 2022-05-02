@@ -171,7 +171,6 @@ router
                     throw (e)
                 }
                 //get user's reviews
-                // console.log(recs);
                 let likes = []
                 for(let i = 0; i < user['liked_shows'].length; i++){
                     try{
@@ -200,6 +199,43 @@ router
         }
     });
 
+    router
+    .route('/view/:username')
+    .get(async(req, res) => {
+        try {
+            const username = req.params.username;
+            const user = await accountFunctions.getUser(username);
+            let recs = []
+            try {
+                recs = await data.showData.getRecommendations(username);
+            } catch (e) {
+                throw (e)
+            }
+            //get user's reviews
+            let likes = []
+            for(let i = 0; i < user['liked_shows'].length; i++){
+                try{
+                    let show = await data.showData.getShow(user['liked_shows'][i]);
+                    likes.push(show);
+                }catch(e){
+                    throw(e);
+                }
+            }
+            let seen = []
+            for(let i = 0; i < user['watched_shows'].length; i++){
+                try{
+                    let show = await data.showData.getShow(user['watched_shows'][i]);
+                    seen.push(show);
+                }catch(e){
+                    throw(e);
+                }
+            }
+            //maybe only show a maximum of 5 liked shows/watched shows/etc
+            return res.status(200).render('individualPages/viewAnotherAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, partial: 'mainScript' });
+        } catch (e) {
+            return res.status(500).json({ error: e });
+        }
+    });
 
 router
     .route('/login')
