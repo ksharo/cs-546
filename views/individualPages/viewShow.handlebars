@@ -43,5 +43,27 @@
         {{/if}}
         <dt>Summary</dt>
         <dd>{{{ showData.summary }}}</dd>
+        <dt>Reviews</dt>
+        {{#if reviews.length}}
+        <dd>
+            <ul>
+                {{#each reviews}}
+                <li>{{this.content}}</li>
+                {{/each}}
+            </ul>
+        </dd>
+        {{else}}
+        <dd>
+            N/A
+        </dd>
+        {{/if}}
     </dl>
+</article>
+<article class="cardLayout">
+<h2>Write a Review:</h2>
+    <form name="reviewForm" class='reviewForm' action="/review/create" method="post" id="reviewForm">
+        <label for="content">Review:</label>
+        <input type="text", name="content", id="content">
+        <button id="createReviewBtn">Create!</button>
+    </form>
 </article>

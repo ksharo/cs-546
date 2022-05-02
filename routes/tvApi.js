@@ -101,7 +101,8 @@ router
                         watchedIcon = '/public/assets/check_filled.svg';
                     }
                 }
-                return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, partial: 'viewShowScript' });
+                const reviews = await data.reviewData.getByShow(showId);
+                return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, reviews: reviews, partial: 'viewShowScript' });
             }
         } catch (e) {
             return res.status(500).json({ error: e })
