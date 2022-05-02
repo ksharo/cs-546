@@ -39,7 +39,7 @@ router
                     x.show.start_year = x.show.premiered ? (x.show.premiered.split('-').length > 0 ? x.show.premiered.split('-')[0] : 'N/A') : 'N/A';
                     x.show.end_year = x.show.ended ? (x.show.ended.split('-').length > 0 ? x.show.ended.split('-')[0] : 'Present') : 'Present';
                 }
-                return res.status(200).render('individualPages/addShow', { user: req.session.user, shows: shows, partial: 'addShowScript' });
+                return res.status(200).render('individualPages/addShow', { user: req.session.user, shows: shows, searchTerm: searchTerm, partial: 'addShowScript' });
             } else {
                 return res.status(400).json({ error: 'Error: Please enter a non-empty search term.' })
             }
