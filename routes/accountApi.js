@@ -161,15 +161,23 @@ router
 router
     .route('/view')
     .get(async(req, res) => {
-        const user = await accountFunctions.getUser(req.session['user']['username']);
-        let recs = []
-        try{
-            recs = await data.showData.getRecommendations(req.session['user']['username']);
-        }catch (e){
-            throw(e)
+        if (req.session.user) {
+            try {
+                const user = await accountFunctions.getUser(req.session['user']['username']);
+                let recs = []
+                try {
+                    recs = await data.showData.getRecommendations(req.session['user']['username']);
+                } catch (e) {
+                    throw (e)
+                }
+                //get user's reviews
+                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: user['liked_shows'], watched: user['watched_shows'], recs: recs, partial: 'mainScript' });
+            } catch (e) {
+                return res.status(500).json({ error: e });
+            }
+        } else {
+            return res.status(500).json({ error: 'Error: Could not get user data.' });
         }
-        //get user's reviews
-        return res.status(200).render('individualPages/viewAccount', { user: user['first_name'], likes: user['liked_shows'], watched: user['watched_shows'], recs: recs, partial: 'mainScript' });
     });
 
 
