@@ -192,9 +192,20 @@ async function checkUser(username, password) {
     }
 }
 
+async function getUser(username){
+    const userCollection = await usersDb();
+    const foundUser = await userCollection.findOne({screen_name: username});
+    if (!(foundUser != undefined && foundUser != null)){
+        throw "Error: User with username " + user + " was not found in the database!";
+    }
+    return foundUser;
+}
+
+
 module.exports = {
     createUser,
     checkUser,
     checkString,
-    editUser
+    editUser,
+    getUser
 }
