@@ -292,7 +292,7 @@ async function getRecommendations(user) {
             }
 
             if (favoriteGenre == '') {
-                throw "Error: Recommendations cannot be made. User profile lacks sufficient data."
+                return [];
             }
             //returns array of 5 random shows with users fav genre
             const recommendations = await showCollection.aggregate([{ $match: { genres: favoriteGenre } }, { $sample: { size: 5 } }]).toArray();
