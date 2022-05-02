@@ -161,12 +161,15 @@ router
 router
     .route('/view')
     .get(async(req, res) => {
-        try {
-            const recs = await data.showData.getRecommendations(req.session.user.username);
-        } catch (e) {
-            throw e;
+        const user = await accountFunctions.getUser(req.session['user']['username']);
+        let recs = []
+        try{
+            recs = await data.showData.getRecommendations(req.session['user']['username']);
+        }catch (e){
+            throw(e)
         }
-        return res.status(200).render('individualPages/viewAccount', { user: req.session.user, partial: 'mainScript' });
+        //get user's reviews
+        return res.status(200).render('individualPages/viewAccount', { user: user['first_name'], likes: user['liked_shows'], watched: user['watched_shows'], recs: recs, partial: 'mainScript' });
     });
 
 
