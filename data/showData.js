@@ -37,6 +37,15 @@ async function searchDb(searchTerm) {
 }
 
 /*
+This function returns all shows in our database
+*/
+async function getAll(){
+    const showCollection = await showDb();
+    const showList = await showCollection.find({}).toArray();
+    if (!showList) throw 'Could not get shows';
+    return showList
+}
+/*
  * This function searches for a tv show within the
  * TV Maze Api so that users can add shows to our database
  */
@@ -323,6 +332,7 @@ function checkInt(int, min, max, name = 'number') {
 
 module.exports = {
     searchDb,
+    getAll,
     add,
     searchMaze,
     getShow,
