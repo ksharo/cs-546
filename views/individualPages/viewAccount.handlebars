@@ -2,19 +2,19 @@
 <h3>Recommendations Just For You</h3>
 <ul>
     {{#each recs}}
-    <li>{{this}}</li>
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
     {{/each}}
 </ul>
 <h3>Your Liked Shows</h3>
 <ul>
     {{#each likes}}
-    <li>{{this}}</li>
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
     {{/each}}
 </ul>
 <h3>Shows You've Seen</h3>
 <ul>
     {{#each watched}}
-    <li>{{this}}</li>
+    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
     {{/each}}
 </ul>
 <h3>Your Reviews</h3>

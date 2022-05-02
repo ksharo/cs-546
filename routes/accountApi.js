@@ -171,7 +171,27 @@ router
                     throw (e)
                 }
                 //get user's reviews
-                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: user['liked_shows'], watched: user['watched_shows'], recs: recs, partial: 'mainScript' });
+                // console.log(recs);
+                let likes = []
+                for(let i = 0; i < user['liked_shows'].length; i++){
+                    try{
+                        let show = await data.showData.getShow(user['liked_shows'][i]);
+                        likes.push(show);
+                    }catch(e){
+                        throw(e);
+                    }
+                }
+                let seen = []
+                for(let i = 0; i < user['watched_shows'].length; i++){
+                    try{
+                        let show = await data.showData.getShow(user['watched_shows'][i]);
+                        seen.push(show);
+                    }catch(e){
+                        throw(e);
+                    }
+                }
+                //maybe only show a maximum of 5 liked shows/watched shows/etc
+                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, partial: 'mainScript' });
             } catch (e) {
                 return res.status(500).json({ error: e });
             }

@@ -1,3 +1,5 @@
+// const { reviewData } = require("../../data");
+
 const svgs = document.getElementsByClassName('svgImg');
 const tup = document.getElementById('tup');
 const likesTxt = document.getElementById('likesTxt');
@@ -5,7 +7,37 @@ const tdown = document.getElementById('tdown');
 const dislikesTxt = document.getElementById('dislikesTxt');
 const watched = document.getElementById('watched');
 const watchesTxt = document.getElementById('watchesTxt');
+const newReviewForm = document.getElementById('reviewForm');
+const review = document.getElementById('content');
 
+newReviewForm.addEventListener('submit', async(event) =>{
+    try{
+        const showId = window.location.href.split('/view/')[1];
+        event.preventDefault();
+        const content = review.value.trim();
+        if(content == ""){
+            return fetch('http://localhost:3000/shows/'+showId);
+        }
+        let result = await createReview(content, showId);
+        return fetch('http://localhost:3000/shows/'+showId);
+    }catch(e){
+        console.log(e);
+        throw e;
+    }
+});
+const createReview = async(content, show) => {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            review: content,
+            show: show
+        })
+    };
+    return fetch('http://localhost:3000/review/create', requestOptions);
+};
 for (let x of svgs) {
     x.addEventListener('click', async(event) => {
         const originalSrc = event.target.src.split('_');
