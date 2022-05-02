@@ -21,7 +21,7 @@
     <section id="modal" class="popupModal">
         <h3>No shows matching that search term were found. Would you like to add a show to the database?</h3>
         <section class="horizontalFlex">
-            <button id="dontAdd">No</button>
+            <button id="dontAdd" onclick="location.href='http://localhost:3000/'">No</button>
             <button id="addShow" onclick="location.href='http://localhost:3000/shows/add/{{searchTerm}}'">Yes</button>
         </section>
     </section>
