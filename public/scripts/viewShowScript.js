@@ -16,10 +16,11 @@ newReviewForm.addEventListener('submit', async(event) =>{
         event.preventDefault();
         const content = review.value.trim();
         if(content == ""){
-            return fetch('http://localhost:3000/shows/'+showId);
+            return;
         }
         let result = await createReview(content, showId);
-        return fetch('http://localhost:3000/shows/'+showId);
+        window.location.reload();
+        return result;
     }catch(e){
         console.log(e);
         throw e;

@@ -2,9 +2,9 @@ const mongoCollections = require('../config/mongoCollections');
 const reviewsDB = mongoCollections.reviews;
 
 async function add(poster_id, show_id, content){
-    let anon = false
+    let anon = true
     if(poster_id){
-        anon = true;
+        anon = false;
     }
     const reviewCollection = await reviewsDB();
     try{
@@ -34,7 +34,17 @@ async function getByShow(show_id){
     return foundReviews;
 }
 
+async function getByUser(username){
+    const reviewCollection = await reviewsDB();
+    const foundReviews = await reviewCollection.find({poster_id:username}).toArray();
+    if (!(foundReviews != undefined && foundReviews != null)) {
+        throw "Error: Show with show id " + show_id + " was not found in the database!";
+    }
+    return foundReviews;
+}
+
 module.exports = {
     add,
-    getByShow
+    getByShow,
+    getByUser
 }
