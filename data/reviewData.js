@@ -1,3 +1,4 @@
+const { ObjectId } = require('bson');
 const mongoCollections = require('../config/mongoCollections');
 const reviewsDB = mongoCollections.reviews;
 
@@ -43,8 +44,39 @@ async function getByUser(username){
     return foundReviews;
 }
 
+async function update(id, content){
+    try{
+        const reviewCollection = await reviewsDB();
+        const original = await reviewCollection.findOne({ _id: ObjectId(id) });
+        if (original == null) {
+            throw `Failed to fetch user after update.`;
+        }
+        const review = {
+            poster_id:original['poster_id'],
+            time_posted:new Date(),
+            show_id:original['show_id'],
+            content:content,
+            anonymous:original['anon']
+        }
+        const updated = await reviewCollection.updateOne({_id:ObjectId(id)}, {$set: review});
+        if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
+            throw `Failed to update account.`;
+        }
+
+        /* get the user to return the data */
+        const result = await reviewCollection.findOne({ _id: ObjectId(id) });
+        if (result == null || result == undefined) {
+            throw `Failed to fetch user after update.`;
+        }
+        return { reviewUpdated: true, data: result };
+    }catch(e){
+        throw e;
+    }
+}
+
 module.exports = {
     add,
     getByShow,
-    getByUser
+    getByUser,
+    update
 }

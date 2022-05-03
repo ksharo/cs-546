@@ -22,9 +22,10 @@
     {{#each reviews}}
     <form>
     <li>
-        <label for="review">{{this.show_id}}</label>: 
-        <input type="text" id="review" name="review" value="{{this.content}}">
-        <input type="submit" value="update">
+        <label for="review"><a href="http://localhost:3000/shows/view/{{this.showName._id}}">{{this.showName.name}}</a></label>: 
+        <input type="text" id="review_{{this._id}}" name="review" value="{{this.content}}">
+        <button id="{{this._id}}">Update</button>
+        {{!-- <input type="submit" id="{{this._id}}" value="update" class="btn"> --}}
     </li>
     </form>
     {{/each}}
