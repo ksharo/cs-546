@@ -10,8 +10,10 @@ router
             let content = req.body.review;
             let show = req.body.show;
             if (content && content.trim() != '' || show && show.trim() != '') {
-                //somehow get poster id or if they are not logged in default to none
                 let poster = ""
+                if(req.session.user){
+                    poster = req.session.user.username;
+                }
                 const insert = await reviewFunctions.add(poster, show, content)
                 return res.redirect(200, 'http://localhost:3000/shows/view'+show);
             } else {

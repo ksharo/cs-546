@@ -170,6 +170,7 @@ router
                 } catch (e) {
                     throw (e)
                 }
+                let reviews = await data.reviewData.getByUser(req.session['user']['username']);
                 //get user's reviews
                 let likes = []
                 for(let i = 0; i < user['liked_shows'].length; i++){
@@ -190,7 +191,7 @@ router
                     }
                 }
                 //maybe only show a maximum of 5 liked shows/watched shows/etc
-                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, partial: 'mainScript' });
+                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, reviews:reviews, partial: 'mainScript' });
             } catch (e) {
                 return res.status(500).json({ error: e });
             }

@@ -20,6 +20,12 @@
 <h3>Your Reviews</h3>
 <ul>
     {{#each reviews}}
-    <li>{{this}}</li>
+    <form>
+    <li>
+        <label for="review">{{this.show_id}}</label>: 
+        <input type="text" id="review" name="review" value="{{this.content}}">
+        <input type="submit" value="update">
+    </li>
+    </form>
     {{/each}}
 </ul>
