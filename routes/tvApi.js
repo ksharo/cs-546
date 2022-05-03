@@ -13,7 +13,7 @@ router
     .route('/allShows')
     .get(async(req, res) => {
         const shows = await data.showData.getAll();
-        return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'searchScript' });
+        return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript' });
     });
 
 

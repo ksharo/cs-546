@@ -777,4 +777,39 @@ label {
     filter: brightness(65%);
 }
 
+.card {
+    border: 1px solid #123dc9;
+    border-radius: .25rem;
+  }
+  
+  .content {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .allshowbutton {
+    background-color: honeydew;
+    border: 1px solid #2196F3;
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border-radius: .25rem;
+    width: 60%;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 20px;
+  }
+.covers{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+.is-hidden { display: none; }
 
+#searchbox{
+    margin-bottom: 12px;
+    width: 100%;
+    font-size: 25px;
+}

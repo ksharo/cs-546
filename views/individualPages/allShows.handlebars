@@ -1,17 +1,15 @@
 {{#if shows.length}}
-<section class = "chips">  
-    <div class="row">
+<input type="search" oninput="live()" id="searchbox" placeholder="Search for shows..">
+<div class = "grid-container">  
         {{#each shows}}
-        <div class="column">
-            <div class="card">
-                <img src={{this.image}} alt="Avatar" style="width:100%">
-                <div class="container">
-                    <h4><b>{{this.name}}</b></h4>
-                    <p>{{this.genres}}</p>
-                </div>
-            </div>
+        <div class="card">
+                <img class = "covers" src={{this.image}} alt="Avatar">
+                <div id = "content" class="content">
+                    <h4 class = "titlename"><b>{{this.name}}</b></h4>
+                    <p id = "genrename">{{this.genres}}</p>
+                    <button class = "allshowbutton"  onclick = "location.href = 'http://localhost:3000/shows/view/{{this._id}}'">Read more...</button>
+                </div>        
         </div>
         {{/each}}
     </div>
-{{/if}}
-</section>
+{{/if}} 
