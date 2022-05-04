@@ -57,6 +57,7 @@
 </article>
 <h3 class="reviewHeader">Your Reviews</h3>
 <article class="cardLayout accountCard reviewLayout">
+    {{#if reviews.length}}
     <ul>
         {{#each reviews}}
         <form class='reviewForm'>
@@ -71,7 +72,10 @@
             {{/if}}
             <button id="updateReview_{{this._id}}" class="updateReviewBtn">Update</button>
         </form>
-        <button id="deleteReview_{{this._id}}">Delete</button>
+        <button id="deleteReview_{{this._id}}" class="deleteReviewBtn">Delete</button>
         {{/each}}
     </ul>
+    {{else}}
+    <p class="messageText">Uh oh! Looks like you haven't left any reviews yet</p>
+    {{/if}}
 </article>

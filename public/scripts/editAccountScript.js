@@ -4,7 +4,7 @@ const lastNameInput = document.getElementById('editLastName');
 const screenNameInput = document.getElementById('editScreenName');
 const imgBox = document.getElementById('chosenImg') ? document.getElementById('chosenImg') : document.getElementById('hiddenImg');
 const emptyPicBox = document.getElementById('noPic');
-const errorMessage = document.getElementById('editError');
+const editErrorMessage = document.getElementById('editError');
 
 let img = null;
 /*
@@ -35,7 +35,7 @@ function checkString(str, name = 'string', strict = false, minLen = 1) {
 }
 
 editForm.addEventListener('submit', async(event) => {
-    errorMessage.style.display = 'none';
+    editErrorMessage.style.display = 'none';
     event.preventDefault();
     try {
         /* error check variables */
@@ -52,13 +52,13 @@ editForm.addEventListener('submit', async(event) => {
             return;
         } else {
             const json = await result.json();
-            errorMessage.textContent = `${json.errorMessage}  (status code: ${json.errorStatus})`;
-            errorMessage.style.display = 'block';
+            editErrorMessage.textContent = `${json.errorMessage}  (status code: ${json.errorStatus})`;
+            editErrorMessage.style.display = 'block';
         }
 
     } catch (e) {
-        errorMessage.textContent = e;
-        errorMessage.style.display = 'block';
+        editErrorMessage.textContent = e;
+        editErrorMessage.style.display = 'block';
     }
 });
 

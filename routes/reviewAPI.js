@@ -67,7 +67,7 @@ router
             /* send updated content to database */
             const updated = await reviewFunctions.update(id.trim(), anon, content.trim());
             if (updated.reviewUpdated) {
-                return res.status(200);
+                return res.status(200).json({});
             } else {
                 return res.status(500).json({ error: 'Error: could not update review. Please try again later.' });
             }
@@ -87,7 +87,7 @@ router
             }
             const deleted = await reviewFunctions.deleteReview(reviewId);
             if (deleted.deleted) {
-                return res.status(200);
+                return res.status(200).json({});
             } else {
                 return res.status(500).json({ error: 'Error: could not delete review. Please try again later.' });
             }
