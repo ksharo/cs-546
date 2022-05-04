@@ -3,6 +3,7 @@ const showDb = mongoCollections.shows;
 const userDb = mongoCollections.users;
 const axios = require('axios');
 const { ObjectId } = require('mongodb');
+const { checkString } = require('./accountData');
 
 /*
  * This function searches for a tv show within our
@@ -10,58 +11,74 @@ const { ObjectId } = require('mongodb');
  * the results of that search, or an empty array if nothing was found
  */
 async function searchDb(searchTerm) {
-    //if (searchTerm.trim().length === 0) throw 'Please enter a search term'
-    const validShows = [];
-    const showCollection = await showDb();
-    let matchingnames = await showCollection.find({ name: { $regex: searchTerm, $options: '-i' } }).toArray();
-    for (x of matchingnames) {
-        validShows.push(x)
+    // check search term for valid non-empty string
+    if (searchTerm == undefined || searchTerm.trim() == '' || typeof(searchTerm) != 'string') {
+        throw 'Error: Expected search term to be a non-empty string';
     }
-    let matchinggenres = await showCollection.find({ genres: { $regex: searchTerm, $options: '-i' } }).toArray();
-    for (x of matchinggenres) {
-        validShows.push(x)
-    }
-    let matchingsummary = await showCollection.find({ summary: { $regex: searchTerm, $options: '-i' } }).toArray();
-    for (x of matchingsummary) {
-        validShows.push(x)
-    }
-    /* Deleting possible collected duplicates */
-    var elements = validShows.reduce(function(previous, current) {
-        var object = previous.filter(object => object.name === current.name);
-        if (object.length == 0) {
-            previous.push(current);
+    try {
+        const validShows = [];
+        const showCollection = await showDb();
+        let matchingnames = await showCollection.find({ name: { $regex: searchTerm, $options: '-i' } }).toArray();
+        for (x of matchingnames) {
+            validShows.push(x)
         }
-        return previous;
-    }, []);
-    return elements;
+        let matchinggenres = await showCollection.find({ genres: { $regex: searchTerm, $options: '-i' } }).toArray();
+        for (x of matchinggenres) {
+            validShows.push(x)
+        }
+        let matchingsummary = await showCollection.find({ summary: { $regex: searchTerm, $options: '-i' } }).toArray();
+        for (x of matchingsummary) {
+            validShows.push(x)
+        }
+        /* Deleting possible collected duplicates */
+        var elements = validShows.reduce(function(previous, current) {
+            var object = previous.filter(object => object.name === current.name);
+            if (object.length == 0) {
+                previous.push(current);
+            }
+            return previous;
+        }, []);
+        return elements;
+    } catch (e) {
+        throw e;
+    }
 }
 
 /* 
  * This function returns the 5 most liked and 5 most watched shows
  */
 async function getPopular() {
-    const showCollection = await showDb();
-    const watchedShows = await showCollection.find({}).sort({ watches: -1 }).limit(5).toArray();
-    const likedShows = await showCollection.find({}).sort({ likes: -1 }).limit(5).toArray();
-    // TODO add error checking
-    return { watchedShows: watchedShows, likedShows: likedShows };
+    try {
+        const showCollection = await showDb();
+        const watchedShows = await showCollection.find({}).sort({ watches: -1 }).limit(5).toArray();
+        const likedShows = await showCollection.find({}).sort({ likes: -1 }).limit(5).toArray();
+        return { watchedShows: watchedShows, likedShows: likedShows };
+    } catch (e) {
+        throw e;
+    }
 }
 
 /*
  * This function returns all shows in our database
  */
 async function getAll() {
-    const showCollection = await showDb();
-    const showList = await showCollection.find({}).toArray();
-    if (!showList) throw 'Could not get shows';
-    return showList
+    try {
+        const showCollection = await showDb();
+        const showList = await showCollection.find({}).toArray();
+        if (!showList) throw 'Could not get shows';
+        return showList;
+    } catch (e) {
+        throw e;
+    }
 }
+
 /*
  * This function searches for a tv show within the
  * TV Maze Api so that users can add shows to our database
  */
 async function searchMaze(searchTerm) {
     try {
+        checkString(searchTerm, 'Search Term', false, 1);
         const { data } = await axios.get('http://api.tvmaze.com/search/shows?q=' + searchTerm);
         // filter out shows that are already in the database
         const validShows = [];
@@ -83,6 +100,7 @@ async function searchMaze(searchTerm) {
  * tvMazeAPI id to our show database
  */
 async function add(showId) {
+    if (showId == undefined || Number(showId) < 0) throw 'Error: Expected showId to be a valid Maze show id!';
     try {
         /* get the show with the given id */
         const { data } = await axios.get('http://api.tvmaze.com/shows/' + showId);
@@ -207,17 +225,13 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
         /* get the show database info */
         const showCollection = await showDb();
         const thisShow = await this.getShow(showId);
-        /* update the show in the database */
+        /* prepare to update the show in the database */
         const updatedShow = {
             likes: Number(thisShow.likes) + Number(likes),
             dislikes: Number(thisShow.dislikes) + Number(dislikes),
             watches: Number(thisShow.watches) + Number(watches)
         }
 
-        const updated = await showCollection.updateOne({ _id: ObjectId(showId) }, { $set: updatedShow });
-        if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
-            throw `Failed to update show data.`;
-        }
         /* get the user database info */
         const userCollection = await userDb();
         /* get the user */
@@ -262,6 +276,11 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
             if (updatedU.matchedCount == 0 || updatedU.modifiedCount == 0) {
                 throw `Error: Failed to update user data.`;
             }
+            /* if user can be updated, upate show! */
+            const updated = await showCollection.updateOne({ _id: ObjectId(showId) }, { $set: updatedShow });
+            if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
+                throw `Failed to update show data.`;
+            }
             return { showUpdated: true, userUpdated: true, data: updatedUser };
         } else {
             throw `Error: Failed to find user with username ${username} in database!`
@@ -271,6 +290,10 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
     }
 }
 
+/*
+ * Forms a list of recommendations for the user based on their
+ * current show preferences
+ */
 async function getRecommendations(user) {
     try {
         //get document for current user
@@ -301,7 +324,7 @@ async function getRecommendations(user) {
                     }
                 }
             }
-            //find users favorite genre
+            //find user's favorite genre
             let favoriteGenre = '';
             let maxFreq = 0;
             for (const x in likedGenres) {
@@ -314,7 +337,7 @@ async function getRecommendations(user) {
             if (favoriteGenre == '') {
                 return [];
             }
-            //returns array of 5 random shows with users fav genre
+            //returns array of 5 random shows with user's fav genre
             const recommendations = await showCollection.aggregate([{ $match: { genres: favoriteGenre } }, { $sample: { size: 5 } }]).toArray();
 
             if (recommendations.length == 0) {
@@ -334,11 +357,14 @@ async function getRecommendations(user) {
     }
 }
 
+/*
+ * Makes sure that the given parameter is a number within the range min-max
+ */
 function checkInt(int, min, max, name = 'number') {
     if (int == undefined || int == null) throw `Error: Expected ${name} to be a number, but it does not exist!`;
     if (isNaN(Number(int))) throw `Error: Expected ${name} to be a number, but failed to convert.`;
     if (Number(int) < min || Number(int) > max) throw `Error: Expected ${name} to be in the range ${min} - ${max}.`;
-    return true
+    return true;
 }
 
 module.exports = {

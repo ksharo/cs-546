@@ -30,7 +30,19 @@ router
         try {
             let content = req.body.review;
             let id = req.body.id;
-            const update = await reviewFunctions.update(id, content);
+            const updated = await reviewFunctions.update(id, content);
+            return;
+        } catch (e) {
+            return res.status(500).json({ error: e.toString() })
+        }
+    });
+
+router
+    .route('/delete/:showId')
+    .delete(async(req, res) => {
+        try {
+            let showId = req.params.showId;
+            const deleted = await reviewFunctions.deleteReview(showId);
             return;
         } catch (e) {
             return res.status(500).json({ error: e.toString() })

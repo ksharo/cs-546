@@ -65,7 +65,7 @@ function checkAdvancedString(str, name = 'Input', minLength = 1, onlyAlphNum = t
 }
 
 /*
- * Creates a user in the database if username is unique.
+ * Creates a user in the database if username and email are unique.
  */
 async function createUser(firstName, lastName, email, username, password) {
     try {
@@ -158,6 +158,9 @@ async function editUser(firstName, lastName, email, oldUsername, newUsername, im
     }
 }
 
+/*
+ * Given a username (email) and password, checks that the user's credentials are valid
+ */
 async function checkUser(username, password) {
     try {
         /* check that the parameters are valid */
@@ -193,26 +196,41 @@ async function checkUser(username, password) {
     }
 }
 
+/*
+ * Gets a user from the database given their username (screen_name)
+ */
 async function getUser(username) {
-    const userCollection = await usersDb();
-    const foundUser = await userCollection.findOne({ screen_name: username });
-    if (!(foundUser != undefined && foundUser != null)) {
-        throw "Error: User with username " + user + " was not found in the database!";
+    try {
+        checkAdvancedString(username, 'Screen Name', 6);
+        const userCollection = await usersDb();
+        const foundUser = await userCollection.findOne({ screen_name: username });
+        if (!(foundUser != undefined && foundUser != null)) {
+            throw "Error: User with username " + user + " was not found in the database!";
+        }
+        return foundUser;
+    } catch (e) {
+        throw e;
     }
-    return foundUser;
 }
 
-async function getUserById(id) {
-    const userCollection = await usersDb();
-    // TODO error checking
-    const foundUser = await userCollection.findOne({ _id: id });
-    if (!(foundUser != undefined && foundUser != null)) {
-        throw "Error: User with id " + id + " was not found in the database!";
+/*
+ * Gets a user from the database by their id
+ */
+async function getUserById(userId) {
+    try {
+        const userCollection = await usersDb();
+        if (userId == undefined || userId.toString().trim() == '' || !ObjectId.isValid(userId.trim)) {
+            throw "Error: Expected id to be a non-empty valid ObjectId.";
+        }
+        const foundUser = await userCollection.findOne({ _id: ObjectId(userId.toString()) });
+        if (!(foundUser != undefined && foundUser != null)) {
+            throw "Error: User with id " + userId + " was not found in the database!";
+        }
+        return foundUser;
+    } catch (e) {
+        throw e;
     }
-    return foundUser;
 }
-
-
 
 module.exports = {
     createUser,

@@ -27,17 +27,21 @@ app.use(
 );
 
 app.use('/account/view/:username', (req, res, next) => {
-    next();
+    if (req.params.username == req.session.user.username) {
+        return res.redirect('/account/view');
+    } else {
+        next();
+    }
 });
 
 app.use('/account/view', (req, res, next) => {
-    if (req.originalUrl == req.baseUrl){
+    if (req.originalUrl == req.baseUrl) {
         if (!req.session.user) {
-            return res.redirect('/');
+            return res.status(403).redirect('/');
         } else {
             next();
         }
-    }else{
+    } else {
         next();
     }
 });

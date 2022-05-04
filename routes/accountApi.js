@@ -51,8 +51,63 @@ const imgData = [{
     {
         link: 'https://images.unsplash.com/photo-1547721064-da6cfb341d50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fGFuaW1hbHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
         alt: 'a silly giraffe'
-    }
-
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1612855190135-bdbacda2a2b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+        alt: 'bubbles'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1573091465730-0b2c8befcfa6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+        alt: 'a small snowman'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1497752531616-c3afd9760a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+        alt: 'a raccoon'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1579380656108-f98e4df8ea62?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+        alt: 'a frog'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+        alt: 'a white bunny'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=394&q=80',
+        alt: 'a happy chihuaua'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1507666405895-422eee7d517f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+        alt: 'a squirrel eating a nut'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1590691565921-287ded4c80ca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+        alt: 'a baby monkey'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+        alt: 'a majestic lion'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1540968221243-29f5d70540bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=327&q=80',
+        alt: 'a flying jellyfish'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+        alt: 'a pineapple'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=415&q=80',
+        alt: 'a strawberry'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=415&q=80',
+        alt: 'a half-peeled banana'
+    },
+    {
+        link: 'https://images.unsplash.com/photo-1528821128474-27f963b062bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+        alt: 'two cherries'
+    },
 ]
 
 router
@@ -168,7 +223,7 @@ router
                 try {
                     recs = await data.showData.getRecommendations(req.session['user']['username']);
                 } catch (e) {
-                    throw (e)
+                    throw (e);
                 }
                 let reviews = await data.reviewData.getByUser(req.session['user']['username']);
                 for (let i = 0; i < reviews.length; i++) {
@@ -204,7 +259,8 @@ router
                 return res.status(500).json({ error: e.toString() });
             }
         } else {
-            return res.status(500).json({ error: 'Error: Could not get user data.' });
+            /* should be caught by middleware, but just in case...*/
+            return res.status(403).redirect('/');
         }
     });
 
@@ -213,12 +269,13 @@ router
     .get(async(req, res) => {
         try {
             const username = req.params.username;
+            if (username.trim() == '') throw `Error: expected username to be non-empty string.`;
             const otherUser = await accountFunctions.getUser(username);
             let recs = []
             try {
                 recs = await data.showData.getRecommendations(username);
             } catch (e) {
-                throw (e)
+                throw (e);
             }
             let reviews = await data.reviewData.getByUser(username);
             for (let i = 0; i < reviews.length; i++) {

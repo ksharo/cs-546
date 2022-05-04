@@ -217,20 +217,28 @@ module.exports = router;
 
 /* TODO: 
  * Error checking
- * check view account page for prettiness
  * limit search results?
  * middleware for logins and permissions
  * edit/delete reviews
  * add reviews to seed file
  * add checkbox functionality to update reviews 
- * add top rated tv shows to home page
+ * add top rated tv shows to home page - DONE
  * all tv shows page - DONE
  * add reviews - DONE
  * show reviews - DONE
  * other user page - DONE
  * show search term on search page and add page - DONE
  * add search bar to search page and add page - DONE
- * 
+ * check view account page for prettiness - DONE
  * Extras:
  * 
+ * 
+ * backend
+ * accountData.js has been error checked fully!
+ * showData.js has been error checked fully!
+ * reviewData.js has been error checked fully!
+ * 
+ * routes
+ * accountApi.js has been error checked fully!
+ * mainApi.js has been error checked fully!
  */
