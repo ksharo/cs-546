@@ -171,44 +171,44 @@ router
                     throw (e)
                 }
                 let reviews = await data.reviewData.getByUser(req.session['user']['username']);
-                for(let i=0; i < reviews.length; i++){
-                    try{
+                for (let i = 0; i < reviews.length; i++) {
+                    try {
                         let show = await data.showData.getShow(reviews[i]['show_id']);
                         reviews[i]['showName'] = show;
-                    }catch(e){
-                        throw(e);
+                    } catch (e) {
+                        throw (e);
                     }
                 }
                 //get user's reviews
                 let likes = []
-                for(let i = 0; i < user['liked_shows'].length; i++){
-                    try{
+                for (let i = 0; i < user['liked_shows'].length; i++) {
+                    try {
                         let show = await data.showData.getShow(user['liked_shows'][i]);
                         likes.push(show);
-                    }catch(e){
-                        throw(e);
+                    } catch (e) {
+                        throw (e);
                     }
                 }
                 let seen = []
-                for(let i = 0; i < user['watched_shows'].length; i++){
-                    try{
+                for (let i = 0; i < user['watched_shows'].length; i++) {
+                    try {
                         let show = await data.showData.getShow(user['watched_shows'][i]);
                         seen.push(show);
-                    }catch(e){
-                        throw(e);
+                    } catch (e) {
+                        throw (e);
                     }
                 }
                 //maybe only show a maximum of 5 liked shows/watched shows/etc
-                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, reviews:reviews, partial: 'viewAccountScript' });
+                return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, reviews: reviews, partial: 'viewAccountScript' });
             } catch (e) {
-                return res.status(500).json({ error: e });
+                return res.status(500).json({ error: e.toString() });
             }
         } else {
             return res.status(500).json({ error: 'Error: Could not get user data.' });
         }
     });
 
-    router
+router
     .route('/view/:username')
     .get(async(req, res) => {
         try {
@@ -221,27 +221,27 @@ router
                 throw (e)
             }
             let likes = []
-            for(let i = 0; i < user['liked_shows'].length; i++){
-                try{
+            for (let i = 0; i < user['liked_shows'].length; i++) {
+                try {
                     let show = await data.showData.getShow(user['liked_shows'][i]);
                     likes.push(show);
-                }catch(e){
-                    throw(e);
+                } catch (e) {
+                    throw (e);
                 }
             }
             let seen = []
-            for(let i = 0; i < user['watched_shows'].length; i++){
-                try{
+            for (let i = 0; i < user['watched_shows'].length; i++) {
+                try {
                     let show = await data.showData.getShow(user['watched_shows'][i]);
                     seen.push(show);
-                }catch(e){
-                    throw(e);
+                } catch (e) {
+                    throw (e);
                 }
             }
             //maybe only show a maximum of 5 liked shows/watched shows/etc
             return res.status(200).render('individualPages/viewAnotherAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, partial: 'mainScript' });
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(500).json({ error: e.toString() });
         }
     });
 

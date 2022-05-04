@@ -1,4 +1,5 @@
 <h2 class="subheader">Add A Show</h2>
+<h3 class="miniTitle">Search Term: {{searchTerm}}</h3>
 <section id="modalBackdrop" hidden class="modalBackground">
     <section id="modal" class="popupModal">
         <h3>Add show to database?</h3>
@@ -13,7 +14,7 @@
         <h3>Add A New Show!</h3>
         <form name="newShowForm" class='accountForm' action="/shows/addManual" method="post" id="newShowForm">
             {{#if error}}
-                <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
+            <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
             {{/if}}
             <p class="errorMessage" id="hiddenAddShowError" hidden></p>
             <label for="showName">Show Title:</label>
@@ -26,7 +27,7 @@
             <input type="text" id="endYear" name="endYear">
             <label for="language">Main Language:</label>
             <input type="text" id="language" name="language" />
-             <label for="numEpisodes">Number of Episodes:</label>
+            <label for="numEpisodes">Number of Episodes:</label>
             <input type="number" id="numEpisodes" name="numEpisodes" />
             <label for="runtime">Episode Runtime (in minutes):</label>
             <input type="number" id="runtime" name="runtime" />
@@ -56,4 +57,12 @@
     <p class="noResults">We're sorry, but no results were found for {{searchTerm}}.</p>
     {{/if}}
 </section>
-<a class="littleLink" onclick="openManualAdd()">Don't see your favorite show here? Click here to add one manually!</a>
+<form action='/shows/search' method='POST' id="addSearch" class="formClass">
+    <label for='smallSearch'>
+        Search for another show to add to the database:
+    </label>
+
+    <input type='text' placeholder='Search' name='smallSearch' id='smallSearch' class='inputBox' />
+    <button type="submit" class="smallBtn">Search!</button>
+</form>
+<a class="littleLink" onclick="openManualAdd()">Don't see your favorite show? Click here to add one manually!</a>

@@ -1,32 +1,75 @@
 <h2 class="subheader">Welcome Back, {{user.firstName}}!</h2>
-<h3>Recommendations Just For You</h3>
-<ul>
-    {{#each recs}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>Your Liked Shows</h3>
-<ul>
-    {{#each likes}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>Shows You've Seen</h3>
-<ul>
-    {{#each watched}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>Your Reviews</h3>
-<ul>
-    {{#each reviews}}
-    <form>
-    <li>
-        <label for="review"><a href="http://localhost:3000/shows/view/{{this.showName._id}}">{{this.showName.name}}</a></label>: 
-        <input type="text" id="review_{{this._id}}" name="review" value="{{this.content}}">
-        <button id="{{this._id}}">Update</button>
-        {{!-- <input type="submit" id="{{this._id}}" value="update" class="btn"> --}}
-    </li>
-    </form>
-    {{/each}}
-</ul>
+<h3 class="reviewHeader">Recommendations Just For You</h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each recs}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
+                    alt="Image for {{this.name}}" class="thumbnail" src="{{this.image}}" /><span
+                    class="showName">{{this.name}}</span></a>
+
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">Your Liked Shows</h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each likes}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}">
+                <img class="thumbnail" alt="Image for {{this.name}}" src="{{this.image}}" />
+                <span class="showName">{{this.name}}</span></a>
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">Shows You've Seen</h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each watched}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
+                    alt="Image for {{this.name}}" class="thumbnail" src="{{this.image}}" />
+                <span class="showName">{{this.name}}</span></a>
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">Your Reviews</h3>
+<article class="cardLayout accountCard reviewLayout">
+    <ul>
+        {{#each reviews}}
+        <form class='reviewForm'>
+            <label for="review"><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for
+                    {{this.showName.name}}:</a></label>
+            <textarea id="review_{{this._id}}" name="review">{{this.content}}</textarea>
+            {{#if this.anonymous}}
+            <label for="anonymous">Anonymous:<input type="checkbox"
+                    name="anonymous" checked id="anonymous_{{this._id}}"></input></label> {{else}}             
+                    <label for="anonymous">Anonymous:<input type="checkbox"
+                    name="anonymous" id="anonymous_{{this._id}}"></input></label>  
+            {{/if}}
+            <button id="{{this._id}}" class="updateReviewBtn">Update</button>
+        </form>
+        {{/each}}
+    </ul>
+</article>

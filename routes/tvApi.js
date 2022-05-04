@@ -20,7 +20,6 @@ router
 router
     .route('/search')
     .post(async(req, res) => {
-        // TODO make this route
         try {
             const searchTerm = req.body.searchTerm;
             if (searchTerm && searchTerm.trim() != '') {
@@ -30,7 +29,23 @@ router
                 return res.status(400).json({ error: 'please enter a search term' })
             }
         } catch (e) {
-            return res.status(500).json({ error: e })
+            return res.status(500).json({ error: e.toString() })
+        }
+    });
+
+router
+    .route('/search/:searchTerm')
+    .get(async(req, res) => {
+        try {
+            const searchTerm = req.params.searchTerm;
+            if (searchTerm && searchTerm.trim() != '') {
+                const shows = await data.showData.searchDb(searchTerm);
+                return res.status(200).render('individualPages/searchShow', { user: req.session.user, searchTerm: searchTerm, shows: shows, partial: 'searchScript' });
+            } else {
+                return res.status(400).json({ error: 'please enter a search term' })
+            }
+        } catch (e) {
+            return res.status(500).json({ error: e.toString() })
         }
     });
 
@@ -52,7 +67,7 @@ router
                 return res.status(400).json({ error: 'Error: Please enter a non-empty search term.' })
             }
         } catch (e) {
-            return res.status(500).json({ error: e })
+            return res.status(500).json({ error: e.toString() })
         }
     });
 
@@ -73,7 +88,7 @@ router
                 return res.status(400).json({ error: 'Error: Expected showId to be non-empty.' });
             }
         } catch (e) {
-            return res.status(500).json({ error: e })
+            return res.status(500).json({ error: e.toString() })
         }
     });
 
@@ -102,10 +117,23 @@ router
                     }
                 }
                 const reviews = await data.reviewData.getByShow(showId);
+                for (let x of reviews) {
+                    if (!x.anonymous) {
+                        const poster = await data.accountData.getUserById(x.poster_id);
+                        x.prof_pic = poster.profile_pic == '' ? '/public/assets/empty_profile.svg' : poster.profile_pic;
+                        x.reviewer = poster.screen_name;
+                        x.link = 'http://localhost:3000/account/view/' + x.reviewer;
+                    } else {
+                        x.prof_pic = '/public/assets/empty_profile.svg';
+                        x.reviewer = 'Anonymous';
+                        x.link = 'http://localhost:3000/shows/view/' + showId;
+                    }
+                }
                 return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, reviews: reviews, partial: 'viewShowScript' });
             }
         } catch (e) {
-            return res.status(500).json({ error: e })
+            console.log(e);
+            return res.status(500).json({ error: e.toString() })
         }
     });
 
@@ -132,7 +160,7 @@ router
 
             }
         } catch (e) {
-            return res.status(500).json({ error: e })
+            return res.status(500).json({ error: e.toString() })
         }
     });
 
@@ -167,7 +195,7 @@ router
                     return res.status(500).json({ error: 'Error: No data to update!' });
                 }
             } catch (e) {
-                return res.status(400).json({ error: e });
+                return res.status(400).json({ error: e.toString() });
             }
             const updated = await data.showData.updateCounts(id, user, likes, dislikes, watches);
             if (updated.showUpdated && updated.userUpdated) {
@@ -181,8 +209,28 @@ router
                 return res.status(500).json({ error: 'Error trying to update show counts' });
             }
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(500).json({ error: e.toString() });
         }
     });
 
 module.exports = router;
+
+/* TODO: 
+ * Error checking
+ * check view account page for prettiness
+ * limit search results?
+ * middleware for logins and permissions
+ * edit/delete reviews
+ * add reviews to seed file
+ * add checkbox functionality to update reviews 
+ * add top rated tv shows to home page
+ * all tv shows page - DONE
+ * add reviews - DONE
+ * show reviews - DONE
+ * other user page - DONE
+ * show search term on search page and add page - DONE
+ * add search bar to search page and add page - DONE
+ * 
+ * Extras:
+ * 
+ */

@@ -3,6 +3,7 @@ const usersDb = mongoCollections.users;
 const bcrypt = require('bcryptjs');
 const saltRounds = 4;
 const validator = require('validator');
+const { ObjectId } = require('mongodb');
 
 /*
  * Checks a given variable (str) with name (name) to see if it is valid according
@@ -192,14 +193,25 @@ async function checkUser(username, password) {
     }
 }
 
-async function getUser(username){
+async function getUser(username) {
     const userCollection = await usersDb();
-    const foundUser = await userCollection.findOne({screen_name: username});
-    if (!(foundUser != undefined && foundUser != null)){
+    const foundUser = await userCollection.findOne({ screen_name: username });
+    if (!(foundUser != undefined && foundUser != null)) {
         throw "Error: User with username " + user + " was not found in the database!";
     }
     return foundUser;
 }
+
+async function getUserById(id) {
+    const userCollection = await usersDb();
+    // TODO error checking
+    const foundUser = await userCollection.findOne({ _id: id });
+    if (!(foundUser != undefined && foundUser != null)) {
+        throw "Error: User with id " + id + " was not found in the database!";
+    }
+    return foundUser;
+}
+
 
 
 module.exports = {
@@ -207,5 +219,6 @@ module.exports = {
     checkUser,
     checkString,
     editUser,
-    getUser
+    getUser,
+    getUserById
 }

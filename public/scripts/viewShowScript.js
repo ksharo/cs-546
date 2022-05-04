@@ -9,24 +9,26 @@ const watched = document.getElementById('watched');
 const watchesTxt = document.getElementById('watchesTxt');
 const newReviewForm = document.getElementById('reviewForm');
 const review = document.getElementById('content');
+const anon = document.getElementById('anonymous');
 
-newReviewForm.addEventListener('submit', async(event) =>{
-    try{
+newReviewForm.addEventListener('submit', async(event) => {
+    try {
         const showId = window.location.href.split('/view/')[1];
         event.preventDefault();
         const content = review.value.trim();
-        if(content == ""){
+        if (content == "") {
             return;
         }
-        let result = await createReview(content, showId);
+        // TODO error checking
+        let result = await createReview(content, showId, anon.checked);
         window.location.reload();
         return result;
-    }catch(e){
+    } catch (e) {
         console.log(e);
         throw e;
     }
 });
-const createReview = async(content, show) => {
+const createReview = async(content, show, anon) => {
     const requestOptions = {
         method: 'POST',
         headers: {
@@ -34,7 +36,8 @@ const createReview = async(content, show) => {
         },
         body: JSON.stringify({
             review: content,
-            show: show
+            show: show,
+            anon: anon, // TODO add anonymous functionality
         })
     };
     return fetch('http://localhost:3000/review/create', requestOptions);

@@ -4,12 +4,13 @@
     <h3 class="showSubheader">
         <img src={{likeIcon}} id='tup' class="svgImg" alt="Thumbs Up" />
         Likes: <span id='likesTxt'>{{showData.likes}}</span> |
-        <img src={{dislikeIcon}} id='tdown' class="svgImg" alt="Thumbs Down" />Dislikes: <span id='dislikesTxt'>{{showData.dislikes}}</span> |
+        <img src={{dislikeIcon}} id='tdown' class="svgImg" alt="Thumbs Down" />Dislikes: <span
+            id='dislikesTxt'>{{showData.dislikes}}</span> |
         <img src={{watchedIcon}} id='watched' class="svgImg" alt="Watched check mark" />Watches:
         <span id='watchesTxt'>{{showData.watches}}</span>
     </h3>
     {{else}}
-        <h3 class="showSubheader">
+    <h3 class="showSubheader">
         Likes: {{showData.likes}} |
         Dislikes: {{showData.dislikes}} |
         Watches: {{showData.watches}}
@@ -43,27 +44,33 @@
         {{/if}}
         <dt>Summary</dt>
         <dd>{{{ showData.summary }}}</dd>
-        <dt>Reviews</dt>
-        {{#if reviews.length}}
-        <dd>
-            <ul>
-                {{#each reviews}}
-                <li>{{this.content}}</li>
-                {{/each}}
-            </ul>
-        </dd>
-        {{else}}
-        <dd>
-            N/A
-        </dd>
-        {{/if}}
     </dl>
 </article>
+{{#if user}}
+    <article class="cardLayout reviewLayout">
+        <h2>Write a Review:</h2>
+        <form name="reviewForm" class='reviewForm' action="/review/create" method="post" id="reviewForm">
+            <label for="content">Review:</label>
+            <textarea  name="content" id="content" placeholder="Write your review here..."></textarea>
+            <label for="anonymous">Post Anonymously: <input type="checkbox" name="anonymous" id="anonymous" ></input> </label>
+            <button id="createReviewBtn">Create!</button>
+        </form>
+    </article>
+{{/if}}
+
+{{#if reviews.length}}
+<h2 class="reviewHeader bigHeader">Reviews</h2>
 <article class="cardLayout">
-<h2>Write a Review:</h2>
-    <form name="reviewForm" class='reviewForm' action="/review/create" method="post" id="reviewForm">
-        <label for="content">Review:</label>
-        <input type="text", name="content", id="content">
-        <button id="createReviewBtn">Create!</button>
-    </form>
+    <ul>
+        {{#each reviews}}
+        <li class="reviewBox">
+            <img src="{{this.prof_pic}}" onclick="window.location.href='{{this.link}}'" class="profileIcon reviewIcon"
+                alt="{{this.reviewer}} Profile Picture" />
+            <a class='reviewerName' href="{{this.link}}">{{this.reviewer}} says...</a>
+            <hr />
+            <p>{{this.content}}</p>
+        </li>
+        {{/each}}
+    </ul>
 </article>
+{{/if}}

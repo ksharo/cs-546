@@ -17,6 +17,21 @@ const runtimeInput = document.getElementById('runtime');
 const genresInput = document.getElementById('genres');
 const summaryInput = document.getElementById('summary');
 
+/* search form */
+const searchInput = document.getElementById('smallSearch');
+const searchForm = document.getElementById('addSearch');
+
+/* set up listener for searching a new term */
+searchForm.addEventListener('submit', async(event) => {
+    event.preventDefault();
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm == '') {
+        // TODO show error on page
+    } else {
+        window.location.href = 'http://localhost:3000/shows/add/' + searchTerm;
+    }
+})
+
 /* set up listener on form submission to add new manual show */
 newShowForm.addEventListener('submit', async(event) => {
     event.preventDefault();
@@ -66,6 +81,8 @@ const addShow = async(showId) => {
     if (result.ok) {
         const show = await result.json();
         window.location.href = 'http://localhost:3000/shows/view/' + show.show._id;
+    } else {
+        // TODO: show error on page
     }
 };
 
