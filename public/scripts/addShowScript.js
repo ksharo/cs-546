@@ -26,7 +26,8 @@ searchForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     const searchTerm = searchInput.value.trim();
     if (searchTerm == '') {
-        // TODO show error on page
+        errorMessage.textContent = 'Please enter a show into the field';
+        errorMessage.style.display = 'block';
     } else {
         window.location.href = 'http://localhost:3000/shows/add/' + searchTerm;
     }
