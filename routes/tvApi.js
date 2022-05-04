@@ -73,7 +73,9 @@ router
                 return res.status(400).json({ error: 'Error: Please enter a non-empty search term.' })
             }
         } catch (e) {
-            return res.status(500).json({ error: e.toString() })
+            // since we handle offline on client side, this just means no shows were found!
+            const searchTerm = req.params.searchTerm;
+            return res.status(200).render('individualPages/addShow', { user: req.session.user, shows: [], searchTerm: searchTerm, partial: 'addShowScript' });
         }
     });
 
@@ -255,8 +257,7 @@ module.exports = router;
 
 /* TODO: 
  * Error checking
- * limit search results?
- * middleware for logins and permissions
+ * make search results scrollable
  * edit/delete reviews
  * add reviews to seed file
  * add checkbox functionality to update reviews 
@@ -265,6 +266,7 @@ module.exports = router;
  * add reviews - DONE
  * show reviews - DONE
  * other user page - DONE
+ * middleware for logins and permissions - DONE
  * show search term on search page and add page - DONE
  * add search bar to search page and add page - DONE
  * check view account page for prettiness - DONE

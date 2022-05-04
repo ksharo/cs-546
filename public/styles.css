@@ -802,6 +802,11 @@ label {
     min-height: 380px;
 }
 
+.scrollingList {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
 .searchLink {
     line-height: 30px;
     color: var(--secondary);
@@ -994,4 +999,10 @@ label {
     width: 600px;
     font-size: 25px;
     display: block;
+}
+
+.messageText {
+    text-align: center;
+    margin: auto;
+    font-size: 24px;
 }

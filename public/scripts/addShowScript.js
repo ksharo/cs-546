@@ -24,6 +24,10 @@ const addSearchError = document.getElementById('addShowSearchError');
 const smallSearchInput = document.getElementById('smallSearch');
 const addSearchForm = document.getElementById('addSearch');
 
+if (!window.navigator.onLine) {
+    window.location.href = 'http://localhost:3000/offline';
+}
+
 /* set up listener for searching a new term */
 addSearchForm.addEventListener('submit', async(event) => {
     addSearchError.style.display = 'none';
@@ -160,5 +164,8 @@ const closeModal = () => {
 const closeManual = () => {
     manualBk.style.display = 'none';
     clickToClose.style.display = 'none';
-
 }
+
+window.addEventListener(('offline'), () => {
+    window.location.href = 'http://localhost:3000/offline';
+})

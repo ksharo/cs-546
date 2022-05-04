@@ -14,9 +14,6 @@
     <section id="manualAdd" class="popupModal bigModal">
         <h3>Add A New Show!</h3>
         <form name="newShowForm" class='accountForm' action="/shows/addManual" method="post" id="newShowForm">
-            {{#if error}}
-            <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
-            {{/if}}
             <p class="errorMessage" id="hiddenAddShowError" hidden></p>
             <label for="showName">Show Title (required):</label>
             <input type="text" id="showName" name="showName">
@@ -41,8 +38,11 @@
     </section>
 </section>
 <section class="searchResults cardLayoutImgRight">
+    {{#if error}}
+    <p class="errorMessage" id="addShowError">{{errorMessage}}</p>
+    {{else}}
     {{#if shows.length}}
-    <ul>
+    <ul class="scrollingList">
         {{#each shows}}
         <li>
             <a class="searchLink" onclick="openModal(`{{show.id}}`)">{{show.name}}</a>
@@ -56,6 +56,7 @@
 
     {{else}}
     <p class="noResults">We're sorry, but no results were found for {{searchTerm}}.</p>
+    {{/if}}
     {{/if}}
 </section>
 <p class="errorMessage" id="addShowSearchError" hidden></p>

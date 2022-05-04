@@ -13,6 +13,12 @@ router
         }
     });
 
+router
+    .route('/offline')
+    .get(async(req, res) => {
+        return res.status(500).render('individualPages/offline', { user: req.session.user, partial: 'mainScript' });
+    });
+
 
 
 module.exports = router;
