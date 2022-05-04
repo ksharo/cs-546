@@ -265,6 +265,10 @@ body {
     flex-direction: column;
 }
 
+.otherReview {
+    margin-bottom: 8px;
+}
+
 .profileInitials {
     padding: 13px 0px;
     top: -20px;
@@ -923,7 +927,30 @@ label {
     border: 1px solid var(--accent);
     border-radius: .25rem;
     position: relative;
-    height: 430px;
+    height: 445px;
+}
+
+.clickable:hover {
+    cursor: pointer;
+    filter: brightness(80%);
+}
+
+.clickable:active {
+    cursor: pointer;
+    filter: brightness(60%);
+}
+
+.topSpace {
+    margin-top: 54px;
+}
+
+.bigLink {
+    color: var(--secondary);
+    text-align: center;
+    margin: 80px auto 0px auto;
+    font-size: 36px;
+    text-decoration: none;
+    display: block;
 }
 
 .content {

@@ -3,10 +3,10 @@
 <div class = "grid-container">  
         {{#each shows}}
         <div class="card">
-                <img class = "covers" src={{this.image}} alt="Avatar">
-                <div id = "content" class="content">
+                <img class = "covers" src={{this.image}} alt="Image for {{this.name}}">
+                <div class="content">
                     <h4 class = "titlename"><b>{{this.name}}</b></h4>
-                    <p id = "genrename">{{this.genres}}</p>
+                    <p>{{this.genres}}</p>
                     <button class = "allshowbutton"  onclick = "location.href = 'http://localhost:3000/shows/view/{{this._id}}'">Read more...</button>
                 </div>        
         </div>

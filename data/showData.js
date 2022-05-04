@@ -36,10 +36,21 @@ async function searchDb(searchTerm) {
     return elements;
 }
 
+/* 
+ * This function returns the 5 most liked and 5 most watched shows
+ */
+async function getPopular() {
+    const showCollection = await showDb();
+    const watchedShows = await showCollection.find({}).sort({ watches: -1 }).limit(5).toArray();
+    const likedShows = await showCollection.find({}).sort({ likes: -1 }).limit(5).toArray();
+    // TODO add error checking
+    return { watchedShows: watchedShows, likedShows: likedShows };
+}
+
 /*
-This function returns all shows in our database
-*/
-async function getAll(){
+ * This function returns all shows in our database
+ */
+async function getAll() {
     const showCollection = await showDb();
     const showList = await showCollection.find({}).toArray();
     if (!showList) throw 'Could not get shows';
@@ -339,5 +350,6 @@ module.exports = {
     addManual,
     updateCounts,
     getRecommendations,
-    checkInt
+    checkInt,
+    getPopular
 }

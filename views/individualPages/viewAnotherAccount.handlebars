@@ -1,5 +1,6 @@
-<h2 class="subheader">{{user.screen_name}}'s Profile</h2>
-<h3 class="reviewHeader">Recommendations Based on {{user.screen_name}}'s Liked Shows </h3>
+<h2 class="subheader">{{otherUser.screen_name}}'s Profile</h2>
+<hr />
+<h3 class="reviewHeader">Recommendations Based on {{otherUser.screen_name}}'s Liked Shows </h3>
 <article class="cardLayout accountCard">
     <ul>
         {{#each recs}}
@@ -18,7 +19,7 @@
         {{/each}}
     </ul>
 </article>
-<h3 class="reviewHeader">{{user.screen_name}}'s Liked Shows</h3>
+<h3 class="reviewHeader">{{otherUser.screen_name}}'s Liked Shows</h3>
 <article class="cardLayout accountCard">
     <ul>
         {{#each likes}}
@@ -36,7 +37,7 @@
         {{/each}}
     </ul>
 </article>
-<h3 class="reviewHeader">Shows {{user.screen_name}} Has Seen</h3>
+<h3 class="reviewHeader">Shows {{otherUser.screen_name}} Has Seen</h3>
 <article class="cardLayout accountCard">
     <ul>
         {{#each watched}}
@@ -54,12 +55,12 @@
         {{/each}}
     </ul>
 </article>
-<h3 class="reviewHeader">{{user.screen_name}}'s Reviews</h3>
+<h3 class="reviewHeader">{{otherUser.screen_name}}'s Reviews</h3>
 <article class="cardLayout accountCard reviewLayout">
     <dl>
         {{#each reviews}}
         <dt><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for {{this.showName.name}}:</a></dt>
-        <dd id="review_{{this._id}}" name="review">{{this.content}}</dd>
+        <dd class="otherReview" id="review_{{this._id}}" name="review">{{this.content}}</dd>
         {{/each}}
     </dl>
 </article>

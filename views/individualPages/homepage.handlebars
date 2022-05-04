@@ -20,3 +20,40 @@
     </form>
 </section>
 
+<hr class="topSpace">
+
+<h3 class="subheader topSpace">Most Liked Shows</h3>
+{{#if likedShows.length}}
+<section id="bestShows" class="grid-container">
+    {{#each likedShows}}
+        <div class="card">
+                <img class="covers clickable" onclick="location.href = 'http://localhost:3000/shows/view/{{this._id}}'" src={{this.image}} alt="Image for {{this.name}}">
+                <div class="content">
+                    <h4 class = "titlename"><b>{{this.name}}</b></h4>
+                    <p >Likes: {{this.likes}}</p>
+                </div>        
+        </div>
+    {{/each}}
+</section>
+{{else}}
+<p>Could not fetch shows.</p>
+{{/if}}
+
+<h3 class="subheader topSpace">Most Watched Shows</h3>
+{{#if watchedShows.length}}
+<section id="popularShows" class="grid-container">
+    {{#each watchedShows}}
+        <div class="card">
+                <img class="covers clickable" onclick="location.href = 'http://localhost:3000/shows/view/{{this._id}}'" src={{this.image}} alt="Image for {{this.name}}">
+                <div class="content">
+                    <h4 class="titlename"><b>{{this.name}}</b></h4>
+                    <p>Watches: {{this.watches}}</p>
+                </div>        
+        </div>
+    {{/each}}
+</section>
+{{else}}
+<p>Could not fetch shows.</p>
+{{/if}}
+
+<a href='http://localhost:3000/shows/allShows' class="bigLink clickable">Click Here To View All Shows</a>
