@@ -10,7 +10,7 @@ const { ObjectId } = require('mongodb');
  * the results of that search, or an empty array if nothing was found
  */
 async function searchDb(searchTerm) {
-    if (searchTerm.trim().length === 0) throw 'Please enter a search term'
+    //if (searchTerm.trim().length === 0) throw 'Please enter a search term'
     const validShows = [];
     const showCollection = await showDb();
     let matchingnames = await showCollection.find({ name: { $regex: searchTerm, $options: '-i' } }).toArray();
