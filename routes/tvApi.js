@@ -257,11 +257,11 @@ module.exports = router;
 
 /* TODO: 
  * Error checking
- * make search results scrollable
  * edit/delete reviews
- * add reviews to seed file
  * add checkbox functionality to update reviews 
  * add top rated tv shows to home page - DONE
+ * add reviews to seed file - DONE
+ * make search results scrollable - DONE
  * all tv shows page - DONE
  * add reviews - DONE
  * show reviews - DONE

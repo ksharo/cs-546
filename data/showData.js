@@ -298,7 +298,7 @@ async function getRecommendations(user) {
     try {
         //get document for current user
         const userCollection = await userDb();
-        const foundUser = await userCollection.findOne({ screen_name: user });
+        const foundUser = await userCollection.findOne({ screen_name: user.toLowerCase() });
         if (!(foundUser != undefined && foundUser != null)) {
             throw "Error: User with username " + user + " was not found in the database!";
         } else {

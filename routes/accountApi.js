@@ -278,11 +278,16 @@ router
             } catch (e) {
                 throw (e);
             }
-            let reviews = await data.reviewData.getByUser(username);
-            for (let i = 0; i < reviews.length; i++) {
+            let origReviews = await data.reviewData.getByUser(username);
+            const reviews = [];
+            for (let i = 0; i < origReviews.length; i++) {
                 try {
-                    let show = await data.showData.getShow(reviews[i]['show_id']);
-                    reviews[i]['showName'] = show;
+                    /* don't let other users see your anonymous reviews! */
+                    if (!origReviews[i].anonymous) {
+                        let show = await data.showData.getShow(origReviews[i]['show_id']);
+                        origReviews[i]['showName'] = show;
+                        reviews.push(origReviews[i]);
+                    }
                 } catch (e) {
                     throw (e);
                 }

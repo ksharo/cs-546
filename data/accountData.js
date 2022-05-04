@@ -90,7 +90,7 @@ async function editUser(firstName, lastName, email, oldUsername, newUsername, im
         }
 
         /* get the user to return the data */
-        const result = await userCollection.findOne({ email: email });
+        const result = await userCollection.findOne({ email: email.toLowerCase() });
         if (result == null || result == undefined) {
             throw `Failed to fetch user after update.`;
         }
@@ -145,9 +145,9 @@ async function getUser(username) {
     try {
         checkAdvancedString(username, 'Screen Name', 6);
         const userCollection = await usersDb();
-        const foundUser = await userCollection.findOne({ screen_name: username });
+        const foundUser = await userCollection.findOne({ screen_name: username.toLowerCase() });
         if (!(foundUser != undefined && foundUser != null)) {
-            throw "Error: User with username " + user + " was not found in the database!";
+            throw "Error: User with username " + username + " was not found in the database!";
         }
         return foundUser;
     } catch (e) {
@@ -161,7 +161,7 @@ async function getUser(username) {
 async function getUserById(userId) {
     try {
         const userCollection = await usersDb();
-        if (userId == undefined || userId.toString().trim() == '' || !ObjectId.isValid(userId.trim)) {
+        if (userId == undefined || userId.toString().trim() == '' || !ObjectId.isValid(userId.toString().trim())) {
             throw "Error: Expected id to be a non-empty valid ObjectId.";
         }
         const foundUser = await userCollection.findOne({ _id: ObjectId(userId.toString()) });

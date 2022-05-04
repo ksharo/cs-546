@@ -51,7 +51,7 @@ async function getByShow(show_id) {
     try {
         if (!(show_id && show_id.trim() != '' && ObjectId.isValid(show_id))) throw `Error: Show ID must be a valid, non-empty ObjectId!`;
         const reviewCollection = await reviewsDB();
-        const foundReviews = await reviewCollection.find({ show_id: show_id }).toArray();
+        const foundReviews = await reviewCollection.find({ show_id: show_id }).sort({ time_posted: -1 }).toArray();
         if (!(foundReviews != undefined && foundReviews != null)) {
             throw "Error: Show with show id " + show_id + " was not found in the database!";
         }
@@ -70,7 +70,7 @@ async function getByUser(username) {
         const reviewCollection = await reviewsDB();
         const user = await getUser(username);
         const poster_id = user._id;
-        const foundReviews = await reviewCollection.find({ poster_id: poster_id }).toArray();
+        const foundReviews = await reviewCollection.find({ poster_id: poster_id }).sort({ time_posted: -1 }).toArray();
         if (!(foundReviews != undefined && foundReviews != null)) {
             throw "Error: Reviews for user " + username + " were not found in the database!";
         }

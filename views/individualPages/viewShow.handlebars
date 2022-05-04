@@ -1,5 +1,6 @@
 <article class="cardLayout">
     <h2 class="subheader showName">{{ showData.name }}</h2>
+    <p class="errorMessage" hidden id="viewShowError"></p>
     {{#if user}}
     <h3 class="showSubheader">
         <img src={{likeIcon}} id='tup' class="svgImg" alt="Thumbs Up" />

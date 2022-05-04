@@ -1,5 +1,3 @@
-// const { reviewData } = require("../../data");
-
 const svgs = document.getElementsByClassName('svgImg');
 const tup = document.getElementById('tup');
 const likesTxt = document.getElementById('likesTxt');
@@ -10,24 +8,29 @@ const watchesTxt = document.getElementById('watchesTxt');
 const newReviewForm = document.getElementById('reviewForm');
 const review = document.getElementById('content');
 const anon = document.getElementById('anonymous');
+const viewShowError = document.getElementById('viewShowError');
 
 newReviewForm.addEventListener('submit', async(event) => {
+    viewShowError.style.display = 'none';
     try {
         const showId = window.location.href.split('/view/')[1];
         event.preventDefault();
         const content = review.value.trim();
         if (content == "") {
-            return;
+            viewShowError.textContent = `Error: Review content cannot be left blank.`;
+            viewShowError.style.display = 'block';
         }
         // TODO error checking
         let result = await createReview(content, showId, anon.checked);
         window.location.reload();
         return result;
     } catch (e) {
-        console.log(e);
-        throw e;
+        viewShowError.textContent = `Error: could not add review. ${e}`;
+        viewShowError.style.display = 'block';
     }
 });
+
+
 const createReview = async(content, show, anon) => {
     const requestOptions = {
         method: 'POST',
@@ -37,13 +40,16 @@ const createReview = async(content, show, anon) => {
         body: JSON.stringify({
             review: content,
             show: show,
-            anon: anon, // TODO add anonymous functionality
+            anon: anon,
         })
     };
     return fetch('http://localhost:3000/review/create', requestOptions);
 };
+
+
 for (let x of svgs) {
     x.addEventListener('click', async(event) => {
+        viewShowError.style.display = 'none';
         const originalSrc = event.target.src.split('_');
         let changedLike = 0;
         let changedDislike = 0;
@@ -94,7 +100,18 @@ for (let x of svgs) {
             watchesTxt.textContent = Number(watchesTxt.textContent) - 1;
             changedWatches -= 1;
         }
-        await updateShowCounts(changedLike, changedDislike, changedWatches);
+        try {
+            const result = await updateShowCounts(changedLike, changedDislike, changedWatches);
+            if (!result.ok) {
+                viewShowError.textContent = `Error: could not update show statistics.`;
+                viewShowError.style.display = 'block';
+            } else {
+                return;
+            }
+        } catch (e) {
+            viewShowError.textContent = `Error: could not update show statistics. ${e}`;
+            viewShowError.style.display = 'block';
+        }
     })
 }
 

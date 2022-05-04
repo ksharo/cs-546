@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use('/account/view/:username', (req, res, next) => {
-    if (req.params.username == req.session.user.username) {
+    if (req.session.user && req.params.username == req.session.user.username) {
         return res.redirect('/account/view');
     } else {
         next();

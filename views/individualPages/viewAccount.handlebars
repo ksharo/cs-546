@@ -69,8 +69,9 @@
                     <label for="anonymous">Anonymous:<input type="checkbox"
                     name="anonymous" id="anonymous_{{this._id}}"></input></label>  
             {{/if}}
-            <button id="{{this._id}}" class="updateReviewBtn">Update</button>
+            <button id="updateReview_{{this._id}}" class="updateReviewBtn">Update</button>
         </form>
+        <button id="deleteReview_{{this._id}}">Delete</button>
         {{/each}}
     </ul>
 </article>
