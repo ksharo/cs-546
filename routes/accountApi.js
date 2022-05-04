@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const accountFunctions = data.accountData;
+const globalFunctions = data.globalData;
 const validator = require('validator');
 
 const imgData = [{
@@ -128,12 +129,12 @@ router
             const password = req.body.newPassword.trim();
             const confirmation = req.body.confirmNewPassword.trim();
             /* error check all inputs */
-            checkString(firstName, 'First Name', 1);
-            checkString(lastName, 'Last Name', 1);
-            checkString(email, 'Email', 6, false, false, true);
-            checkString(username, 'Screen Name', 6);
-            checkString(password, 'Password', 6, false, false, false);
-            checkString(confirmation, 'Password Confirmation', 0, false, false, false);
+            globalFunctions.checkAdvancedString(firstName, 'First Name', 1);
+            globalFunctions.checkAdvancedString(lastName, 'Last Name', 1);
+            globalFunctions.checkAdvancedString(email, 'Email', 6, false, false, true);
+            globalFunctions.checkAdvancedString(username, 'Screen Name', 6);
+            globalFunctions.checkAdvancedString(password, 'Password', 6, false, false, false);
+            globalFunctions.checkAdvancedString(confirmation, 'Password Confirmation', 0, false, false, false);
             if (password != confirmation) {
                 throw `Error: Passwords don't match.`;
             }
@@ -183,9 +184,9 @@ router
                 return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
             }
             /* error check all inputs */
-            checkString(firstName, 'First Name', 1);
-            checkString(lastName, 'Last Name', 1);
-            checkString(username, 'Screen Name', 6);
+            globalFunctions.checkAdvancedString(firstName, 'First Name', 1);
+            globalFunctions.checkAdvancedString(lastName, 'Last Name', 1);
+            globalFunctions.checkAdvancedString(username, 'Screen Name', 6);
 
             /* try to update the user (don't overwrite image with empty string!) */
             const auth = await accountFunctions.editUser(firstName, lastName, req.session.user.email, req.session.user.username, username, img == '' ? req.session.user.img : img);
@@ -317,8 +318,8 @@ router
         try {
             const username = req.body.username;
             const password = req.body.password;
-            checkString(username, 'Username', 6, false, false, true);
-            checkString(password, 'Password', 6, false, false, false);
+            globalFunctions.checkAdvancedString(username, 'Username', 6, false, false, true);
+            globalFunctions.checkAdvancedString(password, 'Password', 6, false, false, false);
             const auth = await accountFunctions.checkUser(username.trim(), password.trim());
             if (auth.authenticated) {
                 /* set cookie for user */
@@ -351,32 +352,5 @@ router
         return res.redirect('/');
     });
 
-function checkString(str, name = 'Input', minLength = 1, onlyAlphNum = true, spacesAllowed = false, email = false) {
-    /* make sure the string is not empty */
-    if (str == undefined || str.trim().length == 0) {
-        throw `Error: ${name} cannot be empty.`;
-    }
-    /* check that the email is valid */
-    if (email) {
-        if (!validator.isEmail(str)) {
-            throw `Error: ${name} must be in email format. Example: john@abc.com`;
-        }
-    }
-    /* make sure the string is at least the required length */
-    if (str.trim().length < minLength) {
-        throw `Error: ${name} must be at least ${minLength} characters.`;
-    }
-    /* make sure there are no spaces, if spaces are not allowed */
-    if (!spacesAllowed && str.trim().includes(' ')) {
-        throw `Error: ${name} cannot contain spaces.`;
-    }
-    /* make sure there are only numbers and letters */
-    if (onlyAlphNum) {
-        const alphanum = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        for (let x of str) {
-            if (!alphanum.includes(x.toLowerCase())) throw `Error: ${name} can only contain letters and numbers.`;
-        }
-    }
-    return true;
-}
+
 module.exports = router;

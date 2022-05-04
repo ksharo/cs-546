@@ -3,10 +3,12 @@ const manualBk = document.getElementById('manualBackdrop');
 const clickToClose = document.getElementById('fullCover');
 const addBtn = document.getElementById('addShow');
 const closeBtn = document.getElementById('dontAdd');
+const fullAddError = document.getElementById('fullAddError');
+
 
 /* form data */
 const newShowForm = document.getElementById('newShowForm');
-const errorMessage = document.getElementById('hiddenAddShowError');
+const addShowErrorMessage = document.getElementById('hiddenAddShowError');
 const nameInput = document.getElementById('showName');
 const imgInput = document.getElementById('imgLink');
 const startInput = document.getElementById('startYear');
@@ -16,17 +18,20 @@ const numEpInput = document.getElementById('numEpisodes');
 const runtimeInput = document.getElementById('runtime');
 const genresInput = document.getElementById('genres');
 const summaryInput = document.getElementById('summary');
+const addSearchError = document.getElementById('addShowSearchError');
 
 /* search form */
-const searchInput = document.getElementById('smallSearch');
-const searchForm = document.getElementById('addSearch');
+const smallSearchInput = document.getElementById('smallSearch');
+const addSearchForm = document.getElementById('addSearch');
 
 /* set up listener for searching a new term */
-searchForm.addEventListener('submit', async(event) => {
+addSearchForm.addEventListener('submit', async(event) => {
+    addSearchError.style.display = 'none';
     event.preventDefault();
-    const searchTerm = searchInput.value.trim();
+    const searchTerm = smallSearchInput.value.trim();
     if (searchTerm == '') {
-        // TODO show error on page
+        addSearchError.textContent = 'Error: Please enter a search term.';
+        addSearchError.style.display = 'block';
     } else {
         window.location.href = 'http://localhost:3000/shows/add/' + searchTerm;
     }
@@ -35,36 +40,57 @@ searchForm.addEventListener('submit', async(event) => {
 /* set up listener on form submission to add new manual show */
 newShowForm.addEventListener('submit', async(event) => {
     event.preventDefault();
-
+    addShowErrorMessage.style.display = 'none';
     try {
         const name = nameInput.value.trim();
-        const img = imgInput.value.trim();
+        const img = imgInput.value.trim(); // not required
         const start = startInput.value.trim();
-        const end = endInput.value.trim();
-        const lang = languageInput.value.trim();
-        const numEp = numEpInput.value.trim();
-        const runtime = runtimeInput.value.trim();
+        const end = endInput.value.trim(); // not required
+        const lang = languageInput.value.trim(); // not required
+        const numEp = numEpInput.value.trim(); // not required
+        const runtime = runtimeInput.value.trim(); // not required
         const genres = genresInput.value.trim();
         const summary = summaryInput.value.trim();
         /* Error check all inputs */
-
-        // TODO: error check inputs
-        // name should be at least one character
-        // image is not required
-        // start must be between 1900 and 2023
-        // end is not required, but if given must be between 1900 and 2023
-        // language must be a string, but is not required
-        // number of episodes is not required but should be a number
-        // runtime is not required but should be a number
-        // genres should be turned into an array separated by commas
-        // summary is required and should be a string at least 20 characters long, fewer than 500 characters
+        let errorText = '';
+        if (name == undefined || name.trim() == '' || name.trim().length < 1) {
+            errorText = 'Error: Show Title must be at least one character.'
+        }
+        // note: no need to error check image link
+        else if (start == undefined || isNaN(Number(start)) || Number(start) < 1900 || Number(start) > 2023 || Math.floor(Number(start)) != Number(start)) {
+            errorText = 'Error: Start year must be a valid year between 1900 and 2023.';
+        } else if ((end != undefined && end.trim() != '') && (isNaN(Number(end)) || Number(end) < 1900 || Number(end) > 2023 || Math.floor(Number(end)) != Number(end) || Number(end) < Number(start))) {
+            errorText = 'Error: End year must be a valid year between 1900 and 2023, and after the start year.';
+        } else if ((lang != undefined && lang.trim() != '') && lang.trim().length < 2) {
+            errorText = 'Error: Language must be at least two characters.';
+        } else if ((numEp != undefined && numEp.trim() != '') && (isNaN(Number(numEp)) || Number(numEp) <= 0 || Math.floor(Number(numEp)) != Number(numEp))) {
+            errorText = 'Error: Number of episodes must be greater than 0.';
+        } else if ((runtime != undefined && runtime.trim() != '') && (isNaN(Number(runtime)) || Number(runtime) <= 0 || Math.floor(Number(runtime)) != Number(runtime))) {
+            errorText = 'Error: Runtime must be greater than 0.';
+        } else if (genres == undefined || genres.trim() == '' || genres.trim().length < 2) {
+            errorText = 'Error: Genres must be at least two characters.';
+        } else if (summary == undefined || summary.trim() == '' || summary.trim().length < 20 || summary.trim().length > 500) {
+            errorText = 'Error: Summary must be between 20 and 500 characters.';
+        }
+        if (errorText != '') {
+            addShowErrorMessage.textContent = errorText;
+            addShowErrorMessage.style.display = 'block';
+            addShowErrorMessage.scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
         const result = await addManualShow(name, img, start, end, lang, numEp, runtime, summary, genres);
         if (result.ok) {
             const show = await result.json();
             window.location.href = 'http://localhost:3000/shows/view/' + show.show._id;
+        } else {
+            addShowErrorMessage.textContent = 'Error: could not add show to database.';
+            addShowErrorMessage.style.display = 'block';
+            addShowErrorMessage.scrollIntoView({ behavior: 'smooth' });
         }
     } catch (e) {
-        // TODO: show error on page
+        addShowErrorMessage.textContent = e;
+        addShowErrorMessage.style.display = 'block';
+        addShowErrorMessage.scrollIntoView({ behavior: 'smooth' });
     }
 })
 
@@ -82,7 +108,9 @@ const addShow = async(showId) => {
         const show = await result.json();
         window.location.href = 'http://localhost:3000/shows/view/' + show.show._id;
     } else {
-        // TODO: show error on page
+        fullAddError.textContent = 'Error: could not add show to database: ' + result.statusText;
+        fullAddError.style.display = 'block';
+        fullAddError.scrollIntoView({ behavior: 'smooth' });
     }
 };
 

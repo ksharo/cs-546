@@ -46,6 +46,18 @@ app.use('/account/view', (req, res, next) => {
     }
 });
 
+app.use('/account/edit', (req, res, next) => {
+    if (req.originalUrl == req.baseUrl) {
+        if (!req.session.user) {
+            return res.status(403).redirect('/');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
+
 /* start the server! */
 configRoutes(app);
 

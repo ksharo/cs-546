@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const { ObjectId } = require('mongodb');
+const { checkAdvancedString } = require('../data/globalData');
 
 router
     .route('/search')
@@ -12,8 +13,12 @@ router
 router
     .route('/allShows')
     .get(async(req, res) => {
-        const shows = await data.showData.getAll();
-        return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript' });
+        try {
+            const shows = await data.showData.getAll();
+            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript' });
+        } catch (e) {
+            return res.status(500).json({ error: e.toString() });
+        }
     });
 
 
@@ -26,7 +31,7 @@ router
                 const shows = await data.showData.searchDb(searchTerm);
                 return res.status(200).render('individualPages/searchShow', { user: req.session.user, searchTerm: searchTerm, shows: shows, partial: 'searchScript' });
             } else {
-                return res.status(400).json({ error: 'please enter a search term' })
+                return res.status(400).json({ error: 'Error: Please enter a search term' })
             }
         } catch (e) {
             return res.status(500).json({ error: e.toString() })
@@ -42,7 +47,7 @@ router
                 const shows = await data.showData.searchDb(searchTerm);
                 return res.status(200).render('individualPages/searchShow', { user: req.session.user, searchTerm: searchTerm, shows: shows, partial: 'searchScript' });
             } else {
-                return res.status(400).json({ error: 'please enter a search term' })
+                return res.status(400).json({ error: 'Error: Please enter a search term' })
             }
         } catch (e) {
             return res.status(500).json({ error: e.toString() })
@@ -58,6 +63,7 @@ router
             if (searchTerm && searchTerm.trim() != '') {
                 const shows = await data.showData.searchMaze(searchTerm);
                 for (let x of shows) {
+                    /* prepare required data for user to view */
                     x.show.image = x.show.image == null ? '/public/assets/no_image.jpeg' : x.show.image.medium ? x.show.image.medium : '/public/assets/no_image.jpeg';
                     x.show.start_year = x.show.premiered ? (x.show.premiered.split('-').length > 0 ? x.show.premiered.split('-')[0] : 'N/A') : 'N/A';
                     x.show.end_year = x.show.ended ? (x.show.ended.split('-').length > 0 ? x.show.ended.split('-')[0] : 'Present') : 'Present';
@@ -118,6 +124,7 @@ router
                 }
                 const reviews = await data.reviewData.getByShow(showId);
                 for (let x of reviews) {
+                    /* prepare review data for the user to view */
                     if (!x.anonymous) {
                         const poster = await data.accountData.getUserById(x.poster_id);
                         x.prof_pic = poster.profile_pic == '' ? '/public/assets/empty_profile.svg' : poster.profile_pic;
@@ -132,7 +139,6 @@ router
                 return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, reviews: reviews, partial: 'viewShowScript' });
             }
         } catch (e) {
-            console.log(e);
             return res.status(500).json({ error: e.toString() })
         }
     });
@@ -142,17 +148,49 @@ router
     .post(async(req, res) => {
         try {
             // this route should be used to create a new show with manual data added by the user
-            // TODO: check for errors
             const showName = req.body.name;
-            const showImg = req.body.img;
-            const startYear = req.body.start;
-            const endYear = req.body.end;
-            const language = req.body.language;
-            const numEpisodes = req.body.numEpisodes;
-            const runtime = req.body.runtime;
+            const showImg = req.body.img; // not required
+            const language = req.body.language; // not required
             const summary = req.body.summary;
+            const startYear = req.body.start;
+            const endYear = req.body.end; // not required
+            const numEpisodes = req.body.numEpisodes; // not required
+            const runtime = req.body.runtime; // not required
             const genres = req.body.genres;
-            const show = await data.showData.addManual(showName, showImg, startYear, endYear, numEpisodes, language, runtime, summary, [genres]);
+            /* error check string parameters */
+            checkAdvancedString(showName, 'Show Name', 1, false, true, false);
+            /* image link not required */
+            if (showImg != undefined && showImg.trim() != '') {
+                checkAdvancedString(showImg, 'Show Image Link', 5, false, false, false);
+            }
+            /* language not required */
+            if (language != undefined && language.trim() != '') {
+                checkAdvancedString(language, 'Show Language', 2, true, true, false);
+            }
+            checkAdvancedString(summary, 'Show Summary', 20, false, true, false);
+            if (summary.trim().length > 500) throw `Error: summary must be at most 500 characters.`;
+            /* error check number parameters */
+            data.showData.checkInt(Number(startYear), 1900, 2023, 'Start Year');
+            /* take into account that the show might still be going! */
+            if (endYear != undefined && endYear.trim() != '') {
+                data.showData.checkInt(Number(endYear), 1900, 2023, 'End Year');
+                if (Number(endYear) < Number(startYear)) {
+                    return res.status(400).json({ error: "Error: End year must be later than start year" });
+                }
+            }
+            /* number of episodes not required */
+            if (numEpisodes != undefined && numEpisodes.trim() != '') {
+                data.showData.checkInt(Number(numEpisodes), 0, undefined, 'Number of Episodes');
+            }
+            /* runtime not required */
+            if (runtime != undefined && runtime.trim() != '') {
+                data.showData.checkInt(Number(runtime), 0, undefined, 'Runtime');
+            }
+
+            /* error check and prepare array of genres */
+            checkAdvancedString(genres, 'Genres', 1, false, true, false);
+            const genreList = genres.trim().split(',');
+            const show = await data.showData.addManual(showName, showImg, startYear, endYear, numEpisodes, language, runtime, summary, genreList);
             if (show.showInserted) {
                 return res.status(200).json({ user: req.session.user, show: show.showData, partial: 'addShowScript' });
             } else {
@@ -160,7 +198,7 @@ router
 
             }
         } catch (e) {
-            return res.status(500).json({ error: e.toString() })
+            return res.status(400).json({ error: e.toString() })
         }
     });
 
@@ -241,4 +279,9 @@ module.exports = router;
  * routes
  * accountApi.js has been error checked fully!
  * mainApi.js has been error checked fully!
+ * reviewAPI.js has been error checked fully!
+ * tvApi.js has been error checked fully!
+ * 
+ * scripts
+ * addShowScript.js has been error checked fully!
  */

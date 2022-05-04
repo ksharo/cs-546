@@ -1,5 +1,6 @@
 <h2 class="subheader">Add A Show</h2>
 <h3 class="miniTitle">Search Term: {{searchTerm}}</h3>
+<p class="errorMessage" id="fullAddError" hidden></p>
 <section id="modalBackdrop" hidden class="modalBackground">
     <section id="modal" class="popupModal">
         <h3>Add show to database?</h3>
@@ -17,23 +18,23 @@
             <p class="errorMessage" id="addShowError">{{errorMessage}} (status code: {{errorStatus}})</p>
             {{/if}}
             <p class="errorMessage" id="hiddenAddShowError" hidden></p>
-            <label for="showName">Show Title:</label>
+            <label for="showName">Show Title (required):</label>
             <input type="text" id="showName" name="showName">
             <label for="imgLink">Link to Show Image:</label>
             <input type="text" id="imgLink" name="imgLink">
-            <label for="startYear">Start Year:</label>
+            <label for="startYear">Start Year (required):</label>
             <input type="text" id="startYear" name="startYear">
             <label for="endYear">End Year (leave blank if show is still active):</label>
             <input type="text" id="endYear" name="endYear">
-            <label for="language">Main Language:</label>
+            <label for="language">Main Language (required):</label>
             <input type="text" id="language" name="language" />
             <label for="numEpisodes">Number of Episodes:</label>
             <input type="number" id="numEpisodes" name="numEpisodes" />
             <label for="runtime">Episode Runtime (in minutes):</label>
             <input type="number" id="runtime" name="runtime" />
-            <label for="genres">Enter genres, separated by a comma:</label>
+            <label for="genres">Enter genres, separated by a comma (required):</label>
             <input type="text" id="genres" name="genres" />
-            <label for="summary">Summary:</label>
+            <label for="summary">Summary (required):</label>
             <textarea id="summary" name="summary"></textarea>
             <button type="submit" id="createAccountBtn">Add!</button>
         </form>
@@ -57,6 +58,7 @@
     <p class="noResults">We're sorry, but no results were found for {{searchTerm}}.</p>
     {{/if}}
 </section>
+<p class="errorMessage" id="addShowSearchError" hidden></p>
 <form action='/shows/search' method='POST' id="addSearch" class="formClass">
     <label for='smallSearch'>
         Search for another show to add to the database:

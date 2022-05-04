@@ -3,7 +3,7 @@ const showDb = mongoCollections.shows;
 const userDb = mongoCollections.users;
 const axios = require('axios');
 const { ObjectId } = require('mongodb');
-const { checkString } = require('./accountData');
+const { checkString } = require('./globalData');
 
 /*
  * This function searches for a tv show within our
@@ -64,7 +64,7 @@ async function getPopular() {
 async function getAll() {
     try {
         const showCollection = await showDb();
-        const showList = await showCollection.find({}).toArray();
+        const showList = await showCollection.find({}).sort({ name: 1 }).toArray();
         if (!showList) throw 'Could not get shows';
         return showList;
     } catch (e) {
@@ -363,7 +363,8 @@ async function getRecommendations(user) {
 function checkInt(int, min, max, name = 'number') {
     if (int == undefined || int == null) throw `Error: Expected ${name} to be a number, but it does not exist!`;
     if (isNaN(Number(int))) throw `Error: Expected ${name} to be a number, but failed to convert.`;
-    if (Number(int) < min || Number(int) > max) throw `Error: Expected ${name} to be in the range ${min} - ${max}.`;
+    if (Math.floor(Number(int)) != int) throw `Error: Expected ${name} to be an integer.`;
+    if ((min != undefined && Number(int) < min) || (max != undefined && Number(int) > max)) throw `Error: Expected ${name} to be in the range ${min} - ${max}.`;
     return true;
 }
 
