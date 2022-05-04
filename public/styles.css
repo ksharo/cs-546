@@ -200,6 +200,9 @@ body {
 
 .accountCard a:hover {
     cursor: pointer;
+}
+
+.accountCard span:hover {
     filter: brightness(80%);
 }
 
@@ -214,9 +217,9 @@ body {
 }
 
 .thumbnail:hover {
-    width: 200px;
+    width: 160px;
     left: 300px;
-    top: 0px;
+    top: 14px;
 }
 
 .updateReviewBtn {
