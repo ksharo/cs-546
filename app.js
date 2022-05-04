@@ -26,6 +26,13 @@ app.use(
     })
 );
 
+app.use('/account/view', (req, res, next) => {
+    if (!req.session.user) {
+      return res.redirect('/');
+    } else {
+      next();
+    }
+});
 
 /* start the server! */
 configRoutes(app);
