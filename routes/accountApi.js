@@ -220,6 +220,15 @@ router
             } catch (e) {
                 throw (e)
             }
+            let reviews = await data.reviewData.getByUser(username);
+            for (let i = 0; i < reviews.length; i++) {
+                try {
+                    let show = await data.showData.getShow(reviews[i]['show_id']);
+                    reviews[i]['showName'] = show;
+                } catch (e) {
+                    throw (e);
+                }
+            }
             let likes = []
             for (let i = 0; i < user['liked_shows'].length; i++) {
                 try {
@@ -239,7 +248,7 @@ router
                 }
             }
             //maybe only show a maximum of 5 liked shows/watched shows/etc
-            return res.status(200).render('individualPages/viewAnotherAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, partial: 'mainScript' });
+            return res.status(200).render('individualPages/viewAnotherAccount', { user: user, likes: likes, watched: seen, recs: recs, reviews: reviews, partial: 'viewAccountScript' });
         } catch (e) {
             return res.status(500).json({ error: e.toString() });
         }

@@ -1,25 +1,65 @@
-<h2 class="subheader">{{user.username}}'s Profile</h2>
-<h3>Recommendations Based on {{user.username}}'s Favorite Shows </h3>
-<ul>
-    {{#each recs}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>{{user.username}}'s Liked Shows</h3>
-<ul>
-    {{#each likes}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>Shows {{user.username}} Has Seen</h3>
-<ul>
-    {{#each watched}}
-    <li><a href="http://localhost:3000/shows/view/{{this._id}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
-<h3>{{user.username}}'s Reviews</h3>
-<ul>
-    {{#each reviews}}
-    <li>{{this}}</li>
-    {{/each}}
-</ul>
+<h2 class="subheader">{{user.screen_name}}'s Profile</h2>
+<h3 class="reviewHeader">Recommendations Based on {{user.screen_name}}'s Liked Shows </h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each recs}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
+                    alt="Image for {{this.name}}" class="thumbnail" src="{{this.image}}" /><span
+                    class="showName">{{this.name}}</span></a>
+
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">{{user.screen_name}}'s Liked Shows</h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each likes}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}">
+                <img class="thumbnail" alt="Image for {{this.name}}" src="{{this.image}}" />
+                <span class="showName">{{this.name}}</span></a>
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">Shows {{user.screen_name}} Has Seen</h3>
+<article class="cardLayout accountCard">
+    <ul>
+        {{#each watched}}
+        <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
+                    alt="Image for {{this.name}}" class="thumbnail" src="{{this.image}}" />
+                <span class="showName">{{this.name}}</span></a>
+            <aside class="searchImg">
+                <h4>Details</h4>
+                <p>{{this.start_year}} - {{this.end_year}}</p>
+                <p>Likes: {{this.likes}}</p>
+                <p>Dislikes: {{this.dislikes}}</p>
+                <p>Watches: {{this.watches}}</p>
+            </aside>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<h3 class="reviewHeader">{{user.screen_name}}'s Reviews</h3>
+<article class="cardLayout accountCard reviewLayout">
+    <dl>
+        {{#each reviews}}
+        <dt><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for {{this.showName.name}}:</a></dt>
+        <dd id="review_{{this._id}}" name="review">{{this.content}}</dd>
+        {{/each}}
+    </dl>
+</article>
