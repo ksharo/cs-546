@@ -257,8 +257,11 @@ module.exports = router;
 
 /* TODO: 
  * Error checking
- * edit/delete reviews
- * add checkbox functionality to update reviews 
+ * add filters and sorting to all shows page
+ * a user that is not logged in cannot add shows
+ * edit show's missing data?
+ * edit/delete reviews - DONE
+ * add checkbox functionality to update reviews - DONE
  * add top rated tv shows to home page - DONE
  * add reviews to seed file - DONE
  * make search results scrollable - DONE
@@ -286,4 +289,5 @@ module.exports = router;
  * 
  * scripts
  * addShowScript.js has been error checked fully!
+ * viewAccountScript.js has been error checked fully!
  */

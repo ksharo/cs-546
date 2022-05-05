@@ -530,6 +530,12 @@ label {
     margin: 4px auto 12px auto;
 }
 
+.successMessage {
+    color: var(--secondary);
+    text-align: center;
+    margin: 4px auto 12px auto;
+}
+
 #loginForm label {
     color: var(--primary);
 }

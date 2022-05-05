@@ -1,11 +1,18 @@
 const deleteBtns = document.getElementsByClassName("deleteReviewBtn");
 const updateBtns = document.getElementsByClassName('updateReviewBtn');
+const updateError = document.getElementById('updateReviewsError');
+const updateSuccess = document.getElementById('updateReviewsSuccess');
+
 
 for (let btn of deleteBtns) {
     btn.addEventListener('click', async(event) => {
+        updateError.style.display = 'none';
+        updateSuccess.style.display = 'none';
         const reviewId = event.target.id.split('deleteReview_')[1];
         if (reviewId.trim() == '') {
-            // TODO show error
+            updateError.textContent = 'Error: There was a problem deleting this review. Please try again later.';
+            updateError.style.display = 'block';
+            updateError.scrollIntoView({ behavior: 'smooth' });
             return;
         }
         const requestOptions = {
@@ -18,16 +25,28 @@ for (let btn of deleteBtns) {
         const result = await fetch('http://localhost:3000/review/delete/' + reviewId, requestOptions);
         if (result.ok) {
             // reload for change to take effect on screen
-            window.location.reload();
+            updateSuccess.textContent = 'Review deleted!';
+            updateSuccess.style.display = 'block';
+            updateSuccess.scrollIntoView({ behavior: 'smooth' });
+            const formToHide = document.getElementById('updateForm_' + reviewId);
+            // make it appear deleted
+            if (formToHide) {
+                formToHide.style.display = 'none';
+            } else {
+                window.location.reload();
+            }
+            return;
         } else {
-            // TODO show error
+            updateError.textContent = 'Error: There was a problem deleting this review. Please try again later.';
+            updateError.style.display = 'block';
+            updateError.scrollIntoView({ behavior: 'smooth' });
             return;
         }
     });
 }
 
 window.onload = function() {
-    const updateReview = async(content, show) => {
+    const updateReview = async(content, reviewId, anonymous) => {
         const requestOptions = {
             method: 'PATCH',
             headers: {
@@ -35,24 +54,75 @@ window.onload = function() {
             },
             body: JSON.stringify({
                 review: content,
-                id: show,
-                anonymous: false // TODO fix anon
+                id: reviewId,
+                anonymous: anonymous
             })
         };
         return fetch('http://localhost:3000/review/update', requestOptions);
     };
     for (let i = 0; i < updateBtns.length; i++) {
         updateBtns[i].addEventListener("click", async(event) => {
-            let review = document.getElementById("review_" + event.target.id);
+            event.preventDefault();
+            updateError.style.display = 'none';
+            updateSuccess.style.display = 'none';
+            const reviewId = event.target.id.split('updateReview_')[1];
+            // error check review id
+            if (reviewId.trim() == '') {
+                updateError.textContent = 'Error: There was a problem updating this review. Please try again later.';
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            let review = document.getElementById("review_" + reviewId);
+            if (!review) {
+                updateError.textContent = 'Error: There was a problem updating this review (content not found). Please try again later.';
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
             let updatedContent = review.value.trim();
+            // error check updated content
             if (updatedContent == "") {
+                updateError.textContent = 'Error: You cannot update your review to be empty! Please consider deleting it instead.';
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            // error check anonymous checkbox
+            const checkbox = document.getElementById('anonymous_' + reviewId);
+            let anon = false;
+            if (checkbox) {
+                anon = checkbox.checked;
+                if (anon != true && anon != false) {
+                    updateError.textContent = 'Error: There was a problem updating this review (checkbox does not have checked attribute!). Please try again later.';
+                    updateError.style.display = 'block';
+                    updateError.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+            } else {
+                updateError.textContent = 'Error: There was a problem updating this review (checkbox not found!). Please try again later.';
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
                 return;
             }
             try {
-                let result = await updateReview(updatedContent, event.target.id);
-                return result;
+                let result = await updateReview(updatedContent, reviewId, anon);
+                if (result.ok) {
+                    updateSuccess.textContent = 'Review updated!';
+                    updateSuccess.style.display = 'block';
+                    updateSuccess.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                } else {
+                    updateError.textContent = 'Error: There was a problem updating this review. Please try again later.';
+                    updateError.style.display = 'block';
+                    updateError.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
             } catch (e) {
-                throw (e);
+                updateError.textContent = 'There was a problem updating this review: ' + e;
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
+                return;
             }
         });
     }
