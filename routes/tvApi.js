@@ -260,6 +260,7 @@ module.exports = router;
  * add filters and sorting to all shows page
  * a user that is not logged in cannot add shows
  * edit show's missing data?
+ * edit password
  * edit/delete reviews - DONE
  * add checkbox functionality to update reviews - DONE
  * add top rated tv shows to home page - DONE

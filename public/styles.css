@@ -941,7 +941,7 @@ label {
     border: 1px solid var(--accent);
     border-radius: .25rem;
     position: relative;
-    height: 445px;
+    height: 480px;
 }
 
 .clickable:hover {
@@ -972,6 +972,11 @@ label {
     text-align: center;
 }
 
+.showGenres {
+    height: 32px;
+    overflow: hidden;
+}
+
 .allshowbutton {
     background-color: var(--secondary);
     border: 1px solid var(--primary);
@@ -980,10 +985,6 @@ label {
     border-radius: .25rem;
     width: 150px;
     font-size: 14px;
-    position: absolute;
-    bottom: 8px;
-    right: 50%;
-    margin-right: -75px;
 }
 
 .grid-container {
@@ -996,7 +997,7 @@ label {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 70%;
+    width: 200px;
 }
 
 .is-hidden {
