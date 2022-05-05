@@ -259,7 +259,7 @@ module.exports = router;
  * Error checking
  * add filters and sorting to all shows page
  * edit show's missing data?
- * edit password
+ * edit password - DONE
  * a user that is not logged in cannot add shows - DONE
  * edit/delete reviews - DONE
  * add checkbox functionality to update reviews - DONE
@@ -290,5 +290,10 @@ module.exports = router;
  * 
  * scripts
  * addShowScript.js has been error checked fully!
+ * createAccountScript.js has been error checked fully!
+ * editAccountScript.js has been error checked fully!
+ * headerScript.js has been error checked fully!
+ * searchScript.js has been error checked fully!
  * viewAccountScript.js has been error checked fully!
+ * viewShowScript.js has been error checked fully!
  */

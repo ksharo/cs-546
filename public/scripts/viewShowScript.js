@@ -20,10 +20,13 @@ newReviewForm.addEventListener('submit', async(event) => {
             viewShowError.textContent = `Error: Review content cannot be left blank.`;
             viewShowError.style.display = 'block';
         }
-        // TODO error checking
-        let result = await createReview(content, showId, anon.checked);
-        window.location.reload();
-        return result;
+        const result = await createReview(content, showId, anon.checked);
+        if (!result.ok) {
+            viewShowError.textContent = `Error: could not create review.`;
+            viewShowError.style.display = 'block';
+        } else {
+            window.location.reload();
+        }
     } catch (e) {
         viewShowError.textContent = `Error: could not add review. ${e}`;
         viewShowError.style.display = 'block';

@@ -17,6 +17,7 @@
                 <p class="picPreview">No Profile Picture</p>
             {{/if}}
         </section>
+        <button type="button" onclick="openPasswordEdit()">Change Password</button>
         <section class="horizontalFlex">
             <button onClick='editOn()'>Edit</button>
             <button onClick="userHome(event)">Home</button>
@@ -34,7 +35,10 @@
             <input type="password" id="newPass" name="newPass">
             <label for="confirmPass">Confirm New Password:</label>
             <input type="password" id="confirmPass" name="confirmPass">
-            <button type="submit" id="changePassBtn">Finish</button>
+            <section class="horizontalFlex">
+                <button type="button" onclick="closePasswordEdit()">Close</button>
+                <button type="submit" id="changePassBtn">Finish</button>
+            </section>
         </form>
     </section>
 </section>
@@ -70,7 +74,6 @@
             {{/if}}
         </section>
         </article>
-        <button type="button" onclick="openPasswordEdit()">Change Password</button>
 
         <section class="horizontalFlex">
             <button type='submit'>Save Changes</button>

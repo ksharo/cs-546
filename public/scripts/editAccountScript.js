@@ -137,13 +137,15 @@ const closePasswordEdit = () => {
 editPassForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     changePassError.style.display = 'none';
-    // TODO add route for changing password and check for errors
     try {
         /* check form data for errors */
         const curPass = origPassInput.value.trim();
         const newPass = newPassInput.value.trim();
         const confirmPass = confirmPassInput.value.trim();
         const passes = [curPass, newPass, confirmPass];
+        checkString(curPass, 'Current Password', false, 6);
+        checkString(newPass, 'New Password', false, 6);
+        checkString(confirmPass, 'Confirmation Password', false, 6);
         for (let x of passes) {
             if (x == undefined || x.trim() == '' || x.trim().length < 6 || x.trim().includes(' ')) {
                 changePassError.textContent = 'Error: Password must be at least 6 characters long and may not include spaces.';
