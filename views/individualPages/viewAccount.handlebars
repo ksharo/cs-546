@@ -2,6 +2,7 @@
 <hr/>
 <h3 class="reviewHeader">Recommendations Just For You</h3>
 <article class="cardLayout accountCard">
+    {{#if recs.length}}
     <ul>
         {{#each recs}}
         <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
@@ -18,9 +19,13 @@
         </li>
         {{/each}}
     </ul>
+    {{else}}
+        <p class="messageText">Start liking shows to get recommendations!</p>
+    {{/if}}
 </article>
 <h3 class="reviewHeader">Your Liked Shows</h3>
 <article class="cardLayout accountCard">
+    {{#if likes.length}}
     <ul>
         {{#each likes}}
         <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}">
@@ -36,9 +41,13 @@
         </li>
         {{/each}}
     </ul>
+    {{else}}
+        <p class="messageText">You haven't liked any shows yet.</p>
+    {{/if}}
 </article>
 <h3 class="reviewHeader">Shows You've Seen</h3>
 <article class="cardLayout accountCard">
+    {{#if watched.length}}
     <ul>
         {{#each watched}}
         <li><a class="searchLink" href="http://localhost:3000/shows/view/{{this._id}}"><img
@@ -54,6 +63,9 @@
         </li>
         {{/each}}
     </ul>
+        {{else}}
+        <p class="messageText">You haven't watched any shows yet.</p>
+    {{/if}}
 </article>
 <h3 class="reviewHeader">Your Reviews</h3>
 <article class="cardLayout accountCard reviewLayout">

@@ -296,24 +296,24 @@ async function updateCounts(showId, username, likes, dislikes, watches) {
  */
 async function getRecommendations(user) {
     try {
-        //get document for current user
+        // get document for current user
         const userCollection = await userDb();
         const foundUser = await userCollection.findOne({ screen_name: user.toLowerCase() });
         if (!(foundUser != undefined && foundUser != null)) {
             throw "Error: User with username " + user + " was not found in the database!";
         } else {
-            //get list of liked shows for current user
+            // get list of liked shows for current user
             const liked_shows = foundUser.liked_shows;
             const watched_shows = foundUser.watched_shows;
             let likedGenres = {};
-            //iterate through list of liked shows' id and get document from id
+            // iterate through list of liked shows' id and get document from id
             const showCollection = await showDb();
             for (let i = 0; i < liked_shows.length; i++) {
                 const foundShow = await showCollection.findOne({ _id: ObjectId(liked_shows[i]) });
                 if (foundShow != undefined && foundShow != null) {
-                    //get list of genres for current show
+                    // get list of genres for current show
                     const showGenres = foundShow.genres;
-                    //iterate through list of genres and add to frequency map
+                    // iterate through list of genres and add to frequency map
                     for (let j = 0; j < showGenres.length; j++) {
                         const genre = showGenres[j];
                         if (likedGenres[genre]) {
@@ -324,33 +324,34 @@ async function getRecommendations(user) {
                     }
                 }
             }
-            //find user's favorite genre
-            let favoriteGenre = '';
-            let maxFreq = 0;
-            for (const x in likedGenres) {
-                if (likedGenres[x] > maxFreq) {
-                    favoriteGenre = x;
-                    maxFreq = likedGenres[x];
-                }
-            }
-
-            if (favoriteGenre == '') {
+            // sort in descending order of most liked genre
+            const likedArray = Object.keys(likedGenres);
+            if (likedArray.length == 0) {
                 return [];
             }
-            //returns array of 5 random shows with user's fav genre
-            const recommendations = await showCollection.aggregate([{ $match: { genres: favoriteGenre } }, { $sample: { size: 5 } }]).toArray();
+            likedArray.sort((g1, g2) => { return likedGenres[g2] - likedGenres[g1] });
+            const fiveRecs = [];
+            let index = 0;
+            while (fiveRecs.length < 5 && index < likedArray.length) {
+                // returns array of random shows with user's fav genre
+                const recommendations = await showCollection.aggregate([{ $match: { genres: likedArray[index] } }]).toArray();
 
-            if (recommendations.length == 0) {
+                // removes any shows that user has watched
+                for (let i = 0; i < recommendations.length; i++) {
+                    if (!watched_shows.includes(recommendations[i]._id.toString())) {
+                        fiveRecs.push(recommendations[i]);
+                    }
+                    if (fiveRecs.length >= 5) {
+                        break;
+                    }
+                }
+                index++;
+            }
+            if (fiveRecs.length == 0) {
                 throw "No recommendations found.";
             }
-
-            //removes any shows that user has watched
-            for (let i = 0; i < recommendations.length; i++) {
-                if (watched_shows.includes(recommendations[i]._id.toString())) {
-                    recommendations.splice(i, 1);
-                }
-            }
-            return recommendations;
+            // return only the top 5 
+            return fiveRecs;
         }
     } catch (e) {
         throw e;
