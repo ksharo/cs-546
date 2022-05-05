@@ -6,6 +6,18 @@ const imgBox = document.getElementById('chosenImg') ? document.getElementById('c
 const emptyPicBox = document.getElementById('noPic');
 const editErrorMessage = document.getElementById('editError');
 
+/* modal for editing password */
+const editPassBack = document.getElementById('modalBackdropEdit');
+const editPassModal = document.getElementById('editPassModal');
+
+/* form for editing password */
+const editPassForm = document.getElementById('changePassForm');
+const origPassInput = document.getElementById('curPass');
+const newPassInput = document.getElementById('newPass');
+const confirmPassInput = document.getElementById('confirmPass');
+const changePassError = document.getElementById('hiddenChangePassError');
+
+
 let img = null;
 /*
  * Checks a given variable (str) with name (name) to see if it is valid according
@@ -111,3 +123,69 @@ const saveChanges = async(firstName, lastName, screenName, img) => {
     };
     return fetch('http://localhost:3000/account/edit', requestOptions);
 };
+
+const openPasswordEdit = () => {
+    editPassModal.style.display = 'block';
+    editPassBack.style.display = 'block';
+}
+
+const closePasswordEdit = () => {
+    editPassModal.style.display = 'none';
+    editPassBack.style.display = 'none';
+}
+
+editPassForm.addEventListener('submit', async(event) => {
+    event.preventDefault();
+    changePassError.style.display = 'none';
+    // TODO add route for changing password and check for errors
+    try {
+        /* check form data for errors */
+        const curPass = origPassInput.value.trim();
+        const newPass = newPassInput.value.trim();
+        const confirmPass = confirmPassInput.value.trim();
+        const passes = [curPass, newPass, confirmPass];
+        for (let x of passes) {
+            if (x == undefined || x.trim() == '' || x.trim().length < 6 || x.trim().includes(' ')) {
+                changePassError.textContent = 'Error: Password must be at least 6 characters long and may not include spaces.';
+                changePassError.style.display = 'block';
+                return;
+            }
+        }
+        if (newPass != confirmPass) {
+            changePassError.textContent = 'Error: Passwords do not match!';
+            changePassError.style.display = 'block';
+            return;
+        }
+        const result = await updatePassword(curPass, newPass, confirmPass);
+        if (result.ok) {
+            closePasswordEdit();
+            return;
+        } else {
+            const json = await result.json();
+            changePassError.textContent = `${json.errorMessage}  (status code: ${json.errorStatus})`;
+            changePassError.style.display = 'block';
+        }
+    } catch (e) {
+        changePassError.textContent = 'Error: Could not update password. ' + e;
+        changePassError.style.display = 'block';
+        return
+    }
+});
+
+/* 
+ * Send prevalidated data to the database in order to update password
+ */
+const updatePassword = async(curPass, newPass, confirmPass) => {
+    const requestOptions = {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            curPass: curPass,
+            newPass: newPass,
+            confirmPass: confirmPass,
+        })
+    };
+    return fetch('http://localhost:3000/account/changePassword', requestOptions);
+}

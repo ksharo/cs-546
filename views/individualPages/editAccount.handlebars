@@ -22,6 +22,22 @@
             <button onClick="userHome(event)">Home</button>
         </section>
     </section>
+    <section id="modalBackdropEdit" onclick='closePasswordEdit()' hidden class="modalBackground"></section>
+<section id="editPassModal" hidden class="topModalSection">
+    <section id="passwordModal" class="popupModal bigModal">
+        <h3>Change Your Password:</h3>
+        <form name="changePassForm" class='accountForm' action="/account/changePassword" method="post" id="changePassForm">
+            <p class="errorMessage" id="hiddenChangePassError" hidden></p>
+            <label for="curPass">Current Password:</label>
+            <input type="password" id="curPass" name="curPass">
+            <label for="newPass">New Password:</label>
+            <input type="password" id="newPass" name="newPass">
+            <label for="confirmPass">Confirm New Password:</label>
+            <input type="password" id="confirmPass" name="confirmPass">
+            <button type="submit" id="changePassBtn">Finish</button>
+        </form>
+    </section>
+</section>
     <form hidden class="editable" id="editForm" action='/account/update' method='POST'>
         <label for="editFirstName">
             First Name </label>
@@ -54,6 +70,7 @@
             {{/if}}
         </section>
         </article>
+        <button type="button" onclick="openPasswordEdit()">Change Password</button>
 
         <section class="horizontalFlex">
             <button type='submit'>Save Changes</button>

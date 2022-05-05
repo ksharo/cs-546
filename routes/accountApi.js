@@ -160,7 +160,7 @@ router
             }
         } catch (e) {
             /* if something went wrong, like an input was probably wrong, show an error */
-            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e });
+            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e.toString() });
         }
     });
 
@@ -210,7 +210,41 @@ router
             }
         } catch (e) {
             /* if something went wrong, like an input was probably wrong, show an error */
-            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e });
+            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e.toString() });
+        }
+    });
+
+router
+    .route('/changePassword')
+    .patch(async(req, res) => {
+        try {
+            /* get all inputs */
+            const curPassword = req.body.curPass.trim();
+            const newPass = req.body.newPass.trim();
+            const confirmPass = req.body.confirmPass.trim();
+            /* error check all inputs */
+            globalFunctions.checkAdvancedString(curPassword, 'Current Password', 6, false, false, false);
+            globalFunctions.checkAdvancedString(newPass, 'New Password', 6, false, false, false);
+            globalFunctions.checkAdvancedString(confirmPass, 'Confirm Password', 6, false, false, false);
+            if (confirmPass != newPass) {
+                return res.status(400).json({ error: 'Error: Passwords do not match.' });
+            }
+            /* if everything is the same as before, no need to continue */
+            if (curPassword == newPass) {
+                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
+            }
+            /* try to update the user (don't overwrite image with empty string!) */
+            const auth = await accountFunctions.changePassword(req.session.user.email, curPassword, newPass);
+            if (auth.userUpdated) {
+                /* no need to update session variables */
+                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
+            } else {
+                /* if it doesn't, show an error */
+                return res.status(500).json({ error: true, errorStatus: 500, errorMessage: 'There was a problem updating your account. Please try again later.' });
+            }
+        } catch (e) {
+            /* if something went wrong, like an input was probably wrong, show an error */
+            return res.status(400).json({ error: true, errorStatus: 400, errorMessage: e.toString() });
         }
     });
 
@@ -344,7 +378,7 @@ router
                 return res.status(400).json({ status: 400, errorStatus: 400, errorMessage: 'Either the username or password is invalid' });
             }
         } catch (e) {
-            return res.status(400).json({ status: 400, errorStatus: 400, errorMessage: e });
+            return res.status(400).json({ status: 400, errorStatus: 400, errorMessage: e.toString() });
         }
     });
 

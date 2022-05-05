@@ -18,7 +18,7 @@
         {{/each}}
     </ul>
     {{else}}
-
+    {{#if user}}
     <section id="modal" class="popupModal mediumModal">
         <h3>No shows matching that search term were found. Would you like to add a show to the database?</h3>
         <section class="horizontalFlex">
@@ -26,6 +26,12 @@
             <button id="addShow" onclick="location.href='http://localhost:3000/shows/add/{{searchTerm}}'">Yes</button>
         </section>
     </section>
+    {{else}}
+    <section id="modal" class="popupModal mediumModal">
+        <h3>No shows matching that search term were found. Log in to add a show to the database!</h3>
+        <button id="dontAdd" onclick="location.href='http://localhost:3000/shows/search'">Close</button>
+    </section>
+    {{/if}}
 </section>
 {{/if}}
 </section>
@@ -41,7 +47,9 @@
     <p id='editError' class="errorMessage" hidden></p>
 
 </form>
+{{#if user}}
 <a class="littleLink" href="http://localhost:3000/shows/add/{{searchTerm}}">Can't find your favorite show? Click
     here to add one to our database!</a>
+{{/if}}
 {{/if}}
 </section>

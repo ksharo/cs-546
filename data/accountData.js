@@ -84,7 +84,7 @@ async function editUser(firstName, lastName, email, oldUsername, newUsername, im
             screen_name: newUsername.toLowerCase(),
         }
 
-        const updated = await userCollection.updateOne({ email: email }, { $set: updatedUser });
+        const updated = await userCollection.updateOne({ email: email.toLowerCase() }, { $set: updatedUser });
         if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
             throw `Failed to update account.`;
         }
@@ -174,10 +174,40 @@ async function getUserById(userId) {
     }
 }
 
+/*
+ * Checks to make sure the user is verified with their current password,
+ * then updates their account to store their new password instead.
+ */
+async function changePassword(userEmail, curPass, newPassword) {
+    try {
+        /* make sure user is valid (this will also check userEmail and curPass for validation) */
+        await checkUser(userEmail, curPass);
+        /* check that newPassword is valid */
+        checkAdvancedString(newPassword, 'New Password', 6, false, false, false);
+        /* update password in database to new password */
+        /* hash the password */
+        const hash = await bcrypt.hash(newPassword, saltRounds);
+        /* update the  user in the database */
+        const updatedUser = {
+            hashed_password: hash,
+        }
+        const userCollection = await usersDb();
+        const updated = await userCollection.updateOne({ email: userEmail.toLowerCase() }, { $set: updatedUser });
+        if (updated.matchedCount == 0 || updated.modifiedCount == 0) {
+            throw `Failed to update account.`;
+        }
+        return { userUpdated: true };
+    } catch (e) {
+        throw e;
+    }
+
+}
+
 module.exports = {
     createUser,
     checkUser,
     editUser,
     getUser,
-    getUserById
+    getUserById,
+    changePassword
 }

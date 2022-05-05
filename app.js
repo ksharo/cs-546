@@ -58,6 +58,14 @@ app.use('/account/edit', (req, res, next) => {
     }
 });
 
+app.use('/shows/add/:showName', (req, res, next) => {
+    if (!req.session.user) {
+        return res.status(403).redirect('/shows/search');
+    } else {
+        next();
+    }
+});
+
 /* start the server! */
 configRoutes(app);
 
