@@ -74,7 +74,7 @@
     {{#if reviews.length}}
         {{#each reviews}}
         <form id='updateForm_{{this._id}}' class='reviewForm' action='/reviews/update' method='POST'>
-            <label for="review"><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for
+            <label for="review_{{this._id}}"><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for
                     {{this.showName.name}}:</a></label>
             <textarea id="review_{{this._id}}" name="review">{{this.content}}</textarea>
             {{#if this.anonymous}}

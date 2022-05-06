@@ -60,7 +60,7 @@
     <dl>
         {{#each reviews}}
         <dt><a href="http://localhost:3000/shows/view/{{this.showName._id}}">Review for {{this.showName.name}}:</a></dt>
-        <dd class="otherReview" id="review_{{this._id}}" name="review">{{this.content}}</dd>
+        <dd class="otherReview" id="review_{{this._id}}">{{this.content}}</dd>
         {{/each}}
     </dl>
 </article>

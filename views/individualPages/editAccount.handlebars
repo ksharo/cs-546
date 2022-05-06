@@ -55,12 +55,12 @@
             Screen Name </label>
 
         <input type="text" id="editScreenName" name="editScreenName" value={{user.username}}>
-        <label id='fileChooser' for="editProfPic" onClick="document.getElementById('imgSelector').hidden = !document.getElementById('imgSelector').hidden"> Choose Profile Picture</label>
+        <label id='fileChooser' onClick="document.getElementById('imgSelector').hidden = !document.getElementById('imgSelector').hidden"> Choose Profile Picture</label>
         <article class="horizontalFlex">
         <section hidden id="imgSelector">
             {{#each imgData}}
             <button>
-                <img alt={{alt}} src={{link}} onClick="imgChosen(event, `{{link}}`)" />
+                <img alt='{{alt}}' src={{link}} onClick="imgChosen(event, `{{link}}`)" />
             </button>
             {{/each}}
         </section>

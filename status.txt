@@ -42,7 +42,19 @@
  * viewShowScript.js has been error checked fully!
  * 
  * HTML validity:
- * 
+ * home page is good
+ * all shows page is good
+ * single show page is good
+ * view account page is good
+ * view other account is good
+ * main search is good
+ * no search is good
+ * search results are good
+ * add a show is good
+ * offline is good
+ * error page is good
+ * create account page is good
+ * edit account page is good
  * 
  * 
  * tota11y checks:

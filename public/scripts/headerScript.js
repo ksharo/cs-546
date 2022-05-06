@@ -14,7 +14,7 @@
     const hiddenMenu = $('#loggedInMenuHidden');
     const loggedOutBox = $('#logBox');
     const loggedInBox = $('#rightLogBox');
-    const profileMenu = $('#smallMenu');
+    const smallProfileMenu = $('#smallMenu');
     const hiddenProfileMenu = $('#smallMenuHidden');
     const sideMenu = $('#sideMenu');
     const hiddenSideMenu = $('#sideMenuHidden');
@@ -68,6 +68,12 @@
                 /* simply reload if page is shows/view to get like/dislike buttons */
                 if (window.location.href.includes('/shows/view')) {
                     window.location.reload();
+                    return;
+                }
+                /* simply reload if page is create account to go to account page */
+                if (window.location.href.includes('/account/create')) {
+                    window.location.reload();
+                    return;
                 }
                 closeLogin();
                 loggedOutBox.hide();
@@ -97,13 +103,14 @@
 
     loginLink.on('click', () => {
         openLogin();
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     });
 
     darkCover.on('click', () => {
         closeLogin();
         /* hide everything when dark cover is clicked */
-        if (profileMenu) {
-            profileMenu.hide();
+        if (smallProfileMenu) {
+            smallProfileMenu.hide();
             hiddenProfileMenu.hide();
         } else {
             hiddenProfileMenu.hide();

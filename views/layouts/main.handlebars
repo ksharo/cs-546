@@ -71,7 +71,7 @@
         </section>
         {{else}}
         <div hidden class="headerItem iconHolder" id="rightLogBox">
-            <img hidden id="loggedInIconHidden" src="" onclick="showProfileMenu()" class="profileIcon"
+            <img hidden id="loggedInIconHidden" src="/public/assets/empty_profile.svg" onclick="showProfileMenu()" class="profileIcon"
                 alt="User's Profile Picture" />
             <p id="loggedInitialsHidden" onclick="showProfileMenu()" class="profileIcon profileInitials" hidden></p>
         </div>
@@ -98,7 +98,7 @@
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" autocomplete>
+                    <input type="password" id="password" name="password" autocomplete="on">
                     <button type="submit">Login</button>
                 </form>
                 <a href="/account/create" class="darkLink littleLink">No account? Make one today!</a>
