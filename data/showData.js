@@ -334,8 +334,8 @@ async function getRecommendations(user) {
             let index = 0;
             while (fiveRecs.length < 5 && index < likedArray.length) {
                 // returns array of random shows with user's fav genre
-                const recommendations = await showCollection.aggregate([{ $match: { genres: likedArray[index] } }]).toArray();
-
+                const origRecom = await showCollection.aggregate([{ $match: { genres: likedArray[index] } }]).toArray();
+                const recommendations = origRecom.sort(() => 0.5 - Math.random());
                 // removes any shows that user has watched
                 for (let i = 0; i < recommendations.length; i++) {
                     if (!watched_shows.includes(recommendations[i]._id.toString())) {
