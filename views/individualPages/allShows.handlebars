@@ -1,5 +1,51 @@
 {{#if shows.length}}
 <input type="search" oninput="live()" id="searchbox" class="inputBox" placeholder="Search for shows..">
+<fieldset>
+    <legend>Sort by:</legend>
+            <label>
+                <input 
+                       type="radio"
+                       name="option" 
+                       value="name"
+                       {{#if name}}
+                       checked = true
+                       {{/if}}
+                       onclick="window.location='/shows/allShows';">
+              Name
+            </label>
+            <label>
+                <input 
+                       type="radio"
+                       name="option" 
+                       value="likes"
+                       {{#if likes}}
+                       checked = true
+                       {{/if}}
+                       onclick="window.location='/shows/allShows/likes';">
+              Likes
+            </label>
+            <label>
+                <input type="radio" 
+                       name="option" 
+                       value="dislikes"
+                       {{#if dislikes}}
+                       checked = true
+                       {{/if}}
+                       onclick="window.location='/shows/allShows/dislikes';">
+             Dislikes
+            </label>
+            <label>
+                <input type="radio" 
+                       name="option" 
+                       value="watches"
+                       {{#if watches}}
+                       checked = true
+                       {{/if}}
+                       onclick="window.location='/shows/allShows/watches';">
+             Watches
+            </label>
+
+</fieldset>
 <div class = "grid-container">  
         {{#each shows}}
         <div class="card">

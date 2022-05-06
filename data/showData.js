@@ -359,6 +359,24 @@ async function getRecommendations(user) {
 }
 
 /*
+ * Returns an array of documents sorted in descending order by the given property 
+ */
+async function sortBy(docArray, prop){
+    const sortedArray = docArray.sort(function(a,b){
+        if (a[prop] < b[prop]){
+            return 1;
+        }
+        if (a[prop] > b[prop]){
+            return -1;
+        }
+        if (a[prop] === b[prop]){
+            return 0;
+        }
+    });
+    return sortedArray;
+}
+
+/*
  * Makes sure that the given parameter is a number within the range min-max
  */
 function checkInt(int, min, max, name = 'number') {
@@ -379,5 +397,6 @@ module.exports = {
     updateCounts,
     getRecommendations,
     checkInt,
-    getPopular
+    getPopular,
+    sortBy
 }

@@ -15,7 +15,28 @@ router
     .get(async(req, res) => {
         try {
             const shows = await data.showData.getAll();
-            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript' });
+            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript', name: 1});
+        } catch (e) {
+            return res.status(500).json({ error: e.toString() });
+        }
+    });
+
+router
+    .route('/allShows/:prop')
+    .get(async(req, res) => {
+        try {
+            const prop = req.params.prop;
+            const shows = await data.showData.getAll();
+            const sortedshows = await data.showData.sortBy(shows, prop);
+            let likes, dislikes, watches = 0;
+            if(prop === "likes"){
+                likes = 1;
+            }else if(prop === "dislikes"){
+                dislikes = 1;
+            }else if(prop === "watches"){
+                watches = 1;
+            }
+            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: sortedshows, partial: 'allShowScript', likes: likes, dislikes: dislikes, watches: watches});
         } catch (e) {
             return res.status(500).json({ error: e.toString() });
         }
