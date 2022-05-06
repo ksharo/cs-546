@@ -20,7 +20,7 @@
     {{else}}
     {{#if user}}
     <section id="modal" class="popupModal mediumModal">
-        <h3>No shows matching that search term were found. Would you like to add a show to the database?</h3>
+        <p class="messageText">No shows matching that search term were found. Would you like to add a show to the database?</p>
         <section class="horizontalFlex">
             <button id="dontAdd" onclick="location.href='http://localhost:3000/shows/search'">No</button>
             <button id="addShow" onclick="location.href='http://localhost:3000/shows/add/{{searchTerm}}'">Yes</button>
@@ -28,7 +28,7 @@
     </section>
     {{else}}
     <section id="modal" class="popupModal mediumModal">
-        <h3>No shows matching that search term were found. Log in to add a show to the database!</h3>
+        <p class="messageText">No shows matching that search term were found. Log in to add a show to the database!</p>
         <button id="dontAdd" onclick="location.href='http://localhost:3000/shows/search'">Close</button>
     </section>
     {{/if}}

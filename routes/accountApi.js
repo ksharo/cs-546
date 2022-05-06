@@ -3,7 +3,7 @@ const router = express.Router();
 const data = require('../data');
 const accountFunctions = data.accountData;
 const globalFunctions = data.globalData;
-const validator = require('validator');
+const xss = require('xss');
 
 const imgData = [{
         link: 'https://images.unsplash.com/photo-1601979031925-424e53b6caaa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHVwcHl8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
@@ -122,12 +122,12 @@ router
     .post(async(req, res) => {
         try {
             /* get all inputs */
-            const firstName = req.body.newFirstName.trim();
-            const lastName = req.body.newLastName.trim();
-            const email = req.body.newEmail.trim();
-            const username = req.body.newScreenName.trim();
-            const password = req.body.newPassword.trim();
-            const confirmation = req.body.confirmNewPassword.trim();
+            const firstName = xss(req.body.newFirstName).trim();
+            const lastName = xss(req.body.newLastName).trim();
+            const email = xss(req.body.newEmail).trim();
+            const username = xss(req.body.newScreenName).trim();
+            const password = xss(req.body.newPassword).trim();
+            const confirmation = xss(req.body.confirmNewPassword).trim();
             /* error check all inputs */
             globalFunctions.checkAdvancedString(firstName, 'First Name', 1);
             globalFunctions.checkAdvancedString(lastName, 'Last Name', 1);
@@ -175,10 +175,10 @@ router
     .patch(async(req, res) => {
         try {
             /* get all inputs */
-            const firstName = req.body.editFirstName.trim();
-            const lastName = req.body.editLastName.trim();
-            const username = req.body.editScreenName.trim();
-            const img = req.body.editImg.trim();
+            const firstName = xss(req.body.editFirstName).trim();
+            const lastName = xss(req.body.editLastName).trim();
+            const username = xss(req.body.editScreenName).trim();
+            const img = xss(req.body.editImg).trim();
             /* if everything is the same as before, no need to continue */
             if (firstName == req.session.user.firstName && lastName == req.session.user.lastName && username == req.session.user.username && (img == req.session.user.img || img == 'null' || img == '' || img == null)) {
                 return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
@@ -219,9 +219,9 @@ router
     .patch(async(req, res) => {
         try {
             /* get all inputs */
-            const curPassword = req.body.curPass.trim();
-            const newPass = req.body.newPass.trim();
-            const confirmPass = req.body.confirmPass.trim();
+            const curPassword = xss(req.body.curPass).trim();
+            const newPass = xss(req.body.newPass).trim();
+            const confirmPass = xss(req.body.confirmPass).trim();
             /* error check all inputs */
             globalFunctions.checkAdvancedString(curPassword, 'Current Password', 6, false, false, false);
             globalFunctions.checkAdvancedString(newPass, 'New Password', 6, false, false, false);
@@ -291,7 +291,7 @@ router
                 //maybe only show a maximum of 5 liked shows/watched shows/etc
                 return res.status(200).render('individualPages/viewAccount', { user: req.session.user, likes: likes, watched: seen, recs: recs, reviews: reviews, partial: 'viewAccountScript' });
             } catch (e) {
-                return res.status(500).json({ error: e.toString() });
+                return res.status(500).render('individualPages/errorPage', { user: req.session.user, error: e.toString(), partial: 'mainScript' });
             }
         } else {
             /* should be caught by middleware, but just in case...*/
@@ -355,8 +355,8 @@ router
     .route('/login')
     .post(async(req, res) => {
         try {
-            const username = req.body.username;
-            const password = req.body.password;
+            const username = xss(req.body.username);
+            const password = xss(req.body.password);
             globalFunctions.checkAdvancedString(username, 'Username', 6, false, false, true);
             globalFunctions.checkAdvancedString(password, 'Password', 6, false, false, false);
             const auth = await accountFunctions.checkUser(username.trim(), password.trim());

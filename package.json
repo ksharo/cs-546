@@ -33,6 +33,7 @@
         "lodash": "^4.17.21",
         "mongodb": "^4.5.0",
         "unique-names-generator": "^4.7.1",
-        "validator": "^13.7.0"
+        "validator": "^13.7.0",
+        "xss": "^1.0.11"
     }
 }

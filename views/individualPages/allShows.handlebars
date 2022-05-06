@@ -1,4 +1,6 @@
+<h2 class="subheader">Browse All Shows</h2>
 {{#if shows.length}}
+<label for="searchbox" class="centerLabel">Filter By Search Term:</label>
 <input type="search" oninput="live()" id="searchbox" class="inputBox" placeholder="Search for shows..">
 <fieldset>
     <legend>Sort by:</legend>
@@ -46,16 +48,19 @@
             </label>
 
 </fieldset>
+<p class="messageText topSpace" hidden id="no-shows-found">No shows found.</p>
 <div class = "grid-container">  
         {{#each shows}}
         <div class="card">
                 <img class = "covers" src={{this.image}} alt="Image for {{this.name}}">
                 <div class="content">
-                    <h4 class = "titlename"><b>{{this.name}}</b></h4>
+                    <h3 class = "titlename"><b>{{this.name}}</b></h3>
                     <p class="showGenres">{{this.genres}}</p>
                     <button class = "allshowbutton"  onclick = "location.href = 'http://localhost:3000/shows/view/{{this._id}}'">Read more...</button>
                 </div>        
         </div>
         {{/each}}
     </div>
+    {{else}}
+    <p class="messageText topSpace">No shows found.</p>
 {{/if}} 

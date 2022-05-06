@@ -361,15 +361,17 @@ async function getRecommendations(user) {
 /*
  * Returns an array of documents sorted in descending order by the given property 
  */
-async function sortBy(docArray, prop){
-    const sortedArray = docArray.sort(function(a,b){
-        if (a[prop] < b[prop]){
+async function sortBy(docArray, prop) {
+    if (docArray == undefined) throw `Error: Cannot sort undefined list of shows!`;
+    if (prop == undefined || (prop != 'likes' && prop != 'dislikes' && prop != 'watches')) throw `Error: prop must be likes, dislikes, or watches`;
+    const sortedArray = docArray.sort(function(a, b) {
+        if (a[prop] < b[prop]) {
             return 1;
         }
-        if (a[prop] > b[prop]){
+        if (a[prop] > b[prop]) {
             return -1;
         }
-        if (a[prop] === b[prop]){
+        if (a[prop] === b[prop]) {
             return 0;
         }
     });

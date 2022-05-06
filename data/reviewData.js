@@ -16,7 +16,7 @@ async function add(poster, anonymous, show_id, content) {
         if (show_id == undefined) throw 'Error: show_id is a required parameter, but was not received.';
         if (content == undefined) throw 'Error: content is a required parameter, but was not received.';
         if (!isString(poster) || poster.trim() == '') throw `Error: Expected poster username to be non-empty string but received ${typeof(poster)} instead.`;
-        if (!isBoolean(anonymous)) throw `Error: Expected anonymous to be boolean but received ${typeof(anonymous)} instead.`;
+        if (!isBoolean(anonymous) && anonymous != 'true' && anonymous != 'false') throw `Error: Expected anonymous to be boolean but received ${typeof(anonymous)} instead.`;
         if (!(show_id && show_id.trim() != '' && ObjectId.isValid(show_id))) throw `Error: Show ID must be a valid, non-empty ObjectId!`;
         if (!isString(content) || content.trim() == '') throw `Error: Expected content to be non-empty string but received ${typeof(content)} instead.`;
         let anon = anonymous;
@@ -29,7 +29,7 @@ async function add(poster, anonymous, show_id, content) {
                 time_posted: new Date(),
                 show_id: show_id,
                 content: content,
-                anonymous: anon
+                anonymous: isBoolean(anon) ? anon : anon == 'true'
             }
             const inserted = await reviewCollection.insertOne(review);
             if (!inserted.acknowledged || !inserted.insertedId) {
@@ -86,7 +86,7 @@ async function getByUser(username) {
 async function update(review_id, anonymous, content) {
     try {
         if (!(review_id && review_id.trim() != '' && ObjectId.isValid(review_id))) throw `Error: Review ID must be a valid, non-empty ObjectId!`;
-        if (anonymous == undefined || !isBoolean(anonymous)) throw `Error: Expected anonymous to be boolean but received ${typeof(anonymous)} instead.`;
+        if (anonymous == undefined || (!isBoolean(anonymous) && anonymous != 'true' && anonymous != 'false')) throw `Error: Expected anonymous to be boolean but received ${typeof(anonymous)} instead.`;
         if (content == undefined || !isString(content) || content.trim() == '') throw `Error: Expected content to be non-empty string but received ${typeof(content)} instead.`;
 
         /* get the original review for updating */
@@ -102,7 +102,7 @@ async function update(review_id, anonymous, content) {
             time_posted: new Date(),
             show_id: original['show_id'],
             content: content,
-            anonymous: anonymous
+            anonymous: isBoolean(anonymous) ? anonymous : anonymous == 'true'
         }
 
         /* execute the update */

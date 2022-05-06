@@ -1,0 +1,65 @@
+/* TODO: 
+ * edit show's missing data?
+ * xss - DONE
+ * Error checking - DONE
+ * add filters and sorting to all shows page - DONE
+ * edit password - DONE
+ * a user that is not logged in cannot add shows - DONE
+ * edit/delete reviews - DONE
+ * add checkbox functionality to update reviews - DONE
+ * add top rated tv shows to home page - DONE
+ * add reviews to seed file - DONE
+ * make search results scrollable - DONE
+ * all tv shows page - DONE
+ * add reviews - DONE
+ * show reviews - DONE
+ * other user page - DONE
+ * middleware for logins and permissions - DONE
+ * show search term on search page and add page - DONE
+ * add search bar to search page and add page - DONE
+ * check view account page for prettiness - DONE
+ * Extras:
+ * 
+ * Error checking:
+ * backend
+ * accountData.js has been error checked fully!
+ * showData.js has been error checked fully!
+ * reviewData.js has been error checked fully!
+ * 
+ * routes
+ * accountApi.js has been error checked fully!
+ * mainApi.js has been error checked fully!
+ * reviewAPI.js has been error checked fully!
+ * tvApi.js has been error checked fully!
+ * 
+ * scripts
+ * addShowScript.js has been error checked fully!
+ * createAccountScript.js has been error checked fully!
+ * editAccountScript.js has been error checked fully!
+ * headerScript.js has been error checked fully!
+ * searchScript.js has been error checked fully!
+ * viewAccountScript.js has been error checked fully!
+ * viewShowScript.js has been error checked fully!
+ * 
+ * HTML validity:
+ * 
+ * 
+ * 
+ * tota11y checks:
+ * home page is good
+ * header is good
+ * view individual show is good
+ * view account page is good
+ * view other account page is good
+ * main search page is good
+ * search results are good
+ * no search results is good
+ * add a show page is good
+ * no shows to add is good
+ * add show form is good
+ * offline is good
+ * error page is good
+ * all shows page is good
+ * create account page is good
+ * edit account page is good
+ */

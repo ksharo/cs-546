@@ -58,7 +58,7 @@
             }),
             url: '/account/login',
             error: (e) => {
-                loginError.text('Error (code ' + e.responseJSON.errorStatus + '): ' + e.responseJSON.errorMessage);
+                loginError.text(e.responseJSON.errorMessage + ' (status code ' + e.responseJSON.errorStatus + ')');
                 loginError.show();
                 return;
             }
@@ -84,7 +84,7 @@
                 hiddenMenu.show();
                 return;
             } else {
-                loginError.text('Error (code ' + responseMessage.errorStatus + '): ' + responseMessage.errorMessage);
+                loginError.text(responseMessage.errorMessage + ' (status code ' + responseMessage.errorStatus + ')');
                 loginError.show();
                 return;
             }

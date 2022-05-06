@@ -1,5 +1,5 @@
 const newAccountForm = document.getElementById('newAccountForm');
-const errorMessage = document.getElementById('hiddenCreateAccountError');
+const createErrorMessage = document.getElementById('hiddenCreateAccountError');
 const firstNameInput = document.getElementById('newFirstName');
 const lastNameInput = document.getElementById('newLastName');
 const emailInput = document.getElementById('newEmail');
@@ -8,7 +8,7 @@ const passwordInput = document.getElementById('newPassword');
 const confirmInput = document.getElementById('confirmNewPassword');
 
 newAccountForm.addEventListener('submit', async(event) => {
-    errorMessage.style.display = 'none';
+    createErrorMessage.style.display = 'none';
     event.preventDefault();
     try {
         /* error check variables */
@@ -33,12 +33,12 @@ newAccountForm.addEventListener('submit', async(event) => {
             return;
         } else {
             const json = await result.json();
-            errorMessage.textContent = `${json.errorMessage}  (status code: ${json.errorStatus})`;
-            errorMessage.style.display = 'block';
+            createErrorMessage.textContent = `${json.errorMessage}  (status code: ${json.errorStatus})`;
+            createErrorMessage.style.display = 'block';
         }
     } catch (e) {
-        errorMessage.textContent = e;
-        errorMessage.style.display = 'block';
+        createErrorMessage.textContent = e;
+        createErrorMessage.style.display = 'block';
     }
 });
 

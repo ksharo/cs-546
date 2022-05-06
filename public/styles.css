@@ -7,9 +7,9 @@
     --body: rgb(1, 1, 40);
     --secondary: #c9abab;
     --accent: #ffba6b;
-    --dark: #aa6767;
-    --error: #a73c06;
-    --lightBackground: #EDEDED;
+    --dark: #a15454;
+    --error: #b45f4c;
+    --lightBackground: #eeebeb;
     --veryDark: #925e5e;
 }
 
@@ -336,7 +336,7 @@ label {
 }
 
 .littleLink {
-    color: var(--dark);
+    color: var(--secondary);
     margin: 14px auto;
     display: block;
     font-size: 16px;
@@ -346,6 +346,12 @@ label {
     text-decoration: underline;
     background: none;
     box-shadow: none;
+}
+
+.centerLabel {
+    display: block;
+    text-align: center;
+    font-size: 24px;
 }
 
 .littleLink:hover {
@@ -403,6 +409,7 @@ label {
     animation-name: fromLeftFarther;
     animation-duration: 6s;
     color: var(--accent);
+    font-size: 32px;
 }
 
 #startForm {
@@ -527,6 +534,7 @@ label {
 .errorMessage {
     color: var(--error);
     text-align: center;
+    font-size: 20px;
     margin: 4px auto 12px auto;
 }
 
@@ -955,7 +963,11 @@ label {
 }
 
 .topSpace {
-    margin-top: 54px;
+    margin-top: 54px !important;
+}
+
+.darkLink {
+    color: var(--dark) !important;
 }
 
 .bigLink {
@@ -1005,7 +1017,7 @@ label {
 }
 
 #searchbox {
-    margin: 48px auto;
+    margin: 14px auto 48px auto;
     width: 600px;
     font-size: 25px;
     display: block;

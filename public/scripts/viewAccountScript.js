@@ -55,7 +55,7 @@ window.onload = function() {
             body: JSON.stringify({
                 review: content,
                 id: reviewId,
-                anonymous: anonymous
+                anonymous: anonymous.toString()
             })
         };
         return fetch('http://localhost:3000/review/update', requestOptions);

@@ -46,6 +46,15 @@ app.use('/account/view', (req, res, next) => {
     }
 });
 
+app.use('/account/create', (req, res, next) => {
+    if (req.session.user) {
+        // already logged in, don't let create account!
+        return res.status(403).redirect('/account/view');
+    } else {
+        next();
+    }
+});
+
 app.use('/account/edit', (req, res, next) => {
     if (req.originalUrl == req.baseUrl) {
         if (!req.session.user) {

@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const router = express.Router();
 const data = require('../data');
 const reviewFunctions = data.reviewData;
+const xss = require('xss');
 
 router
     .route('/create')
@@ -10,9 +11,9 @@ router
         try {
             if (req.session.user) {
                 /* gathering and error checking of parameters */
-                const content = req.body.review;
-                const show = req.body.show;
-                const anonymous = req.body.anon;
+                const content = xss(req.body.review);
+                const show = xss(req.body.show);
+                const anonymous = xss(req.body.anon);
                 if (content == undefined || content.trim() == '') {
                     return res.status(400).json({ error: 'Error: Please add content to your review.' })
                 }
@@ -22,7 +23,7 @@ router
                 if (show == undefined || show.trim() == '') {
                     return res.status(400).json({ error: 'Error: Please state which show the review belongs to.' })
                 }
-                if (anonymous == undefined || (anonymous != true && anonymous != false)) {
+                if (anonymous == undefined || (anonymous != true && anonymous != false && anonymous != 'true' && anonymous != 'false')) {
                     return res.status(400).json({ error: 'Error: Please note whether the review is anonymous or not.' })
                 }
                 /* get the username of the poster (current logged in user) */
@@ -52,16 +53,16 @@ router
     .patch(async(req, res) => {
         try {
             /* gather parameters and error check them */
-            const content = req.body.review;
-            const id = req.body.id;
-            const anon = req.body.anonymous;
+            const content = xss(req.body.review);
+            const id = xss(req.body.id);
+            const anon = xss(req.body.anonymous);
             if (content == undefined || content.trim() == '') {
                 return res.status(400).json({ error: 'Error: Please add content to your review.' })
             }
             if (id == undefined || id.trim() == '' || !ObjectId.isValid(id)) {
                 return res.status(400).json({ error: 'Error: Please provide a valid review id to update.' })
             }
-            if (anon == undefined || (anon != true && anon != false)) {
+            if (anon == undefined || (anon != true && anon != false && anon != 'true' && anon != 'false')) {
                 return res.status(400).json({ error: 'Error: Please note whether the review is anonymous or not.' })
             }
             /* send updated content to database */

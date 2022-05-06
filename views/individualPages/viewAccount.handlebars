@@ -78,9 +78,9 @@
                     {{this.showName.name}}:</a></label>
             <textarea id="review_{{this._id}}" name="review">{{this.content}}</textarea>
             {{#if this.anonymous}}
-            <label for="anonymous">Anonymous:<input type="checkbox"
+            <label for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
                     name="anonymous" checked id="anonymous_{{this._id}}"></input></label> {{else}}             
-                    <label for="anonymous">Anonymous:<input type="checkbox"
+                    <label for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
                     name="anonymous" id="anonymous_{{this._id}}"></input></label>  
             {{/if}}
             <section class="horiziontalFlex">

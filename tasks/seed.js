@@ -18,7 +18,6 @@ async function main() {
     }
     if (db.collection("shows")) {
         try {
-
             await db.collection("shows").drop();
         } catch {
             // not an error!
@@ -81,7 +80,7 @@ async function main() {
                 await showData.updateCounts(shuffled[i], username, i % 3 == 0 || i % 3 == 1 ? 1 : 0, i % 3 == 2 ? 1 : 0, 1);
                 if (i % 5 == 0) {
                     // add a review for every fifth show
-                    reviewData.add(username, (i % 4 == 0), shuffled[i], i % 3 != 0 ? 'This show is ' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '! It makes me feel ' + uniqueNamesGenerator({ dictionaries: [colors] }) + ' every time i watch it.' : 'This show is so' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '. The ' + uniqueNamesGenerator({ dictionaries: [animals] }) + ' is my favorite thing in the world!');
+                    await reviewData.add(username, (i % 4 == 0), shuffled[i], i % 3 != 0 ? 'This show is ' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '! It makes me feel ' + uniqueNamesGenerator({ dictionaries: [colors] }) + ' every time i watch it.' : 'This show is so ' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '. The ' + uniqueNamesGenerator({ dictionaries: [animals] }) + ' is my favorite thing in the world!');
                 }
             } catch (e) {
                 console.error(e);

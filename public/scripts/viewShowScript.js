@@ -10,28 +10,30 @@ const review = document.getElementById('content');
 const anon = document.getElementById('anonymous');
 const viewShowError = document.getElementById('viewShowError');
 
-newReviewForm.addEventListener('submit', async(event) => {
-    viewShowError.style.display = 'none';
-    try {
-        const showId = window.location.href.split('/view/')[1];
-        event.preventDefault();
-        const content = review.value.trim();
-        if (content == "") {
-            viewShowError.textContent = `Error: Review content cannot be left blank.`;
+if (newReviewForm) {
+    newReviewForm.addEventListener('submit', async(event) => {
+        viewShowError.style.display = 'none';
+        try {
+            const showId = window.location.href.split('/view/')[1];
+            event.preventDefault();
+            const content = review.value.trim();
+            if (content == "") {
+                viewShowError.textContent = `Error: Review content cannot be left blank.`;
+                viewShowError.style.display = 'block';
+            }
+            const result = await createReview(content, showId, anon.checked);
+            if (!result.ok) {
+                viewShowError.textContent = `Error: could not create review.`;
+                viewShowError.style.display = 'block';
+            } else {
+                window.location.reload();
+            }
+        } catch (e) {
+            viewShowError.textContent = `Error: could not add review. ${e}`;
             viewShowError.style.display = 'block';
         }
-        const result = await createReview(content, showId, anon.checked);
-        if (!result.ok) {
-            viewShowError.textContent = `Error: could not create review.`;
-            viewShowError.style.display = 'block';
-        } else {
-            window.location.reload();
-        }
-    } catch (e) {
-        viewShowError.textContent = `Error: could not add review. ${e}`;
-        viewShowError.style.display = 'block';
-    }
-});
+    });
+}
 
 
 const createReview = async(content, show, anon) => {
@@ -43,7 +45,7 @@ const createReview = async(content, show, anon) => {
         body: JSON.stringify({
             review: content,
             show: show,
-            anon: anon,
+            anon: anon.toString(),
         })
     };
     return fetch('http://localhost:3000/review/create', requestOptions);

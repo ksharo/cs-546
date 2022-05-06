@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require('../data');
 const { ObjectId } = require('mongodb');
 const { checkAdvancedString } = require('../data/globalData');
+const xss = require('xss');
 
 router
     .route('/search')
@@ -15,9 +16,9 @@ router
     .get(async(req, res) => {
         try {
             const shows = await data.showData.getAll();
-            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript', name: 1});
+            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: shows, partial: 'allShowScript', name: 1 });
         } catch (e) {
-            return res.status(500).json({ error: e.toString() });
+            return res.status(500).render('individualPages/errorPage', { user: req.session.user, error: e.toString(), partial: 'mainScript' });
         }
     });
 
@@ -26,17 +27,24 @@ router
     .get(async(req, res) => {
         try {
             const prop = req.params.prop;
+            if (prop == undefined || prop.trim() == '' || (prop != 'likes' && prop != 'dislikes' && prop != 'watches')) {
+                // invalid prop, just return to allShows
+                return res.status(400).redirect('/shows/allShows');
+            }
             const shows = await data.showData.getAll();
             const sortedshows = await data.showData.sortBy(shows, prop);
             let likes, dislikes, watches = 0;
-            if(prop === "likes"){
+            if (prop === "likes") {
                 likes = 1;
-            }else if(prop === "dislikes"){
+            } else if (prop === "dislikes") {
                 dislikes = 1;
-            }else if(prop === "watches"){
+            } else if (prop === "watches") {
                 watches = 1;
+            } else {
+                // invalid prop, just return to allShows
+                return res.status(400).redirect('/shows/allShows');
             }
-            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: sortedshows, partial: 'allShowScript', likes: likes, dislikes: dislikes, watches: watches});
+            return res.status(200).render('individualPages/allShows', { user: req.session.user, shows: sortedshows, partial: 'allShowScript', likes: likes, dislikes: dislikes, watches: watches });
         } catch (e) {
             return res.status(500).json({ error: e.toString() });
         }
@@ -68,10 +76,10 @@ router
                 const shows = await data.showData.searchDb(searchTerm);
                 return res.status(200).render('individualPages/searchShow', { user: req.session.user, searchTerm: searchTerm, shows: shows, partial: 'searchScript' });
             } else {
-                return res.status(400).json({ error: 'Error: Please enter a search term' })
+                return res.status(400).render('individualPages/errorPage', { user: req.session.user, error: 'Error: Please enter a search term', partial: 'mainScript' });
             }
         } catch (e) {
-            return res.status(500).json({ error: e.toString() })
+            return res.status(500).render('individualPages/errorPage', { user: req.session.user, error: e.toString(), partial: 'mainScript' });
         }
     });
 
@@ -162,7 +170,7 @@ router
                 return res.status(200).render('individualPages/viewShow', { user: req.session.user, showData: show, likeIcon: likeIcon, dislikeIcon: dislikeIcon, watchedIcon: watchedIcon, reviews: reviews, partial: 'viewShowScript' });
             }
         } catch (e) {
-            return res.status(500).json({ error: e.toString() })
+            return res.status(500).render('individualPages/errorPage', { user: req.session.user, error: e.toString(), partial: 'mainScript' });
         }
     });
 
@@ -171,15 +179,15 @@ router
     .post(async(req, res) => {
         try {
             // this route should be used to create a new show with manual data added by the user
-            const showName = req.body.name;
-            const showImg = req.body.img; // not required
-            const language = req.body.language; // not required
-            const summary = req.body.summary;
-            const startYear = req.body.start;
-            const endYear = req.body.end; // not required
-            const numEpisodes = req.body.numEpisodes; // not required
-            const runtime = req.body.runtime; // not required
-            const genres = req.body.genres;
+            const showName = xss(req.body.name);
+            const showImg = xss(req.body.img); // not required
+            const language = xss(req.body.language); // not required
+            const summary = xss(req.body.summary);
+            const startYear = xss(req.body.start);
+            const endYear = xss(req.body.end); // not required
+            const numEpisodes = xss(req.body.numEpisodes); // not required
+            const runtime = xss(req.body.runtime); // not required
+            const genres = xss(req.body.genres);
             /* error check string parameters */
             checkAdvancedString(showName, 'Show Name', 1, false, true, false);
             /* image link not required */
@@ -232,9 +240,9 @@ router
         /* This route should be used for updating the likes/dislikes/watched counts of a show */
         try {
             const id = req.params.showId;
-            const likes = req.body.likes;
-            const dislikes = req.body.dislikes;
-            const watches = req.body.watches;
+            const likes = xss(req.body.likes);
+            const dislikes = xss(req.body.dislikes);
+            const watches = xss(req.body.watches);
             if (!req.session.user) {
                 return res.status(400).json({ error: `Error: User is not logged in!` });
             }
@@ -275,46 +283,3 @@ router
     });
 
 module.exports = router;
-
-/* TODO: 
- * Error checking
- * add filters and sorting to all shows page
- * edit show's missing data?
- * edit password - DONE
- * a user that is not logged in cannot add shows - DONE
- * edit/delete reviews - DONE
- * add checkbox functionality to update reviews - DONE
- * add top rated tv shows to home page - DONE
- * add reviews to seed file - DONE
- * make search results scrollable - DONE
- * all tv shows page - DONE
- * add reviews - DONE
- * show reviews - DONE
- * other user page - DONE
- * middleware for logins and permissions - DONE
- * show search term on search page and add page - DONE
- * add search bar to search page and add page - DONE
- * check view account page for prettiness - DONE
- * Extras:
- * 
- * 
- * backend
- * accountData.js has been error checked fully!
- * showData.js has been error checked fully!
- * reviewData.js has been error checked fully!
- * 
- * routes
- * accountApi.js has been error checked fully!
- * mainApi.js has been error checked fully!
- * reviewAPI.js has been error checked fully!
- * tvApi.js has been error checked fully!
- * 
- * scripts
- * addShowScript.js has been error checked fully!
- * createAccountScript.js has been error checked fully!
- * editAccountScript.js has been error checked fully!
- * headerScript.js has been error checked fully!
- * searchScript.js has been error checked fully!
- * viewAccountScript.js has been error checked fully!
- * viewShowScript.js has been error checked fully!
- */
