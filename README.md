@@ -14,6 +14,7 @@ There are several main components to this application:
 ---
 In order to run this application, if you have npm installed, use the following commands:
 
+`npm i`
 `npm run seed`
 
 *Note: this will take a moment, as seeding with 150 tv shows, 150 users, and several hundred reviews is a lot of work for our server*

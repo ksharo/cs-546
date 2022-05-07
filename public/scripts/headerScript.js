@@ -75,6 +75,11 @@
                     window.location.reload();
                     return;
                 }
+                /* simply reload if page is viewing another account in case it is the user's account */
+                if (window.location.href.includes('/account/view/')) {
+                    window.location.reload();
+                    return;
+                }
                 closeLogin();
                 loggedOutBox.hide();
                 homeLink.hide();

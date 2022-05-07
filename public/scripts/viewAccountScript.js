@@ -1,8 +1,40 @@
 const deleteBtns = document.getElementsByClassName("deleteReviewBtn");
 const updateBtns = document.getElementsByClassName('updateReviewBtn');
+const editBtns = document.getElementsByClassName('editReviewBtn');
 const updateError = document.getElementById('updateReviewsError');
 const updateSuccess = document.getElementById('updateReviewsSuccess');
 
+
+for (let btn of editBtns) {
+    btn.addEventListener('click', (event) => {
+        /* show the elements in order to update the content of the review */
+        updateError.style.display = 'none';
+        const reviewId = event.target.id.split('editReview_')[1];
+        if (reviewId.trim() == '') {
+            updateError.textContent = 'Error: There was a problem editing this review. Please try again later.';
+            updateError.style.display = 'block';
+            updateError.scrollIntoView({ behavior: 'smooth' });
+            return;
+        } else {
+            const editBox = document.getElementById('review_' + reviewId); // to show
+            const updateBtn = document.getElementById('updateReview_' + reviewId); // to show
+            const editBtn = document.getElementById(event.target.id); // to hide
+            const uneditable = document.getElementById('uneditable_' + reviewId); // to hide
+            if (!editBox || !updateBtn || !editBtn || !uneditable) {
+                updateError.textContent = 'Error: There was a problem editing this review. Please try again later.';
+                updateError.style.display = 'block';
+                updateError.scrollIntoView({ behavior: 'smooth' });
+                return;
+            } else {
+                editBox.style.display = 'block';
+                updateBtn.style.display = 'inline';
+                editBtn.style.display = 'none';
+                uneditable.style.display = 'none';
+                return;
+            }
+        }
+    })
+}
 
 for (let btn of deleteBtns) {
     btn.addEventListener('click', async(event) => {
@@ -111,7 +143,22 @@ window.onload = function() {
                     updateSuccess.textContent = 'Review updated!';
                     updateSuccess.style.display = 'block';
                     updateSuccess.scrollIntoView({ behavior: 'smooth' });
-                    return;
+                    const editBox = document.getElementById('review_' + reviewId); // to hide
+                    const updateBtn = document.getElementById('updateReview_' + reviewId); // to hide
+                    const editBtn = document.getElementById('editReview_' + reviewId); // to show
+                    const uneditable = document.getElementById('uneditable_' + reviewId); // to show
+                    if (!editBox || !updateBtn || !editBtn || !uneditable) {
+                        // just reload to get the p element back if an element is having problems
+                        window.location.reload();
+                        return;
+                    } else {
+                        uneditable.textContent = updatedContent;
+                        editBox.style.display = 'none';
+                        updateBtn.style.display = 'none';
+                        editBtn.style.display = 'inline';
+                        uneditable.style.display = 'block';
+                        return;
+                    }
                 } else {
                     updateError.textContent = 'Error: There was a problem updating this review. Please try again later.';
                     updateError.style.display = 'block';
