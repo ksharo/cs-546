@@ -31,3 +31,9 @@ Then navigate in your browser to http://localhost:3000 and start exploring!
 4. If the user is offline, we do not let them access the add tv show page, because in order to add a tv show, we need to use axios, which needs internet connection.
 5. When users search for a show, we search by name first, then by genre, then by summary, in order to encapsulate the greatest number of possible results that the user could want.
 6. Hovering over links and images sometimes does cool things, like giving the user more information about that show or enlarging the image. Try it out!
+
+### About streaming services (extra feature):
+We have implemented streaming services for each show, meaning that we list the streaming services/purchase options available for each tv show on our site. In order to do this, we use the watchmode API, which allows developers 1000 free calls per month. With our seed size of 150 shows, we can only re-seed a few times with the streaming services.
+
+Therefore, we do not have the API key included in our application, which is needed to access these streaming services. See the demo for what it looks like when the API key is included or create your own to test it out!
+The API key can go in showData.js, line 115. 
