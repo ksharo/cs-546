@@ -981,6 +981,11 @@ label {
     -moz-columns: 3;
 }
 
+.spaceBottom {
+    margin-top: 0px;
+    margin-bottom: 24px;
+}
+
 .watchLink:visited {
     color: var(--secondary) !important;
 }

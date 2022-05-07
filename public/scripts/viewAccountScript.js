@@ -18,15 +18,17 @@ for (let btn of editBtns) {
         } else {
             const editBox = document.getElementById('review_' + reviewId); // to show
             const updateBtn = document.getElementById('updateReview_' + reviewId); // to show
+            const anonLabel = document.getElementById('label_' + reviewId); // to show
             const editBtn = document.getElementById(event.target.id); // to hide
             const uneditable = document.getElementById('uneditable_' + reviewId); // to hide
-            if (!editBox || !updateBtn || !editBtn || !uneditable) {
+            if (!editBox || !updateBtn || !editBtn || !uneditable || !anonLabel) {
                 updateError.textContent = 'Error: There was a problem editing this review. Please try again later.';
                 updateError.style.display = 'block';
                 updateError.scrollIntoView({ behavior: 'smooth' });
                 return;
             } else {
                 editBox.style.display = 'block';
+                anonLabel.style.display = 'block';
                 updateBtn.style.display = 'inline';
                 editBtn.style.display = 'none';
                 uneditable.style.display = 'none';
@@ -145,9 +147,10 @@ window.onload = function() {
                     updateSuccess.scrollIntoView({ behavior: 'smooth' });
                     const editBox = document.getElementById('review_' + reviewId); // to hide
                     const updateBtn = document.getElementById('updateReview_' + reviewId); // to hide
+                    const anonLabel = document.getElementById('label_' + reviewId); // to hide
                     const editBtn = document.getElementById('editReview_' + reviewId); // to show
                     const uneditable = document.getElementById('uneditable_' + reviewId); // to show
-                    if (!editBox || !updateBtn || !editBtn || !uneditable) {
+                    if (!editBox || !updateBtn || !editBtn || !uneditable || !anonLabel) {
                         // just reload to get the p element back if an element is having problems
                         window.location.reload();
                         return;
@@ -157,6 +160,7 @@ window.onload = function() {
                         updateBtn.style.display = 'none';
                         editBtn.style.display = 'inline';
                         uneditable.style.display = 'block';
+                        anonLabel.style.display = 'none';
                         return;
                     }
                 } else {

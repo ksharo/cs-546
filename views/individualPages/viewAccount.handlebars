@@ -79,15 +79,15 @@
                     <p id="uneditable_{{this._id}}">{{this.content}}</p>
             <textarea id="review_{{this._id}}" hidden name="review">{{this.content}}</textarea>
             {{#if this.anonymous}}
-            <label hidden for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
+            <label hidden id="label_{{this._id}}" for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
                     name="anonymous" checked id="anonymous_{{this._id}}"></input></label> {{else}}             
-                    <label hidden for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
+                    <label hidden id="label_{{this._id}}" for="anonymous_{{this._id}}">Anonymous:<input type="checkbox"
                     name="anonymous" id="anonymous_{{this._id}}"></input></label>  
             {{/if}}
-            <section class="horiziontalFlex">
-            <button type="button" id="editReview_{{this._id}}" class="editReviewBtn">Edit</button>
-            <button id="updateReview_{{this._id}}" hidden type='submit' class="updateReviewBtn">Update</button>
-            <button id="deleteReview_{{this._id}}" type='button' class="deleteReviewBtn">Delete</button>
+            <section class="horiziontalFlex spaceBottom">
+            <button type="button" id="editReview_{{this._id}}" class="editReviewBtn smallBtn">Edit</button>
+            <button id="updateReview_{{this._id}}" hidden type='submit' class="updateReviewBtn smallBtn">Update</button>
+            <button id="deleteReview_{{this._id}}" type='button' class="deleteReviewBtn smallBtn">Delete</button>
             </section>
         </form>
         {{/each}}
