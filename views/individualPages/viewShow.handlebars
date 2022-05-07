@@ -46,6 +46,17 @@
         <dt>Summary</dt>
         <dd>{{{ showData.summary }}}</dd>
     </dl>
+            {{#if showData.streamingServices.length}}
+        <details>
+            <summary>Where to Watch</summary>
+            <ul class="watchList">
+                {{#each showData.streamingServices}}
+                    <li><a class="watchLink clickable" href="{{this.url}}" target="_blank" rel="noopener noreferrer">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+            <p>Streaming data powered by Watchmode.com</p>
+        </details>
+        {{/if}}
 </article>
 {{#if user}}
     <article class="cardLayout reviewLayout">

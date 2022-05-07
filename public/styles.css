@@ -970,6 +970,21 @@ label {
     color: var(--dark) !important;
 }
 
+.watchLink {
+    color: var(--secondary) !important;
+    line-height: 2
+}
+
+.watchList {
+    columns: 3;
+    -webkit-columns: 3;
+    -moz-columns: 3;
+}
+
+.watchLink:visited {
+    color: var(--secondary) !important;
+}
+
 .bigLink {
     color: var(--secondary);
     text-align: center;

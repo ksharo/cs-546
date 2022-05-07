@@ -80,6 +80,11 @@
                     window.location.reload();
                     return;
                 }
+                /* simply reload if page is searching so that they can add */
+                if (window.location.href.includes('/shows/search/')) {
+                    window.location.reload();
+                    return;
+                }
                 closeLogin();
                 loggedOutBox.hide();
                 homeLink.hide();

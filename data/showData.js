@@ -111,6 +111,36 @@ async function add(showId) {
         /* get number of episodes */
         const episodes = await axios.get('http://api.tvmaze.com/shows/' + showId + '/episodes');
         if (!episodes) throw `Error: could not get list of episodes for show with id ${showId}.`;
+        /* get list of streaming services */
+        const streamingAPIkey = '';
+        let streamingServices = [];
+        // only get streaming services if API key is activated and filled out
+        if (streamingAPIkey != '') {
+            try {
+                const titleResults = await axios.get('https://api.watchmode.com/v1/search/?apiKey=' + streamingAPIkey + '&search_field=name&search_value=' + data.name);
+                let watchmodeId = '';
+                for (let title of titleResults.data.title_results) {
+                    if (title.type == 'tv_series') {
+                        watchmodeId = title.id;
+                        break;
+                    }
+                }
+                // if nothing is found, don't error, just don't list streaming services - maybe there are none
+                if (watchmodeId != '') {
+                    const results = await axios.get('https://api.watchmode.com/v1/title/' + watchmodeId + '/sources/?apiKey=' + streamingAPIkey);
+                    for (let result of results.data) {
+                        if (result.name && result.web_url) {
+                            if (!streamingServices.find(o => o.name === result.name)) {
+                                streamingServices.push({ name: result.name, url: result.web_url });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                // streaming services are not that important, so catch the error and move on with life
+                console.error('could not get streaming services for ' + data.name + ': ' + e);
+            }
+        }
         const start = data.premiered ? (data.premiered.split('-').length > 0 ? data.premiered.split('-')[0] : '?') : '?';
         const end = data.ended ? (data.ended.split('-').length > 0 ? data.ended.split('-')[0] : start == '?' ? '?' : 'Present') : start == '?' ? '?' : 'Present';
         const newShow = {
@@ -126,7 +156,8 @@ async function add(showId) {
             language: dataValidation(data.language),
             runtime: dataValidation(data.runtime),
             summary: dataValidation(data.summary),
-            genres: data.genres ? data.genres : []
+            genres: data.genres ? data.genres : [],
+            streamingServices: streamingServices
         }
         const inserted = await showCollection.insertOne(newShow);
         if (!inserted.acknowledged || !inserted.insertedId) {
