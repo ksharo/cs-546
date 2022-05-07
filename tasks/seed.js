@@ -88,7 +88,6 @@ async function main() {
         }
     }
 
-    dbConnection.closeConnection();
     console.log('Done seeding!');
     return;
 }
@@ -103,6 +102,9 @@ const isAlphanum = (name) => {
     return true;
 }
 
-main().catch((error) => {
+main().then(() => {
+    dbConnection.closeConnection();
+}).catch((error) => {
+    dbConnection.closeConnection();
     console.log(error);
 });
