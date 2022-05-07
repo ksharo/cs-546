@@ -42,6 +42,7 @@ async function main() {
     const addedIds = [];
     for (let x of showsToAdd) {
         let thisShow = await showData.add(x);
+        console.log('adding show ' + thisShow.showData.newShow.name);
         addedIds.push(thisShow.showData._id.toString());
     }
 
@@ -69,6 +70,7 @@ async function main() {
                 dictionaries: [names]
             });
         }
+        console.log('creating user ' + username);
         await accountData.createUser(firstName, lastName, username + '@123.com', username, '123456');
 
         /* add random shows to the user's watched, liked, and disliked, with more likes than dislikes */
@@ -80,6 +82,7 @@ async function main() {
                 await showData.updateCounts(shuffled[i], username, i % 3 == 0 || i % 3 == 1 ? 1 : 0, i % 3 == 2 ? 1 : 0, 1);
                 if (i % 5 == 0) {
                     // add a review for every fifth show
+                    console.log('adding review');
                     await reviewData.add(username, (i % 4 == 0), shuffled[i], i % 3 != 0 ? 'This show is ' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '! It makes me feel ' + uniqueNamesGenerator({ dictionaries: [colors] }) + ' every time i watch it.' : 'This show is so ' + uniqueNamesGenerator({ dictionaries: [adjectives] }) + '. The ' + uniqueNamesGenerator({ dictionaries: [animals] }) + ' is my favorite thing in the world!');
                 }
             } catch (e) {
@@ -89,6 +92,7 @@ async function main() {
     }
 
     console.log('Done seeding!');
+    dbConnection.closeConnection();
     return;
 }
 
@@ -102,9 +106,6 @@ const isAlphanum = (name) => {
     return true;
 }
 
-main().then(() => {
-    dbConnection.closeConnection();
-}).catch((error) => {
-    dbConnection.closeConnection();
+main().catch((error) => {
     console.log(error);
 });
