@@ -13,7 +13,7 @@ async function main() {
             await db.collection("users").drop();
         } catch {
             // not an error!
-            console.log('Did not drop users collection because no data was in it.');
+            console.log('Not an error: Did not drop users collection because no data was in it.');
         }
     }
     if (db.collection("shows")) {
@@ -21,7 +21,7 @@ async function main() {
             await db.collection("shows").drop();
         } catch {
             // not an error!
-            console.log('Did not drop shows collection because no data was in it.');
+            console.log('Not an error: Did not drop shows collection because no data was in it.');
 
         }
     }
@@ -30,7 +30,7 @@ async function main() {
             await db.collection("reviews").drop();
         } catch {
             // not an error!
-            console.log('Did not drop reviews collection because no data was in it.');
+            console.log('Not an error: Did not drop reviews collection because no data was in it.');
 
         }
     }
@@ -47,12 +47,12 @@ async function main() {
     }
 
     /* add as many users as shows for more data */
-    for (let _ in showsToAdd) {
+    for (let num in showsToAdd) {
         const username = uniqueNamesGenerator({
             dictionaries: [adjectives, animals],
             style: 'capital',
             separator: '',
-        }); // adjective, then color, then animal for username (screenname)
+        }) + num.toString(); // adjective, then color, then animal for username (screenname) (also add number at the end to make sure each is unique!)
         let firstName = uniqueNamesGenerator({
             dictionaries: [names]
         });
@@ -71,7 +71,12 @@ async function main() {
             });
         }
         console.log('creating user ' + username);
-        await accountData.createUser(firstName, lastName, username + '@123.com', username, '123456');
+        try {
+            await accountData.createUser(firstName, lastName, username + '@123.com', username, '123456');
+        } catch (e) {
+            console.error('Problem adding user ' + username);
+            continue;
+        }
 
         /* add random shows to the user's watched, liked, and disliked, with more likes than dislikes */
         const num_shows = Math.floor(Math.random() * 40) + 1;

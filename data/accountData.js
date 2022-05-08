@@ -181,7 +181,14 @@ async function getUserById(userId) {
 async function changePassword(userEmail, curPass, newPassword) {
     try {
         /* make sure user is valid (this will also check userEmail and curPass for validation) */
-        await checkUser(userEmail, curPass);
+        const valid = await checkUser(userEmail, curPass);
+        if (valid.authenticated != true) {
+            throw 'Error! Password is incorrect.';
+        }
+        if (curPass == newPassword) {
+            /* if everything is the same as before, no need to update */
+            return { userUpdated: true };
+        }
         /* check that newPassword is valid */
         checkAdvancedString(newPassword, 'New Password', 6, false, false, false);
         /* update password in database to new password */

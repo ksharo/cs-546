@@ -12,12 +12,20 @@ There are several main components to this application:
 
 ### Running the Application
 ---
-In order to run this application, if you have npm installed, use the following commands:
+#### Prepping
+In order to run this application, if you have npm installed, use the following command:
 
 `npm i`
+
+#### Seeding
+To seed the application, we have provided the DB_dump directory. This contains 3 json files, one for each of our collections. In order to use these files, open up compass and create a database called what2watch. Next, make three empty collections: users, reviews, and shows. Then import these json files into their appropriate collections and you're ready to go!
+#### Alternative (slow - not recommended!):
+
 `npm run seed`
 
-*Note: this will take a moment, as seeding with 150 tv shows, 150 users, and several hundred reviews is a lot of work for our server*
+*Note: this will take a moment, as seeding with 150 tv shows, 150 users, and several hundred reviews is a lot of work for our server. If it gets stuck adding reviews, that's okay, just CTRL+C to stop it. Sometimes Mongo gets a broken pipe when our seed file runs, another reason to use the DB dump instead! *
+
+#### Starting
 
 `npm start`
 
@@ -37,3 +45,5 @@ We have implemented streaming services for each show, meaning that we list the s
 
 Therefore, we do not have the API key included in our application, which is needed to access these streaming services. See the demo for what it looks like when the API key is included or create your own to test it out!
 The API key can go in showData.js, line 115. 
+
+This is another reason why we recommend you use the DB Dump directory rather than seeding because the DB Dump has the streaming services that we gather from the watchmode API. 

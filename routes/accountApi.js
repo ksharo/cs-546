@@ -229,10 +229,6 @@ router
             if (confirmPass != newPass) {
                 return res.status(400).json({ error: 'Error: Passwords do not match.' });
             }
-            /* if everything is the same as before, no need to continue */
-            if (curPassword == newPass) {
-                return res.status(200).render('individualPages/editAccount', { user: req.session.user, imgData: imgData, partial: 'editAccountScript' });
-            }
             /* try to update the user (don't overwrite image with empty string!) */
             const auth = await accountFunctions.changePassword(req.session.user.email, curPassword, newPass);
             if (auth.userUpdated) {
